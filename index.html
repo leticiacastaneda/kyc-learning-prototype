@@ -311,6 +311,38 @@
   .tl { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; font-weight: 700; color: var(--teal); max-width: 640px; }
   .qcard.dark .tl { color: var(--cyan); }
   .note.foot { border-top: 1px solid var(--line); padding-top: 12px; }
+
+  /* Storyboard narrative */
+  .route { display: grid; grid-template-columns: minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1.2fr) 28px minmax(0,1fr); gap: 6px; align-items: stretch; }
+  .rstep { background: var(--mist); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+  .rstep .rw { font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .05em; }
+  .rstep b { font-size: 15px; }
+  .rstep span:last-child { color: var(--muted); }
+  .rstep.hl { background: var(--ink); color: var(--paper); box-shadow: 0 0 0 3px var(--cyan); }
+  .rstep.hl .rw { color: var(--cyan); } .rstep.hl span:last-child { color: var(--soft); }
+  .rarrow { display: grid; place-items: center; color: var(--teal); font-weight: 800; font-size: 22px; }
+  @media (max-width: 900px) { .route { grid-template-columns: 1fr; } .rarrow { transform: rotate(90deg); height: 24px; } }
+  .why { background: var(--mist); border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .why .from { font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .05em; }
+  .obj { margin: 0; font-size: clamp(17px, 2vw, 20px); max-width: 80ch; }
+  .fact { background: var(--ink-2); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .fact span { font-size: 12px; font-weight: 800; color: var(--lilac); text-transform: uppercase; letter-spacing: .05em; }
+  .fact b { font-weight: 600; }
+  .stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  @media (max-width: 900px) { .stages { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .stages { grid-template-columns: 1fr; } }
+  .stage { background: var(--mist); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; border: 2px solid transparent; }
+  .stage.built { border-color: var(--teal); }
+  .stage .sn { font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .05em; }
+  .stage b { font-size: 15px; }
+  .stage > span:last-child { color: var(--muted); }
+  .meter { display: flex; gap: 3px; margin-bottom: 6px; }
+  .meter i { flex: 1; height: 8px; border-radius: 4px; background: var(--teal); }
+  .meter i.off { background: var(--line); }
+  .bars { display: inline-block; width: 26px; height: 8px; border-radius: 4px; margin-right: 6px; background: linear-gradient(90deg, var(--teal) 50%, var(--line) 50%); vertical-align: 1px; }
+  .boxk { display: inline-block; width: 18px; height: 12px; border: 2px solid var(--teal); border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+  .sct { font-weight: 600; font-size: 12px; color: var(--muted); margin-left: 4px; }
+  .screen summary .tt a.chip { margin-left: 6px; text-decoration: none; }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -568,77 +600,113 @@
 
 <!-- ================= 2 STORYBOARD ================= -->
 <section class="view" id="storyboard" aria-labelledby="h-sb" hidden>
-  <div class="wrap stack">
+  <div class="wrap">
     <header><div class="eyebrow">Deliverable 2 · Storyboard excerpt</div>
-      <h1 id="h-sb">Spot inconsistencies <b>before a file is submitted</b></h1>
-      <p class="lead">One module from each analyst's learning route. See the flow at a glance; open any screen for the detail a stakeholder needs to review it.</p></header>
+      <h1 id="h-sb">One piece of the plan, <b>designed screen by screen</b></h1>
+      <p class="lead">The 90-day plan gives every analyst a personal learning route made of short modules, one per process step. This storyboard designs one of those modules in detail.</p>
+      <nav class="chapters" aria-label="Chapters">
+        <button type="button" data-go="sb1">1 Where it fits</button><button type="button" data-go="sb2">2 What learners will do</button><button type="button" data-go="sb3">3 How it's built</button><button type="button" data-go="sb4">4 Screen by screen</button><button type="button" data-go="sb5">5 Designed for everyone</button>
+      </nav>
+    </header>
 
-    <div class="card dark"><span class="eyebrow">Learning objective</span>
-      <p style="margin:6px 0 0;font-size:18px">Given a client file, the analyst identifies inconsistencies between the identity documents and the data captured in the platform (name, ID number, date of birth, address and document validity) and chooses the right next action before submitting it.</p></div>
+    <!-- SB1 -->
+    <article class="chapter" id="sb1" aria-labelledby="h-sb1">
+      <span class="eyebrow">1 · Where it fits in the plan</span>
+      <h2 id="h-sb1">From the assessment to this module: <b>one analyst's route</b></h2>
+      <div class="route" aria-label="Learning route">
+        <div class="rstep"><span class="rw">Week 3</span><b>Case-based assessment</b><span>Shows which steps each analyst masters and where they struggle</span></div>
+        <div class="rarrow" aria-hidden="true">→</div>
+        <div class="rstep"><span class="rw">Personal route</span><b>Modules only for the steps with gaps</b><span>One short module per process step</span></div>
+        <div class="rarrow" aria-hidden="true">→</div>
+        <div class="rstep hl"><span class="rw">This storyboard</span><b>Spot inconsistencies before submitting a file</b><span>The module for the identity-check step</span></div>
+        <div class="rarrow" aria-hidden="true">→</div>
+        <div class="rstep"><span class="rw">Weeks 6–10</span><b>Workshop, then verification</b><span>Practice with peers; an expert referent confirms mastery on the job</span></div>
+      </div>
+      <div class="grid g2">
+        <div class="why"><span class="from">The symptom it attacks</span><b>“Employees are not confident they are applying the process correctly.”</b><span class="note">From the brief: the one cause on our diagnosis that training can address on its own.</span></div>
+        <div class="why"><span class="from">Why we chose this step</span><b>In our scenario, a file that doesn't match its documents comes back from Quality: rework, delay and compliance risk.</b><span class="note">It is also the step where a one-page guide helps most at the moment of work.</span></div>
+      </div>
+    </article>
 
-    <div class="grid g4">
-      <div class="card"><span class="eyebrow">Audience</span><p style="margin:4px 0 0">Analysts whose assessment showed gaps in this step</p></div>
-      <div class="card"><span class="eyebrow">Format</span><p style="margin:4px 0 0">Self-paced online · ~12 min · desktop and mobile</p></div>
-      <div class="card"><span class="eyebrow">Strategy</span><p style="margin:4px 0 0">Scenario-based; support fades from example to solo practice</p></div>
-      <div class="card"><span class="eyebrow">Reviewers</span><p style="margin:4px 0 0">Process owner, Compliance, two expert referents</p></div>
-    </div>
+    <!-- SB2 -->
+    <article class="chapter dark" id="sb2" aria-labelledby="h-sb2">
+      <span class="eyebrow">2 · What learners will be able to do</span>
+      <h2 id="h-sb2">Find the mismatch, <b>then choose the right next step</b></h2>
+      <p class="obj">Given a client file, the analyst identifies inconsistencies between the identity documents and the data captured in the platform (name, ID number, date of birth, address and document validity) and chooses the right next action before submitting it.</p>
+      <div class="grid g4">
+        <div class="fact"><span>Who</span><b>Analysts whose assessment showed gaps in this step</b></div>
+        <div class="fact"><span>How long</span><b>About 12 minutes, on desktop or mobile</b></div>
+        <div class="fact"><span>Format</span><b>Self-paced online, with real-looking sample files</b></div>
+        <div class="fact"><span>Reviewed by</span><b>Process owner, Compliance and two expert referents</b></div>
+      </div>
+    </article>
 
-    <div class="flow" aria-label="Learning flow">
-      <div class="st"><b>Why it matters</b><span>Screens 1–3</span></div>
-      <div class="st"><b>See it done</b><span>Screens 4–5</span></div>
-      <div class="st hl"><b>Practice with support</b><span>Screen 6 · in prototype</span></div>
-      <div class="st hl"><b>Practice alone</b><span>Screens 7–9 · 7–8 in prototype</span></div>
-      <div class="st hl"><b>Check</b><span>Screens 10–16 · 11–13, 16 in prototype</span></div>
-    </div>
+    <!-- SB3 -->
+    <article class="chapter" id="sb3" aria-labelledby="h-sb3">
+      <span class="eyebrow">3 · How it's built</span>
+      <h2 id="h-sb3">From watching to doing it alone, <b>with less help at each stage</b></h2>
+      <p class="lead">Learners first see why it matters and how it's done. Then they practice, and the help fades step by step until they can do it on their own, just like on the job. The step guide stays open the whole time, because it is the same support they will use at work.</p>
+      <div class="stages">
+        <div class="stage"><div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="sn">Stage 1</span><b>Why it matters</b><span>A file returned by Quality, and what it cost</span></div>
+        <div class="stage"><div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="sn">Stage 2</span><b>See it done</b><span>The five checks, then Ana works through a file</span></div>
+        <div class="stage built"><div class="meter" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i></div><span class="sn">Stage 3</span><b>Practice with help</b><span>One error to find, with a hint if needed</span></div>
+        <div class="stage built"><div class="meter" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i></div><span class="sn">Stage 4</span><b>Practice alone</b><span>Two errors, no hints, then decide what to do</span></div>
+        <div class="stage built"><div class="meter" aria-hidden="true"><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div><span class="sn">Stage 5</span><b>Check and next step</b><span>Five files, how sure you are, and your route</span></div>
+      </div>
+      <div class="legend"><span><i class="bars" aria-hidden="true"></i>Level of help</span><span><i class="boxk" aria-hidden="true"></i>Outlined stages are built in the prototype: <a href="#prototype">try it</a></span></div>
+    </article>
 
-    <div class="stack" style="gap:8px">
-      <details class="screen"><summary><span class="no">1–3</span><span><span class="tt">Why it matters</span><span class="ds">A returned file opens the module, not a list of rules</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>On-screen text</dt><dd>“This file came back from Quality. One date didn't match the ID. Result: two days of rework.” Then the objective in plain English, and Ana, the analyst we follow.</dd>
-          <dt>Interaction</dt><dd>Reads and continues; practice is announced as not graded.</dd>
-          <dt>Visual &amp; access</dt><dd>Illustration of a returned file with alt text; progress bar in five stages.</dd></dl></div></details>
-      <details class="screen"><summary><span class="no">4–5</span><span><span class="tt">See it done</span><span class="ds">The step guide's five checks, then a worked example</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>On-screen text</dt><dd>Five cards: name, ID number, date of birth, address, document validity. “Watch Ana check Daniel's file, one field at a time.”</dd>
-          <dt>Interaction</dt><dd>Opens each card; steps through the example until the date-of-birth mismatch is highlighted.</dd>
-          <dt>Feedback</dt><dd>“14/03 on the ID, 14/08 in the platform. A capture error: correct it from the document.”</dd>
-          <dt>Accessibility</dt><dd>Cards are buttons with visible focus; nothing locks progress.</dd></dl></div></details>
-      <details class="screen built"><summary><span class="no">6</span><span><span class="tt">Practice 1 · with support <span class="chip fill">In prototype</span></span><span class="ds">Find the one field that doesn't match</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>Interaction</dt><dd>Select the mismatching field by click, tap or list. Hint and guide available. Two attempts, then the answer is shown.</dd>
-          <dt>Feedback</dt><dd>Correct: “The last two digits are swapped. One wrong digit makes the check fail.” Incorrect: “That field matches. Compare the ID number digit by digit.”</dd>
-          <dt>Accessibility</dt><dd>List alternative to clicking; feedback read by screen readers; icon + text, never color alone.</dd></dl></div></details>
-      <details class="screen built"><summary><span class="no">7</span><span><span class="tt">Practice 2 · on your own <span class="chip fill">In prototype</span></span><span class="ds">Two inconsistencies, no hints</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>Interaction</dt><dd>Select up to two fields; one attempt; guide still open.</dd>
-          <dt>Feedback</dt><dd>Per field: address typed 210 vs 120 on the proof; proof of address older than 3 months (sample policy). Missed fields are outlined.</dd></dl></div></details>
-      <details class="screen built"><summary><span class="no">8</span><span><span class="tt">Decide the next action <span class="chip fill">In prototype</span></span><span class="ds">Correct the capture, request a document or escalate</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>Interaction</dt><dd>One action per inconsistency.</dd>
-          <dt>Feedback</dt><dd>“Escalate when something suggests risk or alteration, not for routine fixes.”</dd></dl></div></details>
-      <details class="screen"><summary><span class="no">9–10</span><span><span class="tt">Expert tip, then the check</span><span class="ds">A referent names the old habit without blaming anyone</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>On-screen text</dt><dd>“The habit that hurts most is copying data from a client's previous file. Always capture from the document in front of you.”</dd>
-          <dt>Media</dt><dd>Optional 45–60 s audio with captions and transcript; never autoplays.</dd></dl></div></details>
-      <details class="screen built"><summary><span class="no">11–15</span><span><span class="tt">Knowledge check <span class="chip fill">3 of 5 in prototype</span></span><span class="ds">Five files, one per check, each with a certainty rating</span></span><span class="tog"></span></summary>
-        <div class="body"><div class="tw"><table><thead><tr><th>Check</th><th>Sample file</th><th>Correct answer</th></tr></thead><tbody>
-          <tr><td>Name</td><td>“Ana Lucía” on the ID, “Ana” in the platform</td><td>Name mismatch</td></tr>
-          <tr><td>Validity</td><td>ID expired last month</td><td>Request a valid ID</td></tr>
-          <tr><td>Date of birth</td><td>05/11 vs 11/05</td><td>Mismatch · correct the capture</td></tr>
-          <tr><td>Address</td><td>“45” on the proof, “45-B” in the platform</td><td>Request clarification</td></tr>
-          <tr><td>ID number</td><td>Digits differ and font looks altered</td><td>Escalate to Compliance</td></tr></tbody></table></div>
-          <p class="note">Scoring per check: correct with medium or high certainty = mastered · correct with low = unsure · wrong = keep practicing · wrong with high certainty = priority.</p></div></details>
-      <details class="screen built"><summary><span class="no">16</span><span><span class="tt">Your results <span class="chip fill">In prototype</span></span><span class="ds">Status by check and the next step on the learner's route</span></span><span class="tog"></span></summary>
-        <div class="body"><dl>
-          <dt>Next step</dt><dd>Gaps add the matching workshop; all mastered → verification with an expert referent.</dd>
-          <dt>Privacy</dt><dd>Learner sees full detail; manager sees required workshops; client sees totals by step and team.</dd></dl></div></details>
-    </div>
+    <!-- SB4 -->
+    <article class="chapter" id="sb4" aria-labelledby="h-sb4">
+      <span class="eyebrow">4 · Screen by screen</span>
+      <h2 id="h-sb4">Sixteen screens across the five stages, <b>ready for stakeholder review</b></h2>
+      <p class="lead">Open any stage to see what is on screen, what the learner does, the feedback they get and how it stays accessible.</p>
+      <div class="stack" style="gap:8px">
+        <details class="screen"><summary><span class="no">S1</span><span><span class="tt">Why it matters <span class="sct">screens 1–3</span></span><span class="ds">A returned file opens the module, not a list of rules</span></span><span class="tog"></span></summary>
+          <div class="body"><dl>
+            <dt>On screen</dt><dd>“This file came back from Quality. One date didn't match the ID. Result: two days of rework.” Then the objective in plain words, and Ana, the analyst we follow.</dd>
+            <dt>Learner</dt><dd>Reads and continues. Practice is announced as not graded.</dd>
+            <dt>Visual &amp; access</dt><dd>Illustration of a returned file, with alt text. Progress bar in five stages.</dd></dl></div></details>
+        <details class="screen"><summary><span class="no">S2</span><span><span class="tt">See it done <span class="sct">screens 4–5</span></span><span class="ds">The guide's five checks, then a worked example</span></span><span class="tog"></span></summary>
+          <div class="body"><dl>
+            <dt>On screen</dt><dd>Five cards: name, ID number, date of birth, address, document validity. Then “Watch Ana check Daniel's file, one field at a time.”</dd>
+            <dt>Learner</dt><dd>Opens each card; steps through the example until the date-of-birth mismatch appears.</dd>
+            <dt>Feedback</dt><dd>“14/03 on the ID, 14/08 in the platform. A typing error: correct it from the document.”</dd>
+            <dt>Accessibility</dt><dd>Cards are buttons with visible focus; nothing locks progress.</dd></dl></div></details>
+        <details class="screen built"><summary><span class="no">S3</span><span><span class="tt">Practice with help <span class="sct">screen 6</span> <a class="chip fill" href="#prototype">Try it</a></span><span class="ds">Find the one field that doesn't match</span></span><span class="tog"></span></summary>
+          <div class="body"><dl>
+            <dt>Learner</dt><dd>Selects the mismatching field by click, tap or list. Hint and guide available; two attempts, then the answer is shown.</dd>
+            <dt>Feedback</dt><dd>Right: “The last two digits are swapped. One wrong digit makes the check fail.” Wrong: “That field matches. Compare the ID number digit by digit.”</dd>
+            <dt>Accessibility</dt><dd>List alternative to clicking; feedback read aloud by screen readers; icon and text, never color alone.</dd></dl></div></details>
+        <details class="screen built"><summary><span class="no">S4</span><span><span class="tt">Practice alone, then decide <span class="sct">screens 7–9</span> <a class="chip fill" href="#prototype">Try it</a></span><span class="ds">Two errors with no hints, choose the next action, and an expert's tip</span></span><span class="tog"></span></summary>
+          <div class="body"><dl>
+            <dt>Learner</dt><dd>Finds two errors in Sofía's file in one attempt, then decides for each: correct the capture, request a new document or escalate.</dd>
+            <dt>Feedback</dt><dd>Typed address 210 vs 120 on the proof → correct the capture. Proof of address older than 3 months (sample rule) → request a new one. “Escalate when something suggests risk, not for routine fixes.”</dd>
+            <dt>Expert tip</dt><dd>A referent: “The habit that hurts most is copying data from a client's previous file.” Optional audio with transcript.</dd></dl></div></details>
+        <details class="screen built"><summary><span class="no">S5</span><span><span class="tt">Check and next step <span class="sct">screens 10–16</span> <a class="chip fill" href="#prototype">Try it</a></span><span class="ds">Five files, one per check, each with a certainty rating, then results</span></span><span class="tog"></span></summary>
+          <div class="body"><div class="tw"><table><thead><tr><th>Check</th><th>Sample file</th><th>Right answer</th></tr></thead><tbody>
+            <tr><td>Name</td><td>“Ana Lucía” on the ID, “Ana” in the platform</td><td>Name mismatch</td></tr>
+            <tr><td>Validity</td><td>ID expired last month</td><td>Request a valid ID</td></tr>
+            <tr><td>Date of birth</td><td>05/11 vs 11/05</td><td>Mismatch · correct the capture</td></tr>
+            <tr><td>Address</td><td>“45” on the proof, “45-B” in the platform</td><td>Request clarification</td></tr>
+            <tr><td>ID number</td><td>Digits differ and the print looks altered</td><td>Escalate to Compliance</td></tr></tbody></table></div>
+            <dl style="margin-top:10px">
+              <dt>Results</dt><dd>Each check is marked mastered, correct but unsure, keep practicing, or priority (a confident wrong answer).</dd>
+              <dt>Next step</dt><dd>Gaps add the matching workshop to the route; everything mastered → verification with an expert referent.</dd>
+              <dt>Privacy</dt><dd>The learner sees the detail; the manager sees required workshops; the client sees totals by step and team.</dd></dl></div></details>
+      </div>
+    </article>
 
-    <div class="grid g3">
-      <div class="card"><h3>Assessment</h3><p class="note" style="font-size:14px;margin:6px 0 0">Immediate feedback in practice. Certainty-based knowledge check that flags confident misconceptions. Results by check, not a single score; not used in performance reviews.</p></div>
-      <div class="card"><h3>Accessibility · WCAG 2.2 AA</h3><p class="note" style="font-size:14px;margin:6px 0 0">Keyboard and list alternatives to every image task, alt text, captions, no color-only cues, AA contrast, no time limits, works at 200% zoom and on mobile.</p></div>
-      <div class="card"><h3>Visual &amp; media</h3><p class="note" style="font-size:14px;margin:6px 0 0">Dark title screens, light reading screens. Mock platform and documents marked “Sample”. Illustrations, not photos. One optional audio tip.</p></div>
-    </div>
+    <!-- SB5 -->
+    <article class="chapter" id="sb5" aria-labelledby="h-sb5">
+      <span class="eyebrow">5 · Designed for everyone</span>
+      <h2 id="h-sb5">Assessment, accessibility and media <b>by design, not as an add-on</b></h2>
+      <div class="grid g3">
+        <div class="pillar"><h3>Assessment</h3><p class="note" style="font-size:14px;margin:0">Instant feedback while practicing. In the check, learners also say how sure they are, so we catch confident mistakes. Results are shown by check, never as one score, and never used in performance reviews.</p></div>
+        <div class="pillar"><h3>Accessibility · WCAG 2.2 AA</h3><p class="note" style="font-size:14px;margin:0">Every click-on-image task has a keyboard and list alternative. Alt text, captions, no color-only cues, AA contrast, no time limits, works at 200% zoom and on mobile.</p></div>
+        <div class="pillar"><h3>Visual &amp; media</h3><p class="note" style="font-size:14px;margin:0">Dark title screens, light reading screens. Mock platform and documents marked “Sample”. Illustrations instead of photos, and one optional audio tip.</p></div>
+      </div>
+    </article>
   </div>
 </section>
 
