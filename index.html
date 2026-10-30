@@ -3,418 +3,645 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KYC Step Module · Prototype</title>
-<meta name="description" content="Prototype of a scenario-based learning module: spot inconsistencies before a KYC file is submitted. Sample data only.">
+<title>KYC Adoption Challenge · Leticia Castañeda</title>
+<meta name="description" content="Learning and change recommendation for a process-adoption challenge: diagnosis, storyboard, prototype, adoption plan and AI use statement.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* Dark brand header over light reading surfaces; cyan/lilac only on dark, teal for interaction on light */
+  /* Dark brand chrome, light reading surfaces. Cyan/lilac only on dark; teal carries meaning on light. */
   :root {
-    --ink: #231F20; --ink-2: #3A3536; --paper: #FFFFFF; --mist: #F2F3F5; --line: #D9DBDF;
-    --muted: #5E5A5B; --cyan: #06F5FE; --lilac: #B895FF; --teal: #047680; --teal-soft: #E3F1F2;
+    --ink: #231F20; --ink-2: #3A3536; --ink-3: #4A4546; --paper: #FFFFFF; --mist: #F2F3F5; --line: #D9DBDF;
+    --muted: #5E5A5B; --soft: #CFCBCC; --cyan: #06F5FE; --lilac: #B895FF; --teal: #047680; --teal-soft: #E3F1F2;
     --ok: #1B7A3E; --ok-soft: #E6F4EA; --warn: #8A5A00; --warn-soft: #FFF4DB; --bad: #B3261E; --bad-soft: #FCE8E6;
     --font: "Mulish", "Segoe UI", system-ui, -apple-system, sans-serif;
-    --r: 10px;
-    color-scheme: light;
+    --r: 12px; color-scheme: light;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; }
-  body { font-family: var(--font); background: var(--mist); color: var(--ink); font-size: 16px; line-height: 1.5; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font); background: var(--mist); color: var(--ink); font-size: 16px; line-height: 1.5; }
   a { color: var(--teal); }
-  button, select { font: inherit; }
+  button { font: inherit; }
   :focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .dark :focus-visible { outline-color: var(--cyan); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--paper); padding: 8px 12px; border-radius: 8px; z-index: 10; }
+  .skip:focus { left: 16px; }
 
-  header.top { background: var(--ink); color: var(--paper); position: relative; overflow: hidden; }
-  header.top::before { content: ""; position: absolute; inset: -60% -10% auto auto; width: 520px; height: 520px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(6,245,254,.28), rgba(184,149,255,.18) 45%, transparent 70%); pointer-events: none; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-  .top .wrap { padding-block: 20px 16px; position: relative; display: flex; flex-direction: column; gap: 14px; }
-  .brandrow { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
-  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--lilac); }
-  .top h1 { margin: 2px 0 0; font-weight: 300; font-size: clamp(22px, 3.2vw, 30px); line-height: 1.2; }
-  .top h1 b { font-weight: 700; color: var(--cyan); }
-  .badge { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--lilac); color: var(--lilac); white-space: nowrap; }
-  ol.progress { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  ol.progress li { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--ink-2); color: #CFCBCC; }
-  ol.progress li[aria-current="step"] { background: var(--cyan); color: var(--ink); font-weight: 800; }
-  ol.progress li.done { color: var(--paper); }
-  ol.progress li.done::before { content: "✓ "; color: var(--cyan); }
+  /* Header + menu */
+  header.top { background: var(--ink); color: var(--paper); position: sticky; top: 0; z-index: 5; }
+  @media (max-width: 700px) { header.top { position: static; } }
+  .top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding-block: 12px; }
+  .brand { display: flex; flex-direction: column; text-decoration: none; color: var(--paper); }
+  .brand small { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--lilac); }
+  .brand span { font-weight: 300; font-size: 19px; }
+  .brand b { color: var(--cyan); font-weight: 700; }
+  nav.menu ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+  nav.menu a { display: block; text-decoration: none; color: var(--soft); font-size: 14px; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+  nav.menu a:hover { color: var(--paper); background: var(--ink-2); }
+  nav.menu a[aria-current="page"] { background: var(--cyan); color: var(--ink); }
+  nav.menu a .n { opacity: .7; margin-right: 4px; }
 
-  main .wrap { padding-block: 24px 48px; }
-  .screen { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
-  .screen.full { grid-template-columns: minmax(0, 1fr); }
-  @media (max-width: 900px) { .screen { grid-template-columns: minmax(0, 1fr); } }
+  main { padding-block: 28px 56px; }
+  section.view[hidden] { display: none; }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+  .dark .eyebrow { color: var(--lilac); }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  .view > .wrap > header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 300; line-height: 1.15; margin: 4px 0 8px; }
+  .view > .wrap > header h1 b { font-weight: 800; color: var(--teal); }
+  .lead { color: var(--muted); max-width: 72ch; margin: 0; }
+  .view > .wrap > header { margin-bottom: 22px; }
+  h3 { font-size: 17px; font-weight: 800; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; min-width: 0; }
-  .card + .card { margin-top: 16px; }
-  h2 { font-size: 22px; font-weight: 800; margin: 0 0 6px; text-wrap: balance; }
-  h2:focus { outline: none; }
-  h3 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
-  .lead { margin: 0 0 16px; color: var(--muted); max-width: 70ch; }
-  .scene { display: flex; gap: 12px; align-items: center; margin: 0 0 16px; padding: 12px 14px; background: var(--mist); border-radius: var(--r); }
-  .avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--cyan); display: grid; place-items: center; font-weight: 800; }
-
-  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
-  .doc { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; background: linear-gradient(135deg, #F7FAFB, #EEF3F6); position: relative; overflow: hidden; }
-  .doc::after { content: "SAMPLE"; position: absolute; right: -8px; bottom: 10px; transform: rotate(-12deg); font-weight: 800; font-size: 34px; letter-spacing: .1em; color: rgba(4,118,128,.08); pointer-events: none; }
-  .doc .dochead { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
-  .doc .docbody { display: flex; gap: 12px; }
-  .photo { flex: none; width: 64px; height: 80px; border-radius: 6px; background: #CBD5DA; display: grid; place-items: end center; overflow: hidden; }
-  .photo span { width: 44px; height: 54px; background: #9AAAB2; border-radius: 22px 22px 0 0; }
-  dl.kv { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 10px; font-size: 14px; }
-  dl.kv dt { color: var(--muted); }
-  dl.kv dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .docs { display: flex; flex-direction: column; gap: 12px; }
-
-  .platform { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--paper); }
-  .platform .bar { background: var(--ink-2); color: var(--paper); font-size: 12px; font-weight: 700; padding: 8px 12px; display: flex; justify-content: space-between; gap: 8px; }
-  .platform .bar span:last-child { color: var(--cyan); }
-  .fields { list-style: none; margin: 0; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
-  .field { width: 100%; text-align: left; background: var(--paper); border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 12px; cursor: pointer;
-    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; color: var(--ink); }
-  .field .lbl { font-size: 12px; color: var(--muted); grid-column: 1; }
-  .field .val { font-weight: 700; font-variant-numeric: tabular-nums; grid-column: 1; overflow-wrap: anywhere; }
-  .field .tag { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 12px; font-weight: 800; }
-  .field:hover { border-color: var(--teal); }
-  .field[aria-pressed="true"] { border-color: var(--teal); background: var(--teal-soft); }
-  .field[aria-pressed="true"] .tag::before { content: "Selected"; color: var(--teal); }
-  .field.is-right { border-color: var(--ok); background: var(--ok-soft); }
-  .field.is-right .tag::before { content: "✓ Mismatch"; color: var(--ok); }
-  .field.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
-  .field.is-wrong .tag::before { content: "✗ No mismatch"; color: var(--bad); }
-  .field.is-missed { border: 2px dashed var(--warn); background: var(--warn-soft); }
-  .field.is-missed .tag::before { content: "! Missed"; color: var(--warn); }
-  .field[disabled] { cursor: default; }
-
-  .alt { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
-  select { padding: 6px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); max-width: 100%; }
-
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
-  .btn { border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 9px 16px; font-weight: 700; cursor: pointer; }
-  .btn.primary { background: var(--ink); color: var(--paper); }
-  .btn.primary .arrow { color: var(--cyan); }
-  .btn[disabled] { opacity: .45; cursor: not-allowed; }
-  .btn.ghost { border-color: var(--line); }
-
-  .feedback { margin-top: 16px; border-radius: var(--r); padding: 12px 14px; display: none; }
-  .feedback.show { display: block; }
-  .feedback.ok { background: var(--ok-soft); border: 1px solid var(--ok); }
-  .feedback.no { background: var(--bad-soft); border: 1px solid var(--bad); }
-  .feedback.info { background: var(--teal-soft); border: 1px solid var(--teal); }
-  .feedback strong { display: block; margin-bottom: 2px; }
-  .feedback ul { margin: 6px 0 0; padding-left: 20px; }
-
-  aside.guide { position: sticky; top: 16px; background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 16px; }
-  aside.guide h3 { color: var(--cyan); }
-  aside.guide p.small { font-size: 13px; color: #CFCBCC; margin: 0 0 10px; }
-  aside.guide ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
-  aside.guide b { color: var(--paper); }
-  aside.guide .rule { color: #CFCBCC; }
-  @media (max-width: 900px) { aside.guide { position: static; } }
-
-  fieldset { border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; margin: 0 0 12px; }
-  legend { font-weight: 800; padding: 0 6px; }
-  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
-  .opt { position: relative; }
-  .opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .opt span { display: inline-block; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); font-weight: 600; }
-  .opt input:checked + span { border-color: var(--teal); background: var(--teal-soft); }
-  .opt input:focus-visible + span { outline: 3px solid var(--teal); outline-offset: 2px; }
-  .opt.right span { border-color: var(--ok); background: var(--ok-soft); }
-  .opt.wrong span { border-color: var(--bad); background: var(--bad-soft); }
-
-  .certainty { margin-top: 16px; padding: 12px 14px; background: var(--mist); border-radius: var(--r); }
-  .certainty legend { padding: 0; }
-  .certainty fieldset { border: 0; padding: 0; margin: 0; }
-
-  .intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; margin: 16px 0; }
-  .tile { background: var(--mist); border-radius: var(--r); padding: 14px; }
-  .tile b { display: block; margin-bottom: 4px; }
-
-  .results { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
-  .res { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; padding: 12px 14px; border-radius: var(--r); border: 1.5px solid var(--line); background: var(--paper); }
-  .res .ic { grid-row: 1 / span 2; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; }
-  .res .st { font-weight: 800; }
-  .res .why { color: var(--muted); font-size: 14px; }
-  .res.mastered { border-color: var(--ok); } .res.mastered .ic { background: var(--ok-soft); color: var(--ok); }
-  .res.unsure { border-color: var(--warn); } .res.unsure .ic { background: var(--warn-soft); color: var(--warn); }
-  .res.practice { border-color: var(--bad); } .res.practice .ic { background: var(--bad-soft); color: var(--bad); }
-  .res.priority { border: 2px dashed var(--bad); } .res.priority .ic { background: var(--bad); color: var(--paper); }
+  .dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .g5 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+  .chip { display: inline-block; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
+  .chip.teal { color: var(--teal); } .chip.ok { color: var(--ok); } .chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); }
+  .chip.cyan { color: var(--cyan); } .chip.lilac { color: var(--lilac); } .chip.fill { background: var(--teal); color: var(--paper); border-color: var(--teal); }
   .note { font-size: 13px; color: var(--muted); }
-  footer { font-size: 13px; color: var(--muted); }
-  footer .wrap { padding-block: 0 32px; }
-  @media (prefers-reduced-motion: no-preference) { .screen { animation: in .25s ease-out; } @keyframes in { from { opacity: .9; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+  .dark .note { color: var(--soft); }
+  .icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; background: var(--teal-soft); color: var(--teal); }
+  .dark .icon { background: var(--ink-2); color: var(--cyan); }
+  .icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 10px; padding: 9px 16px; font-weight: 800; cursor: pointer; text-decoration: none; }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary span { color: var(--cyan); }
+  details > summary { cursor: pointer; font-weight: 800; color: var(--teal); }
+  details[open] > summary { margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 800; padding: 6px 8px; border-bottom: 1.5px solid var(--line); }
+  td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tw { overflow-x: auto; }
+
+  /* Home */
+  .hero { position: relative; overflow: hidden; border-radius: 18px; padding: clamp(24px, 5vw, 48px); }
+  .hero::before { content: ""; position: absolute; right: -120px; top: -160px; width: 560px; height: 560px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,245,254,.30), rgba(184,149,255,.18) 45%, transparent 70%); pointer-events: none; }
+  .hero h1 { font-size: clamp(30px, 5vw, 52px); font-weight: 300; line-height: 1.1; margin: 8px 0 14px; max-width: 18ch; position: relative; }
+  .hero h1 b { color: var(--cyan); font-weight: 800; }
+  .hero p { color: var(--soft); max-width: 62ch; margin: 0 0 8px; position: relative; font-size: 17px; }
+  .hero .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; position: relative; }
+  .stat b { display: block; font-size: 34px; font-weight: 800; color: var(--cyan); line-height: 1; }
+  .stat span { font-size: 13px; color: var(--soft); }
+  .deliv { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; transition: transform .15s, border-color .15s; }
+  .deliv:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .deliv .num { font-size: 13px; font-weight: 800; color: var(--teal); }
+  .deliv p { margin: 0; color: var(--muted); font-size: 14px; }
+  .deliv .go { margin-top: auto; font-weight: 800; color: var(--teal); font-size: 14px; }
+
+  /* Carousel */
+  .carousel { position: relative; }
+  .slides { position: relative; }
+  .slide { border-radius: 18px; padding: clamp(18px, 3.5vw, 36px); min-height: 560px; display: flex; flex-direction: column; gap: 18px; }
+  .slide[hidden] { display: none; }
+  .slide h2 { font-size: clamp(24px, 3.4vw, 36px); font-weight: 300; line-height: 1.15; }
+  .slide h2 b { font-weight: 800; color: var(--cyan); }
+  .slide.light h2 b { color: var(--teal); }
+  .slide.light { background: var(--paper); border: 1px solid var(--line); }
+  .cnav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .dots { display: flex; gap: 8px; flex-wrap: wrap; }
+  .dots button { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--muted); }
+  .dots button[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .arrows { display: flex; gap: 8px; align-items: center; }
+  .arrows .count { font-size: 13px; color: var(--muted); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* Slide 1 */
+  .sym { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: var(--r); background: var(--ink-2); border: 1.5px solid var(--ink-2); }
+  .sym.inside { border: 1.5px dashed var(--lilac); }
+  .sym .t { font-weight: 800; font-size: 15px; }
+  .sym .c { font-size: 13px; color: var(--soft); }
+  .sym .chip { align-self: flex-start; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; padding: 14px 18px; border-radius: var(--r); background: var(--ink-2); }
+  .verdict .big { font-size: 40px; font-weight: 800; color: var(--cyan); line-height: 1; }
+  .verdict p { margin: 0; max-width: 60ch; }
+
+  /* Slide 2 */
+  .proof { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .proof:last-child { border-bottom: 0; }
+  .proof .num { flex: none; width: 128px; font-size: 21px; font-weight: 800; color: var(--teal); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .proof b { display: block; }
+  .proof span { font-size: 14px; color: var(--muted); }
+  .scen { background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .scen .row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* Slide 3 */
+  .pillar { border-radius: var(--r); padding: 16px; background: var(--mist); display: flex; flex-direction: column; gap: 10px; }
+  .pillar h3 { display: flex; align-items: center; gap: 10px; }
+  .pillar ul { margin: 0; padding-left: 18px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .timeline { display: grid; grid-template-columns: 3fr 7fr 3fr; gap: 6px; }
+  .phase { background: var(--ink); color: var(--paper); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 0; }
+  .phase b { color: var(--cyan); display: block; }
+  .phase .gate { color: var(--soft); display: block; margin-top: 2px; }
+  @media (max-width: 640px) { .timeline { grid-template-columns: 1fr; } }
+  .decision { border: 1.5px solid var(--teal); border-radius: var(--r); padding: 12px 14px; font-size: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 10px; }
+  .decision div { min-width: 0; }
+  .decision .lab { font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* Slide 4 */
+  .objective { background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 14px 18px; }
+  .objective b { color: var(--cyan); }
+  .level { border-radius: var(--r); padding: 16px; background: var(--mist); display: flex; flex-direction: column; gap: 10px; }
+  .level .k { font-size: 12px; font-weight: 800; color: var(--teal); }
+  .level ul { margin: 0; padding-left: 18px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .horizon { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; font-size: 13px; }
+  .horizon div { background: var(--paper); border-radius: 8px; padding: 8px 10px; }
+  .horizon b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .rules { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* Slide 5 */
+  .risk { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.3fr); gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--ink-3); }
+  .risk:last-child { border-bottom: 0; }
+  .risk .r { font-weight: 800; }
+  .risk .a { color: var(--cyan); text-align: center; font-weight: 800; }
+  .risk .m { color: var(--soft); font-size: 14px; }
+  @media (max-width: 640px) { .risk { grid-template-columns: 1fr; } .risk .a { text-align: left; } }
+  .q { background: var(--ink-2); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+  .next { border: 1.5px solid var(--cyan); border-radius: var(--r); padding: 14px 18px; }
+  .next b { color: var(--cyan); }
+
+  /* Storyboard */
+  .flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .flow .st { background: var(--ink); color: var(--paper); border-radius: 10px; padding: 10px 12px; position: relative; }
+  .flow .st b { display: block; font-size: 14px; }
+  .flow .st span { font-size: 12px; color: var(--soft); }
+  .flow .st.hl { background: var(--teal); }
+  .flow .st.hl span { color: var(--paper); }
+  @media (max-width: 760px) { .flow { grid-template-columns: 1fr 1fr; } }
+  .screen { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); padding: 0; overflow: hidden; }
+  .screen summary { list-style: none; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; color: var(--ink); }
+  .screen summary::-webkit-details-marker { display: none; }
+  .screen summary .no { width: 40px; height: 40px; border-radius: 10px; background: var(--mist); display: grid; place-items: center; font-weight: 800; color: var(--teal); }
+  .screen summary .tt { font-weight: 800; }
+  .screen summary .ds { display: block; font-weight: 400; font-size: 14px; color: var(--muted); }
+  .screen summary .tog { font-size: 13px; color: var(--teal); font-weight: 800; }
+  .screen summary .tog::after { content: "View detail ▾"; }
+  .screen[open] summary .tog::after { content: "Hide ▴"; }
+  .screen .body { padding: 0 16px 16px; }
+  .screen dl { margin: 0; display: grid; grid-template-columns: minmax(120px, max-content) minmax(0, 1fr); gap: 6px 14px; font-size: 14px; }
+  .screen dt { font-weight: 800; color: var(--teal); }
+  .screen dd { margin: 0; }
+  .screen.built { border-color: var(--teal); }
+  @media (max-width: 560px) { .screen dl { grid-template-columns: 1fr; } }
+
+  /* Adoption */
+  .aud { display: flex; flex-direction: column; gap: 10px; }
+  .aud .top2 { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .aud .row { font-size: 14px; }
+  .aud .row b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .lanes { display: grid; grid-template-columns: 130px repeat(3, minmax(0, 1fr)); gap: 6px; font-size: 14px; }
+  .lanes .h { background: var(--ink); color: var(--paper); border-radius: 10px; padding: 10px 12px; }
+  .lanes .h b { color: var(--cyan); display: block; font-size: 12px; }
+  .lanes .ln { background: var(--ink-2); color: var(--paper); border-radius: 10px; padding: 10px 12px; font-weight: 800; display: flex; align-items: center; }
+  .lanes .ln.tg { background: var(--teal); }
+  .lanes .c { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .lanes .c.tg { border: 1.5px solid var(--teal); font-weight: 700; }
+  .lanes .blank { background: transparent; }
+  @media (max-width: 820px) { .lanes { grid-template-columns: 1fr; } .lanes .blank { display: none; } }
+  .commit { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 4px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .commit:last-child { border-bottom: 0; }
+  .commit .when { font-weight: 800; color: var(--teal); font-size: 14px; }
+  .commit .what { font-weight: 800; }
+  .commit .if { grid-column: 2; font-size: 14px; color: var(--muted); }
+  @media (max-width: 560px) { .commit { grid-template-columns: 1fr; } .commit .if { grid-column: 1; } }
+
+  /* AI */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; }
+  .stp { background: var(--ink-2); border-radius: var(--r); padding: 14px; }
+  .stp .n { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--cyan); color: var(--cyan); display: grid; place-items: center; font-weight: 800; margin-bottom: 8px; }
+  .stp p { margin: 4px 0 0; font-size: 14px; color: var(--soft); }
+  .dec { display: flex; flex-direction: column; gap: 12px; }
+  .dec > .chip { align-self: flex-start; }
+  .dec .item { border-top: 1px solid var(--line); padding-top: 12px; font-size: 14px; }
+  .dec .item b { display: block; font-size: 15px; }
+  .dec .item .why { color: var(--muted); }
+  .guard { display: flex; gap: 12px; align-items: flex-start; }
+
+  footer.site { font-size: 13px; color: var(--muted); }
+  footer.site .wrap { padding-block: 0 32px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="top">
   <div class="wrap">
-    <div class="brandrow">
-      <div>
-        <div class="eyebrow">KYC onboarding · Step module</div>
-        <h1>Spot inconsistencies <b>before you submit a file</b></h1>
-      </div>
-      <span class="badge">Prototype · Sample data only</span>
-    </div>
-    <nav aria-label="Module progress"><ol class="progress" id="progress"></ol></nav>
+    <a class="brand" href="#home"><small>Learning &amp; change challenge</small><span>KYC process <b>adoption</b></span></a>
+    <nav class="menu" aria-label="Deliverables">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#recommendation"><span class="n">1</span>Recommendation</a></li>
+        <li><a href="#storyboard"><span class="n">2</span>Storyboard</a></li>
+        <li><a href="#prototype"><span class="n">3</span>Prototype</a></li>
+        <li><a href="#adoption"><span class="n">4</span>Adoption plan</a></li>
+        <li><a href="#ai"><span class="n">5</span>AI use</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
-<main id="main"><div class="wrap" id="stage"></div></main>
-<div class="sr" aria-live="polite" id="live"></div>
-<footer><div class="wrap">Learning prototype designed by Leticia Castañeda. All names, data and documents are fictional, and the rules shown (such as the 3-month validity of a proof of address) are examples for practice only.</div></footer>
+<main id="main" tabindex="-1">
+
+<!-- ================= HOME ================= -->
+<section class="view" id="home" aria-labelledby="h-home">
+  <div class="wrap stack">
+    <div class="hero dark">
+      <div class="eyebrow">Learning &amp; change recommendation</div>
+      <h1 id="h-home">Six months in, the process exists. <b>Now people need to use it.</b></h1>
+      <p>A client launched a new process to raise quality in a regulated, distributed operation. Metrics haven't moved. They asked for training; this is a plan for adoption, with training as one part of it.</p>
+      <div class="stats">
+        <div class="stat"><b>3 of 4</b><span>root causes sit outside the classroom</span></div>
+        <div class="stat"><b>90</b><span>days to a measurable improvement</span></div>
+        <div class="stat"><b>3</b><span>levels of measurement: learning, behavior, results</span></div>
+      </div>
+    </div>
+    <div class="grid g5">
+      <a class="card deliv" href="#recommendation"><span class="num">01</span><h3>Recommendation</h3><p>Diagnosis, assumptions, solution, measures and risks in five screens.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#storyboard"><span class="num">02</span><h3>Storyboard</h3><p>One objective, screen by screen, ending in a knowledge check.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#prototype"><span class="num">03</span><h3>Prototype</h3><p>Try the practice, the decision, the check and your results.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#adoption"><span class="num">04</span><h3>Adoption plan</h3><p>Who changes and how, who does what, and what the client commits to.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#ai"><span class="num">05</span><h3>AI use</h3><p>My method, and what I accepted, changed or rejected.</p><span class="go">Open →</span></a>
+    </div>
+    <p class="note">Scenario: the brief leaves industry and process open, so this work assumes a KYC (Know Your Customer) client-onboarding process at a multinational financial services firm. Client figures are assumptions; research figures are cited.</p>
+  </div>
+</section>
+
+<!-- ================= 1 RECOMMENDATION ================= -->
+<section class="view" id="recommendation" aria-labelledby="h-rec" hidden>
+  <div class="wrap">
+    <header><div class="eyebrow">Deliverable 1 · Learning &amp; change recommendation</div>
+      <h1 id="h-rec">Five screens, <b>one argument</b></h1>
+      <p class="lead">Use the arrows or your keyboard (← →) to move between screens.</p></header>
+
+    <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Recommendation in five screens">
+      <div class="slides">
+
+        <!-- Slide 1 -->
+        <article class="slide dark" role="group" aria-roledescription="slide" aria-label="1 of 5: Diagnosis">
+          <div class="eyebrow">1 · Understanding the request</div>
+          <h2>Training alone won't fix this: <b>3 of 4 root causes sit outside the classroom</b></h2>
+          <div class="grid g4">
+            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
+              <div class="t">Experienced staff revert to old methods</div><div class="c">The old way feels faster and safer</div><span class="chip lilac">Motivation · habit</span></div>
+            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg></div>
+              <div class="t">Documentation is hard to find and use</div><div class="c">Guidance lives outside the workflow</div><span class="chip lilac">Tools · environment</span></div>
+            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20c0-3 3-5 6-5s6 2 6 5"/><path d="M14 15.5c1-.3 2-.5 3-.5 3 0 5 2 5 5"/></svg></div>
+              <div class="t">Managers give inconsistent guidance</div><div class="c">Never calibrated on one standard</div><span class="chip lilac">Leadership</span></div>
+            <div class="sym inside"><div class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></div>
+              <div class="t">Employees aren't sure they apply it correctly</div><div class="c">No safe practice on real cases</div><span class="chip cyan">Knowledge · skill</span></div>
+          </div>
+          <div class="verdict"><span class="big">!</span><p><b>Underlying gap:</b> the client measures outcomes and course completion, not whether the process is actually followed. Communications, documents and manager support happened as activities, not as capability.</p></div>
+          <p class="note">Working diagnosis built from the brief only. Each gap is a hypothesis validated in weeks 1–3.</p>
+        </article>
+
+        <!-- Slide 2 -->
+        <article class="slide light" role="group" aria-roledescription="slide" aria-label="2 of 5: Assumptions and design rationale" hidden>
+          <div class="eyebrow">2 · Assumptions &amp; design rationale</div>
+          <h2>A realistic scenario and <b>five principles backed by evidence</b></h2>
+          <div class="grid g2" style="align-items:start">
+            <div class="stack">
+              <div class="scen dark">
+                <span class="eyebrow">Assumed scenario</span>
+                <div><b>KYC client onboarding</b> at a multinational financial services firm, standardized on a digital platform six months ago.</div>
+                <div class="row"><span class="chip cyan">~800 analysts &amp; leads</span><span class="chip cyan">Regional hubs</span><span class="chip cyan">Highly regulated</span></div>
+                <div class="note">If it doesn't apply, the approach still holds: only content and examples change.</div>
+              </div>
+              <details class="card"><summary>Operating assumptions (and what changes if they're false)</summary>
+                <div class="tw"><table><thead><tr><th>We assume</th><th>If false</th></tr></thead><tbody>
+                  <tr><td>The platform records each step</td><td>Check adherence through quality sampling and manager reviews</td></tr>
+                  <tr><td>Quality data splits by step, team and site</td><td>A sample audit builds the baseline</td></tr>
+                  <tr><td>The old method still runs outside the platform</td><td>Track workarounds inside the platform</td></tr>
+                  <tr><td>Compliance can review content in an agreed time</td><td>Narrow scope to the most critical steps</td></tr>
+                  <tr><td>Experts can give time to support peers</td><td>Managers take that role; slower progress</td></tr>
+                </tbody></table></div></details>
+            </div>
+            <div>
+              <div class="proof"><span class="num">System first</span><div><b>Fix the system before the course</b><span>Training fails when people return to an unchanged system.¹</span></div></div>
+              <div class="proof"><span class="num">11% → 7%</span><div><b>Support at the point of use</b><span>A one-page surgical checklist cut major complications in 8 countries.²</span></div></div>
+              <div class="proof"><span class="num">−62%</span><div><b>Learn from those who already succeed</b><span>Staff-designed practices cut ICU infections across U.S. veterans' hospitals.³</span></div></div>
+              <div class="proof"><span class="num">Feedback</span><div><b>Treat resistance as information</b><span>Vocal critics often spot real flaws in the change plan.⁴</span></div></div>
+              <div class="proof"><span class="num">143 vs 305 min</span><div><b>Leaders shape adoption</b><span>Same training, same surgery: how leaders framed it explained the gap between teams.⁵</span></div></div>
+            </div>
+          </div>
+          <p class="note">¹ Beer, HBS Working Knowledge / HBR · ² Haynes et al., NEJM 2009 · ³ Jain et al., NEJM 2011 · ⁴ Ford &amp; Ford, HBR 2009 · ⁵ Edmondson, Bohmer &amp; Pisano, ASQ 2001; Pisano et al., Management Science 2001</p>
+        </article>
+
+        <!-- Slide 3 -->
+        <article class="slide light" role="group" aria-roledescription="slide" aria-label="3 of 5: Proposed solution" hidden>
+          <div class="eyebrow">3 · Proposed solution</div>
+          <h2>One integrated solution: <b>learning, performance support and change enablement</b></h2>
+          <div class="grid g3">
+            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></span>Learning</h3>
+              <ul><li>Case-based assessment → a personal route by step</li><li>Short step modules with real cases from experts</li><li>Workshops only on the steps with most gaps</li><li>On-the-job verification by expert referents</li></ul></div>
+            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 14l2 2 4-4"/></svg></span>Performance support</h3>
+              <ul><li>One-page step guides at the point of use</li><li>One-page guide for managers</li><li>A no-blame channel to report friction</li><li>Phase 2: guided mode inside the platform</li></ul></div>
+            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 12h4l3-8 4 16 3-8h2"/></svg></span>Change enablement</h3>
+              <ul><li>Sponsor: quality over speed during the transition</li><li>Manager calibration + weekly file review</li><li>Experts as referents and co-designers</li><li>Listen, then report back what changes</li></ul></div>
+          </div>
+          <div class="decision" aria-label="Decision point: why experienced staff revert">
+            <div><span class="lab">Decision point</span><br><b>Why do experts revert?</b> Hypothesis: fluency → targeted practice + guides</div>
+            <div><span class="lab">If it clusters on one step</span><br>Fix the step with the process owner</div>
+            <div><span class="lab">If they feel loss of status</span><br>Expert-referent role</div>
+            <div><span class="lab">If nobody notices</span><br>Weekly manager review</div>
+          </div>
+          <div class="timeline" aria-label="90-day timeline">
+            <div class="phase"><b>Weeks 1–3</b>Align &amp; diagnose<span class="gate">◆ Decision gate</span></div>
+            <div class="phase"><b>Weeks 4–10</b>Enable: guides, calibrated managers, learning routes<span class="gate">◆ Reassessment in week 10</span></div>
+            <div class="phase"><b>Weeks 11–13</b>Reinforce &amp; measure<span class="gate">◆ Day-90 review</span></div>
+          </div>
+        </article>
+
+        <!-- Slide 4 -->
+        <article class="slide light" role="group" aria-roledescription="slide" aria-label="4 of 5: Measuring success" hidden>
+          <div class="eyebrow">4 · Measuring success</div>
+          <h2>Measured at <b>three levels</b>, against a baseline set in week 1</h2>
+          <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against the baseline.</div>
+          <div class="grid g3">
+            <div class="level"><span class="k">LEARNING · Kirkpatrick 2</span><h3>Do they know how?</h3>
+              <ul><li>Mastery by step, with a certainty rating</li><li>Confident wrong answers flagged first</li></ul>
+              <div class="horizon"><div><b>Day 90</b>Critical steps</div><div><b>Beyond</b>All steps</div></div></div>
+            <div class="level"><span class="k">BEHAVIOR · Kirkpatrick 3 · Prosci</span><h3>Do they do it?</h3>
+              <ul><li>% analysts verified by referents</li><li>% files following the full flow (+ quality)</li><li>Deviations by step and cause</li><li>Manager agreement · weekly reviews held</li></ul>
+              <div class="horizon"><div><b>Day 90</b>Adherence rising</div><div><b>Beyond</b>Stable habit</div></div></div>
+            <div class="level"><span class="k">RESULTS · Kirkpatrick 4</span><h3>Does quality improve?</h3>
+              <ul><li>First-time-right files by step, team, site</li><li>Gap between best and worst teams</li></ul>
+              <div class="horizon"><div><b>Day 90</b>Early improvement</div><div><b>Beyond</b>Fewer audit findings</div></div></div>
+          </div>
+          <div class="rules"><span class="chip teal">Adherence always paired with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed against the baseline</span><span class="chip teal">Success-case interviews explain the numbers</span></div>
+        </article>
+
+        <!-- Slide 5 -->
+        <article class="slide dark" role="group" aria-roledescription="slide" aria-label="5 of 5: Risks and open questions" hidden>
+          <div class="eyebrow">5 · Risks &amp; open questions</div>
+          <h2>What could <b>derail adoption</b>, and what we need to ask</h2>
+          <div class="grid g2" style="align-items:start">
+            <div>
+              <div class="risk"><span class="r">Learning doesn't transfer</span><span class="a">→</span><span class="m">Spaced practice, step guides, on-the-job verification</span></div>
+              <div class="risk"><span class="r">People game the metrics</span><span class="a">→</span><span class="m">Private individual results; adherence paired with quality</span></div>
+              <div class="risk"><span class="r">Managers return to volume</span><span class="a">→</span><span class="m">Sponsor sets quality first; weekly review; recalibration in week 7</span></div>
+              <div class="risk"><span class="r">Approvals or data slip</span><span class="a">→</span><span class="m">Review windows agreed in week 1; assessment can start first</span></div>
+              <div class="risk"><span class="r">It's the process, not the people</span><span class="a">→</span><span class="m">Friction channel from week 1; process owner at the decision gate</span></div>
+            </div>
+            <div class="stack">
+              <span class="eyebrow">Questions for the client</span>
+              <div class="grid g2" style="gap:8px">
+                <div class="q">Do you measure if the process is followed, or only outcomes?</div>
+                <div class="q">Which steps concentrate errors? Which teams do best?</div>
+                <div class="q">Who sponsors the change, and how visibly?</div>
+                <div class="q">Do team metrics reward speed over quality?</div>
+                <div class="q">Who approves changes to the process and platform?</div>
+                <div class="q">Did launch training reach every profile, shift and site?</div>
+              </div>
+            </div>
+          </div>
+          <div class="next"><b>Next step:</b> a week-1 session with the sponsor to agree success metrics, data access and Compliance review windows.</div>
+        </article>
+      </div>
+
+      <div class="cnav">
+        <div class="dots" role="group" aria-label="Choose a screen">
+          <button type="button" aria-current="true">1 Diagnosis</button><button type="button">2 Rationale</button><button type="button">3 Solution</button><button type="button">4 Measures</button><button type="button">5 Risks</button>
+        </div>
+        <div class="arrows"><button class="btn" type="button" data-dir="-1" aria-label="Previous screen">←</button><span class="count" aria-live="polite">1 / 5</span><button class="btn primary" type="button" data-dir="1" aria-label="Next screen"><span>→</span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 2 STORYBOARD ================= -->
+<section class="view" id="storyboard" aria-labelledby="h-sb" hidden>
+  <div class="wrap stack">
+    <header><div class="eyebrow">Deliverable 2 · Storyboard excerpt</div>
+      <h1 id="h-sb">Spot inconsistencies <b>before a file is submitted</b></h1>
+      <p class="lead">One module from each analyst's learning route. See the flow at a glance; open any screen for the detail a stakeholder needs to review it.</p></header>
+
+    <div class="card dark"><span class="eyebrow">Learning objective</span>
+      <p style="margin:6px 0 0;font-size:18px">Given a client file, the analyst identifies inconsistencies between the identity documents and the data captured in the platform (name, ID number, date of birth, address and document validity) and chooses the right next action before submitting it.</p></div>
+
+    <div class="grid g4">
+      <div class="card"><span class="eyebrow">Audience</span><p style="margin:4px 0 0">Analysts whose assessment showed gaps in this step</p></div>
+      <div class="card"><span class="eyebrow">Format</span><p style="margin:4px 0 0">Self-paced online · ~12 min · desktop and mobile</p></div>
+      <div class="card"><span class="eyebrow">Strategy</span><p style="margin:4px 0 0">Scenario-based; support fades from example to solo practice</p></div>
+      <div class="card"><span class="eyebrow">Reviewers</span><p style="margin:4px 0 0">Process owner, Compliance, two expert referents</p></div>
+    </div>
+
+    <div class="flow" aria-label="Learning flow">
+      <div class="st"><b>Why it matters</b><span>Screens 1–3</span></div>
+      <div class="st"><b>See it done</b><span>Screens 4–5</span></div>
+      <div class="st hl"><b>Practice with support</b><span>Screen 6 · in prototype</span></div>
+      <div class="st hl"><b>Practice alone</b><span>Screens 7–9 · 7–8 in prototype</span></div>
+      <div class="st hl"><b>Check</b><span>Screens 10–16 · 11–13, 16 in prototype</span></div>
+    </div>
+
+    <div class="stack" style="gap:8px">
+      <details class="screen"><summary><span class="no">1–3</span><span><span class="tt">Why it matters</span><span class="ds">A returned file opens the module, not a list of rules</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>On-screen text</dt><dd>“This file came back from Quality. One date didn't match the ID. Result: two days of rework.” Then the objective in plain English, and Ana, the analyst we follow.</dd>
+          <dt>Interaction</dt><dd>Reads and continues; practice is announced as not graded.</dd>
+          <dt>Visual &amp; access</dt><dd>Illustration of a returned file with alt text; progress bar in five stages.</dd></dl></div></details>
+      <details class="screen"><summary><span class="no">4–5</span><span><span class="tt">See it done</span><span class="ds">The step guide's five checks, then a worked example</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>On-screen text</dt><dd>Five cards: name, ID number, date of birth, address, document validity. “Watch Ana check Daniel's file, one field at a time.”</dd>
+          <dt>Interaction</dt><dd>Opens each card; steps through the example until the date-of-birth mismatch is highlighted.</dd>
+          <dt>Feedback</dt><dd>“14/03 on the ID, 14/08 in the platform. A capture error: correct it from the document.”</dd>
+          <dt>Accessibility</dt><dd>Cards are buttons with visible focus; nothing locks progress.</dd></dl></div></details>
+      <details class="screen built"><summary><span class="no">6</span><span><span class="tt">Practice 1 · with support <span class="chip fill">In prototype</span></span><span class="ds">Find the one field that doesn't match</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>Interaction</dt><dd>Select the mismatching field by click, tap or list. Hint and guide available. Two attempts, then the answer is shown.</dd>
+          <dt>Feedback</dt><dd>Correct: “The last two digits are swapped. One wrong digit makes the check fail.” Incorrect: “That field matches. Compare the ID number digit by digit.”</dd>
+          <dt>Accessibility</dt><dd>List alternative to clicking; feedback read by screen readers; icon + text, never color alone.</dd></dl></div></details>
+      <details class="screen built"><summary><span class="no">7</span><span><span class="tt">Practice 2 · on your own <span class="chip fill">In prototype</span></span><span class="ds">Two inconsistencies, no hints</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>Interaction</dt><dd>Select up to two fields; one attempt; guide still open.</dd>
+          <dt>Feedback</dt><dd>Per field: address typed 210 vs 120 on the proof; proof of address older than 3 months (sample policy). Missed fields are outlined.</dd></dl></div></details>
+      <details class="screen built"><summary><span class="no">8</span><span><span class="tt">Decide the next action <span class="chip fill">In prototype</span></span><span class="ds">Correct the capture, request a document or escalate</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>Interaction</dt><dd>One action per inconsistency.</dd>
+          <dt>Feedback</dt><dd>“Escalate when something suggests risk or alteration, not for routine fixes.”</dd></dl></div></details>
+      <details class="screen"><summary><span class="no">9–10</span><span><span class="tt">Expert tip, then the check</span><span class="ds">A referent names the old habit without blaming anyone</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>On-screen text</dt><dd>“The habit that hurts most is copying data from a client's previous file. Always capture from the document in front of you.”</dd>
+          <dt>Media</dt><dd>Optional 45–60 s audio with captions and transcript; never autoplays.</dd></dl></div></details>
+      <details class="screen built"><summary><span class="no">11–15</span><span><span class="tt">Knowledge check <span class="chip fill">3 of 5 in prototype</span></span><span class="ds">Five files, one per check, each with a certainty rating</span></span><span class="tog"></span></summary>
+        <div class="body"><div class="tw"><table><thead><tr><th>Check</th><th>Sample file</th><th>Correct answer</th></tr></thead><tbody>
+          <tr><td>Name</td><td>“Ana Lucía” on the ID, “Ana” in the platform</td><td>Name mismatch</td></tr>
+          <tr><td>Validity</td><td>ID expired last month</td><td>Request a valid ID</td></tr>
+          <tr><td>Date of birth</td><td>05/11 vs 11/05</td><td>Mismatch · correct the capture</td></tr>
+          <tr><td>Address</td><td>“45” on the proof, “45-B” in the platform</td><td>Request clarification</td></tr>
+          <tr><td>ID number</td><td>Digits differ and font looks altered</td><td>Escalate to Compliance</td></tr></tbody></table></div>
+          <p class="note">Scoring per check: correct with medium or high certainty = mastered · correct with low = unsure · wrong = keep practicing · wrong with high certainty = priority.</p></div></details>
+      <details class="screen built"><summary><span class="no">16</span><span><span class="tt">Your results <span class="chip fill">In prototype</span></span><span class="ds">Status by check and the next step on the learner's route</span></span><span class="tog"></span></summary>
+        <div class="body"><dl>
+          <dt>Next step</dt><dd>Gaps add the matching workshop; all mastered → verification with an expert referent.</dd>
+          <dt>Privacy</dt><dd>Learner sees full detail; manager sees required workshops; client sees totals by step and team.</dd></dl></div></details>
+    </div>
+
+    <div class="grid g3">
+      <div class="card"><h3>Assessment</h3><p class="note" style="font-size:14px;margin:6px 0 0">Immediate feedback in practice. Certainty-based knowledge check that flags confident misconceptions. Results by check, not a single score; not used in performance reviews.</p></div>
+      <div class="card"><h3>Accessibility · WCAG 2.2 AA</h3><p class="note" style="font-size:14px;margin:6px 0 0">Keyboard and list alternatives to every image task, alt text, captions, no color-only cues, AA contrast, no time limits, works at 200% zoom and on mobile.</p></div>
+      <div class="card"><h3>Visual &amp; media</h3><p class="note" style="font-size:14px;margin:6px 0 0">Dark title screens, light reading screens. Mock platform and documents marked “Sample”. Illustrations, not photos. One optional audio tip.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 PROTOTYPE ================= -->
+<section class="view" id="prototype" aria-labelledby="h-pr" hidden>
+  <div class="wrap stack">
+    <header><div class="eyebrow">Deliverable 3 · Developed learning sample</div>
+      <h1 id="h-pr">Try it: <b>practice, decide, check</b></h1>
+      <p class="lead">Built from storyboard screens 6–8, 11–13 and 16. About 6 minutes. All data is fictional.</p></header>
+    <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="prototype.html" target="_blank" rel="noopener">Open full screen <span>↗</span></a></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <iframe src="prototype.html" title="Learning prototype: spot inconsistencies before submitting a KYC file" style="width:100%;height:900px;border:0;display:block" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4 ADOPTION ================= -->
+<section class="view" id="adoption" aria-labelledby="h-ad" hidden>
+  <div class="wrap stack">
+    <header><div class="eyebrow">Deliverable 4 · Change enablement artifact: adoption plan excerpt</div>
+      <h1 id="h-ad">Four audiences, four changes, <b>one plan</b></h1>
+      <p class="lead">Resistance is treated as information: every reversion or complaint tells us whether the gap is in the person, the tool or the process.</p></header>
+
+    <div class="grid g4">
+      <div class="card aud"><div class="top2"><h3>Sponsor</h3><span class="chip teal">Sets direction</span></div>
+        <div class="row"><b>What changes</b>Puts quality over speed, visibly</div>
+        <div class="row"><b>How we drive it</b>Week-1 success definition, opening message, decision gates</div>
+        <div class="row"><b>Signal</b>Message sent; attends the gates</div></div>
+      <div class="card aud"><div class="top2"><h3>Managers</h3><span class="chip warn">Reinforcement</span></div>
+        <div class="row"><b>What changes</b>One shared standard, reinforced weekly</div>
+        <div class="row"><b>How we drive it</b>Calibration on real files, one-page guide, weekly review</div>
+        <div class="row"><b>Signal</b>Agreement on the same files; reviews held</div></div>
+      <div class="card aud"><div class="top2"><h3>Experts</h3><span class="chip bad">Desire</span></div>
+        <div class="row"><b>What changes</b>From the old method to referents of the new</div>
+        <div class="row"><b>How we drive it</b>Part of the diagnosis; co-design cases; verify peers</div>
+        <div class="row"><b>Signal</b>Fewer reversions; verifications done</div></div>
+      <div class="card aud"><div class="top2"><h3>Analysts</h3><span class="chip ok">Knowledge · Ability</span></div>
+        <div class="row"><b>What changes</b>Master critical steps; report friction</div>
+        <div class="row"><b>How we drive it</b>Personal route, step guides, workshops, verification</div>
+        <div class="row"><b>Signal</b>Mastery by step; first-time-right files</div></div>
+    </div>
+
+    <div class="card stack">
+      <h3>Who does what, and when · design, co-facilitate, hand over</h3>
+      <div class="lanes" role="table" aria-label="Responsibilities by phase">
+        <div class="blank" role="cell"></div>
+        <div class="h" role="columnheader"><b>Weeks 1–3</b>Align &amp; diagnose</div>
+        <div class="h" role="columnheader"><b>Weeks 4–10</b>Enable</div>
+        <div class="h" role="columnheader"><b>Weeks 11–13</b>Reinforce &amp; measure</div>
+        <div class="ln" role="rowheader">Consulting team</div>
+        <div class="c" role="cell">Baseline · survey &amp; interviews · case-based assessment · facilitate calibration</div>
+        <div class="c" role="cell">Step guides · manager guide · modules · workshops · calibrate referents</div>
+        <div class="c" role="cell">Results · success-case interviews · phase 2 roadmap</div>
+        <div class="ln tg" role="rowheader">Together</div>
+        <div class="c tg" role="cell">◆ Decision gate: confirm causes, pick 2–3 critical steps</div>
+        <div class="c tg" role="cell">Report back what we heard · ◆ Recalibration (week 7)</div>
+        <div class="c tg" role="cell">◆ Day-90 review</div>
+        <div class="ln" role="rowheader">Client</div>
+        <div class="c" role="cell">Sponsor message · data · access to people · Compliance validates cases</div>
+        <div class="c" role="cell">Approvals · process fixes · weekly manager review · referents' time · attendance</div>
+        <div class="c" role="cell">Visible recognition · phase 2 decision</div>
+      </div>
+      <p class="note">The consulting team never decides the KYC criteria: the process owner and Compliance do.</p>
+    </div>
+
+    <div class="card">
+      <h3>What we need from the client</h3>
+      <div class="commit"><span class="when">Week 1</span><span class="what">A sponsor with a visible agenda and opening message</span><span class="if">If it slips: the quality-first priority doesn't reach managers</span></div>
+      <div class="commit"><span class="when">Week 2</span><span class="what">Quality data by step, team and site</span><span class="if">If it slips: the baseline moves; the assessment runs first</span></div>
+      <div class="commit"><span class="when">Weeks 2–5</span><span class="what">Compliance reviews within an agreed window</span><span class="if">If it slips: each week of delay moves the workshops a week</span></div>
+      <div class="commit"><span class="when">From week 1</span><span class="what">Allocated hours for expert referents</span><span class="if">If it slips: no on-the-job verification</span></div>
+      <div class="commit"><span class="when">Weeks 2, 5, 7</span><span class="what">Managers in calibration and the weekly review</span><span class="if">If it slips: training loses its reinforcement</span></div>
+      <div class="commit"><span class="when">Weeks 6–9</span><span class="what">Attendance according to each analyst's route</span><span class="if">If it slips: mastery by step doesn't improve</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5 AI ================= -->
+<section class="view" id="ai" aria-labelledby="h-ai" hidden>
+  <div class="wrap stack">
+    <header><div class="eyebrow">Deliverable 5 · AI use statement</div>
+      <h1 id="h-ai">I led the thinking; AI <b>researched, challenged and drafted</b></h1>
+      <p class="lead">Tool: Claude (Anthropic), used as a research and drafting partner, with every decision logged.</p></header>
+
+    <div class="card dark stack">
+      <span class="eyebrow">My method</span>
+      <div class="steps">
+        <div class="stp"><span class="n">1</span><b>Read the case myself</b><p>Symptoms, contradictions and gaps, before asking AI</p></div>
+        <div class="stp"><span class="n">2</span><b>Research and verify</b><p>Every figure checked against its primary source</p></div>
+        <div class="stp"><span class="n">3</span><b>Diagnose with a matrix</b><p>Symptom → cause → validation → action, corrected row by row</p></div>
+        <div class="stp"><span class="n">4</span><b>Design and build</b><p>AI drafted the materials; I reviewed and redirected them</p></div>
+        <div class="stp"><span class="n">5</span><b>Log every decision</b><p>What I asked, what AI returned, what I decided</p></div>
+      </div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card dec"><span class="chip ok">Accepted</span>
+        <div class="item"><b>Split gaps into assumptions and open questions</b><span class="why">It answers the brief and makes my reasoning visible.</span></div>
+        <div class="item"><b>A hypothesis-driven matrix</b><span class="why">It let me design actions without client data; I corrected each row myself.</span></div></div>
+      <div class="card dec"><span class="chip warn">Modified</span>
+        <div class="item"><b>Case results from secondary sites</b><span class="why">I required primary sources; one figure changed (VA: 62% in ICUs, 45% elsewhere, not 65%).</span></div>
+        <div class="item"><b>Principles cited only as references</b><span class="why">Rewritten as proof points a reader understands without context.</span></div></div>
+      <div class="card dec"><span class="chip bad">Rejected / overridden</span>
+        <div class="item"><b>A palette from EPAM's previous identity</b><span class="why">Replaced with the current official palette, confirmed against brand images.</span></div>
+        <div class="item"><b>The first learning objective proposed</b><span class="why">I chose a clearer one, closer to the errors that send files back.</span></div></div>
+    </div>
+
+    <div class="card stack">
+      <h3>My guardrails as the human in the loop</h3>
+      <div class="grid g4">
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 19V5h11l5 5v9z"/><path d="M9 14l2 2 4-4"/></svg></span><div><b>Sources</b><div class="note">Every figure traces to its original study</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span><div><b>Assumptions</b><div class="note">Stated as assumptions, never as facts</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div><b>Privacy</b><div class="note">No real personal or client data</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Decisions</b><div class="note">AI proposed options; I chose and rewrote</div></div></div>
+      </div>
+      <p class="note">Both ways: I also asked AI to critique my own drafts objectively. When it found flaws (mixed focus groups, metrics used as early penalties), I reworked the actions myself.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site"><div class="wrap">Designed by Leticia Castañeda. The scenario and all client data are illustrative; research sources are cited where used.</div></footer>
 
 <script>
 (() => {
-  const TODAY = "30/10/2026";
-  const STEPS = ["Start", "Practice 1", "Practice 2", "Decide", "Check", "Results"];
-  const GUIDE = [
-    ["Name", "Matches the ID exactly, including every given name and surname."],
-    ["ID number", "Every digit matches the document. Read long numbers in pairs."],
-    ["Date of birth", "Day, month and year match. Watch the day/month order."],
-    ["Address", "Matches a proof of address issued in the last 3 months (sample policy)."],
-    ["Document validity", "The ID is in date and shows no signs of alteration."],
-  ];
-  const state = { step: 0, kc: {}, kcIndex: 0 };
-  const $ = (s, el = document) => el.querySelector(s);
-  const stage = $("#stage"), live = $("#live");
-  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const announce = (t) => { live.textContent = ""; setTimeout(() => { live.textContent = t; }, 30); };
+  const views = [...document.querySelectorAll("section.view")];
+  const links = [...document.querySelectorAll("nav.menu a")];
+  const ids = views.map((v) => v.id);
+  function route() {
+    const id = ids.includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
+    views.forEach((v) => { v.hidden = v.id !== id; });
+    links.forEach((a) => { if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    window.scrollTo(0, 0);
+    const h = document.querySelector(`#${id} h1`); if (h && document.activeElement && document.activeElement.tagName === "A") { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
+  }
+  window.addEventListener("hashchange", route); route();
 
-  function renderProgress() {
-    const ol = $("#progress");
-    const idx = state.step <= 3 ? state.step : state.step <= 6 ? 4 : 5;
-    ol.innerHTML = STEPS.map((s, i) => `<li ${i === idx ? 'aria-current="step"' : ""} class="${i < idx ? "done" : ""}">${s}</li>`).join("");
-  }
-  function guideAside() {
-    return `<aside class="guide" aria-labelledby="g-h"><h3 id="g-h">Step guide: five checks</h3>
-      <p class="small">The same guide you use on the job. Keep it open while you practice.</p>
-      <ol>${GUIDE.map(([a, b]) => `<li><b>${a}.</b> <span class="rule">${b}</span></li>`).join("")}</ol></aside>`;
-  }
-  function idCard(d) {
-    return `<div class="doc" role="group" aria-label="Identity document, sample"><div class="dochead">Identity document · sample</div>
-      <div class="docbody"><div class="photo" aria-hidden="true"><span></span></div>
-      <dl class="kv"><dt>Name</dt><dd>${esc(d.name)}</dd><dt>ID number</dt><dd>${esc(d.id)}</dd><dt>Date of birth</dt><dd>${esc(d.dob)}</dd><dt>Valid until</dt><dd>${esc(d.valid)}</dd></dl></div></div>`;
-  }
-  function addressCard(d) {
-    return `<div class="doc" role="group" aria-label="Proof of address, sample"><div class="dochead">Proof of address · utility bill · sample</div>
-      <dl class="kv"><dt>Holder</dt><dd>${esc(d.holder)}</dd><dt>Address</dt><dd>${esc(d.address)}</dd><dt>Issued</dt><dd>${esc(d.issued)}</dd></dl></div>`;
-  }
-  function platform(fields, label) {
-    return `<div class="platform"><div class="bar"><span>KYC platform · Identity verification</span><span>${esc(label)}</span></div>
-      <ul class="fields">${fields.map((f) => `<li><button type="button" class="field" data-key="${f.key}" aria-pressed="false">
-        <span class="lbl">${esc(f.label)}</span><span class="val">${esc(f.value)}</span><span class="tag" aria-hidden="true"></span></button></li>`).join("")}</ul></div>`;
-  }
-  function altSelect(fields, id, multiple) {
-    return `<div class="alt"><label for="${id}">Or choose ${multiple ? "fields" : "the field"} from a list:</label>
-      <select id="${id}" ${multiple ? "multiple size=\"5\"" : ""}>${multiple ? "" : '<option value="">Select a field</option>'}${fields.map((f) => `<option value="${f.key}">${esc(f.label)}</option>`).join("")}</select></div>`;
-  }
-  function wireFields(root, max, onChange) {
-    const btns = [...root.querySelectorAll(".field")];
-    const sel = root.querySelector("select");
-    const sync = () => { const picked = btns.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.key);
-      if (sel) [...sel.options].forEach((o) => { if (o.value) o.selected = picked.includes(o.value); }); onChange && onChange(picked); };
-    btns.forEach((b) => b.addEventListener("click", () => {
-      const on = b.getAttribute("aria-pressed") === "true";
-      if (max === 1) btns.forEach((x) => x.setAttribute("aria-pressed", "false"));
-      else if (!on && btns.filter((x) => x.getAttribute("aria-pressed") === "true").length >= max) { announce(`You can select up to ${max} fields.`); return; }
-      b.setAttribute("aria-pressed", on && max !== 1 ? "false" : "true"); sync();
-    }));
-    if (sel) sel.addEventListener("change", () => {
-      const picked = [...sel.selectedOptions].map((o) => o.value).filter(Boolean).slice(0, max);
-      btns.forEach((b) => b.setAttribute("aria-pressed", picked.includes(b.dataset.key) ? "true" : "false")); onChange && onChange(picked);
+  // Carousel
+  const car = document.querySelector(".carousel");
+  if (car) {
+    const slides = [...car.querySelectorAll(".slide")], dots = [...car.querySelectorAll(".dots button")], count = car.querySelector(".count");
+    let i = 0;
+    const show = (n) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => { s.hidden = k !== i; });
+      dots.forEach((d, k) => d.setAttribute("aria-current", k === i ? "true" : "false"));
+      count.textContent = `${i + 1} / ${slides.length}`;
+    };
+    car.querySelectorAll("[data-dir]").forEach((b) => b.addEventListener("click", () => show(i + Number(b.dataset.dir))));
+    dots.forEach((d, k) => d.addEventListener("click", () => show(k)));
+    document.addEventListener("keydown", (e) => {
+      if (document.getElementById("recommendation").hidden) return;
+      if (e.target.closest && e.target.closest("input, textarea, select, summary")) return;
+      if (e.key === "ArrowRight") show(i + 1); else if (e.key === "ArrowLeft") show(i - 1);
     });
-    return () => btns.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.key);
+    show(0);
   }
-  function show(fb, cls, html) { fb.className = "feedback show " + cls; fb.innerHTML = html; announce(fb.textContent); }
-  function lock(root) { root.querySelectorAll(".field, select").forEach((e) => e.setAttribute("disabled", "")); }
-  function go(step) { state.step = step; render(); }
-  function focusTitle() { const h = $("h2", stage); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } window.scrollTo({ top: 0 }); }
-
-  const SCREENS = [];
-
-  // 0 · Start
-  SCREENS[0] = () => `<section class="screen full"><div class="card">
-    <h2>Practice spotting the five inconsistencies that send files back</h2>
-    <p class="lead">This prototype builds part of the storyboard: two practice files, a decision, three knowledge-check items and your results. It takes about 6 minutes.</p>
-    <div class="scene"><div class="avatar" aria-hidden="true">A</div><div>You'll work alongside <b>Ana</b>, an onboarding analyst in a regional hub. She has new files to check before submitting.</div></div>
-    <div class="intro-grid">
-      <div class="tile"><b>Objective</b>Given a client file, identify inconsistencies between the identity documents and the data captured in the platform, and choose the right next action.</div>
-      <div class="tile"><b>How it works</b>Compare the document with the platform capture. Select the field that doesn't match. The step guide stays open on the side.</div>
-      <div class="tile"><b>Safe to practice</b>Nothing here is used in performance reviews. Your results only build your learning route.</div>
-    </div>
-    <div class="actions"><button class="btn primary" id="start">Start practice <span class="arrow">→</span></button></div>
-  </div></section>`;
-  const after0 = () => $("#start").addEventListener("click", () => go(1));
-
-  // 1 · Practice 1
-  const F1 = [
-    { key: "name", label: "Full name", value: "Lucía Ramos Vega" },
-    { key: "id", label: "ID number", value: "27519846" },
-    { key: "dob", label: "Date of birth", value: "02/11/1991" },
-    { key: "valid", label: "Document valid", value: "Yes, until 08/2030" },
-  ];
-  SCREENS[1] = () => `<section class="screen"><div class="card">
-    <h2>Practice 1: find the one field that doesn't match</h2>
-    <p class="lead">Lucía's file has one inconsistency. Select the field in the platform capture that doesn't match her ID.</p>
-    <div class="compare">${idCard({ name: "Lucía Ramos Vega", id: "27519864", dob: "02/11/1991", valid: "08/2030" })}${platform(F1, "File 1 of 2")}</div>
-    ${altSelect(F1, "alt1", false)}
-    <div class="actions"><button class="btn ghost" id="hint" aria-expanded="false" aria-controls="hinttext">Show a hint</button>
-      <button class="btn primary" id="check" disabled>Check answer</button><button class="btn" id="next" hidden>Next file <span>→</span></button></div>
-    <p id="hinttext" class="note" hidden>Hint: read long numbers in pairs of two digits.</p>
-    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
-  const after1 = () => {
-    let tries = 0; const card = $(".card", stage), fb = $("#fb");
-    const picked = wireFields(card, 1, (p) => { $("#check").disabled = p.length === 0; });
-    $("#hint").addEventListener("click", (e) => { const h = $("#hinttext"); h.hidden = !h.hidden; e.currentTarget.setAttribute("aria-expanded", String(!h.hidden)); });
-    $("#check").addEventListener("click", () => {
-      const p = picked()[0]; tries++;
-      const btn = card.querySelector(`.field[data-key="${p}"]`);
-      if (p === "id") { btn.classList.add("is-right"); lock(card); $("#check").hidden = true; $("#next").hidden = false;
-        show(fb, "ok", "<strong>Right.</strong>The last two digits are swapped: 27519864 on the ID, 27519846 in the platform. One wrong digit makes the identity check fail and the file comes back from Quality."); $("#next").focus(); }
-      else if (tries < 2) { btn.classList.add("is-wrong"); btn.setAttribute("aria-pressed", "false"); $("#check").disabled = true;
-        show(fb, "no", "<strong>Not this one.</strong>That field matches the document. Compare the ID number digit by digit and try again."); }
-      else { btn.classList.add("is-wrong"); card.querySelector('.field[data-key="id"]').classList.add("is-missed"); lock(card); $("#check").hidden = true; $("#next").hidden = false;
-        show(fb, "info", "<strong>Here's the inconsistency.</strong>The ID number: 27519864 on the document, 27519846 in the platform. The last two digits are swapped."); $("#next").focus(); }
-    });
-    $("#next").addEventListener("click", () => go(2));
-  };
-
-  // 2 · Practice 2
-  const F2 = [
-    { key: "name", label: "Full name", value: "Sofía Martínez Lara" },
-    { key: "id", label: "ID number", value: "31840275" },
-    { key: "dob", label: "Date of birth", value: "19/06/1985" },
-    { key: "address", label: "Address", value: "Av. Juárez 210, Col. Centro" },
-    { key: "proof", label: "Proof of address", value: "Issued 12/05/2026 · accepted" },
-  ];
-  SCREENS[2] = () => `<section class="screen"><div class="card">
-    <h2>Practice 2: two inconsistencies, no hints</h2>
-    <p class="lead">Sofía's file has two inconsistencies. Select both, then check your answers. Today is ${TODAY}.</p>
-    <div class="compare"><div class="docs">${idCard({ name: "Sofía Martínez Lara", id: "31840275", dob: "19/06/1985", valid: "03/2031" })}${addressCard({ holder: "Sofía Martínez Lara", address: "Av. Juárez 120, Col. Centro", issued: "12/05/2026" })}</div>${platform(F2, "File 2 of 2")}</div>
-    ${altSelect(F2, "alt2", true)}
-    <div class="actions"><button class="btn primary" id="check" disabled>Check answers</button><button class="btn" id="next" hidden>Decide what to do <span>→</span></button></div>
-    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
-  const after2 = () => {
-    const card = $(".card", stage), fb = $("#fb");
-    const picked = wireFields(card, 2, (p) => { $("#check").disabled = p.length === 0; });
-    $("#check").addEventListener("click", () => {
-      const p = picked(); const target = ["address", "proof"]; const lines = [];
-      card.querySelectorAll(".field").forEach((b) => {
-        const k = b.dataset.key, sel = p.includes(k), isT = target.includes(k);
-        if (sel && isT) b.classList.add("is-right"); else if (sel && !isT) b.classList.add("is-wrong"); else if (!sel && isT) b.classList.add("is-missed");
-      });
-      lines.push(p.includes("address") ? "<li><b>Address:</b> found. 210 in the platform, 120 on the proof of address. A capture error.</li>" : "<li><b>Address (missed):</b> 210 in the platform, 120 on the proof of address.</li>");
-      lines.push(p.includes("proof") ? "<li><b>Proof of address:</b> found. Issued 12/05/2026, more than 3 months ago; the guide accepts documents up to 3 months old.</li>" : "<li><b>Proof of address (missed):</b> issued 12/05/2026. Check the issue date, not only the content.</li>");
-      p.filter((k) => !target.includes(k)).forEach((k) => lines.push(`<li><b>${esc(F2.find((f) => f.key === k).label)}:</b> this field matches the documents.</li>`));
-      const all = p.length === 2 && target.every((t) => p.includes(t));
-      show(fb, all ? "ok" : "info", `<strong>${all ? "Both found." : "Here's what the file shows."}</strong><ul>${lines.join("")}</ul>`);
-      lock(card); $("#check").hidden = true; $("#next").hidden = false; $("#next").focus();
-    });
-    $("#next").addEventListener("click", () => go(3));
-  };
-
-  // 3 · Decide
-  const ACTIONS = [["correct", "Correct the capture"], ["request", "Request a new document"], ["escalate", "Escalate to Compliance"]];
-  const radios = (name) => `<div class="opts" role="radiogroup">${ACTIONS.map(([v, l]) => `<label class="opt"><input type="radio" name="${name}" value="${v}"><span>${l}</span></label>`).join("")}</div>`;
-  SCREENS[3] = () => `<section class="screen"><div class="card">
-    <h2>Finding the error is half the job: decide what to do</h2>
-    <p class="lead">What should Ana do with each inconsistency in Sofía's file?</p>
-    <fieldset><legend>Address: 210 in the platform, 120 on the proof of address</legend>${radios("d1")}</fieldset>
-    <fieldset><legend>Proof of address issued 12/05/2026 (more than 3 months ago)</legend>${radios("d2")}</fieldset>
-    <div class="actions"><button class="btn primary" id="check" disabled>Check decisions</button><button class="btn" id="next" hidden>Start the knowledge check <span>→</span></button></div>
-    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
-  const after3 = () => {
-    const card = $(".card", stage), fb = $("#fb");
-    const val = (n) => (card.querySelector(`input[name="${n}"]:checked`) || {}).value;
-    card.addEventListener("change", () => { $("#check").disabled = !(val("d1") && val("d2")); });
-    $("#check").addEventListener("click", () => {
-      const ans = { d1: "correct", d2: "request" }; const out = [];
-      for (const n of ["d1", "d2"]) {
-        card.querySelectorAll(`input[name="${n}"]`).forEach((i) => { const l = i.closest(".opt"); if (i.value === ans[n]) l.classList.add("right"); else if (i.checked) l.classList.add("wrong"); i.disabled = true; });
-      }
-      out.push(val("d1") === "correct" ? "<li><b>Address: correct the capture.</b> The document is right; the capture is wrong. Fix it from the document in front of you.</li>" : "<li><b>Address: the right action is to correct the capture.</b> The evidence is fine; only the typing is wrong.</li>");
-      out.push(val("d2") === "request" ? "<li><b>Proof of address: request a new document.</b> The data may be right, but the evidence is out of date.</li>" : "<li><b>Proof of address: the right action is to request a new document.</b> An outdated proof cannot support the file, even if the address matches.</li>");
-      if (val("d1") === "escalate" || val("d2") === "escalate") out.push("<li><b>About escalating:</b> escalate when something suggests risk or alteration, not for routine fixes. Escalating everything slows real cases.</li>");
-      const ok = val("d1") === "correct" && val("d2") === "request";
-      show(fb, ok ? "ok" : "info", `<strong>${ok ? "Both decisions are right." : "Here's the reasoning."}</strong><ul>${out.join("")}</ul>`);
-      $("#check").hidden = true; $("#next").hidden = false; $("#next").focus();
-    });
-    $("#next").addEventListener("click", () => go(4));
-  };
-
-  // 4–6 · Knowledge check items
-  const KC = [
-    { check: "Name", type: "field", prompt: "Find the field that doesn't match the ID.",
-      doc: { name: "Ana Lucía Torres Gil", id: "40417728", dob: "23/01/1994", valid: "11/2032" },
-      fields: [{ key: "name", label: "Full name", value: "Ana Torres Gil" }, { key: "id", label: "ID number", value: "40417728" }, { key: "dob", label: "Date of birth", value: "23/01/1994" }, { key: "valid", label: "Document valid", value: "Yes, until 11/2032" }],
-      correct: "name", why: { right: "The second given name (Lucía) is missing. Names must match the ID exactly.", wrong: "The name is incomplete: “Ana Torres Gil” vs “Ana Lucía Torres Gil”. Names must match the ID exactly, including all given names." } },
-    { check: "Document validity", type: "action", prompt: `All the data matches, but the ID was valid until 09/2026. Today is ${TODAY}. What should Ana do?`,
-      doc: { name: "Marco Díaz Peña", id: "55120943", dob: "30/07/1979", valid: "09/2026" },
-      fields: [{ key: "name", label: "Full name", value: "Marco Díaz Peña" }, { key: "id", label: "ID number", value: "55120943" }, { key: "dob", label: "Date of birth", value: "30/07/1979" }, { key: "valid", label: "Document valid", value: "Yes" }],
-      correct: "request", why: { right: "An expired ID cannot support verification, even if every field matches.", wrong: "The right action is to request a valid ID. An expired document cannot support verification, even if every field matches." } },
-    { check: "Date of birth", type: "field", prompt: "Find the field that doesn't match the ID.",
-      doc: { name: "Raúl Herrera Soto", id: "62093317", dob: "05/11/1990", valid: "02/2029" },
-      fields: [{ key: "name", label: "Full name", value: "Raúl Herrera Soto" }, { key: "id", label: "ID number", value: "62093317" }, { key: "dob", label: "Date of birth", value: "11/05/1990" }, { key: "valid", label: "Document valid", value: "Yes, until 02/2029" }],
-      correct: "dob", why: { right: "Day and month are swapped: 05/11 on the ID, 11/05 in the platform. Check the date format in the guide.", wrong: "The date of birth: 05/11/1990 on the ID, 11/05/1990 in the platform. Day and month were swapped." } },
-  ];
-  const kcScreen = (i) => () => {
-    const q = KC[i];
-    const task = q.type === "field" ? `${platform(q.fields, `Item ${i + 1} of 3`)}` : `${platform(q.fields, `Item ${i + 1} of 3`)}`;
-    return `<section class="screen full"><div class="card">
-      <div class="eyebrow" style="color:var(--teal)">Knowledge check · item ${i + 1} of 3 (prototype) · not used in performance reviews</div>
-      <h2>${esc(q.prompt)}</h2>
-      <div class="compare">${idCard(q.doc)}${task}</div>
-      ${q.type === "field" ? altSelect(q.fields, "altk", false) : `<fieldset style="margin-top:16px"><legend>Choose the next action</legend>${radios("act")}</fieldset>`}
-      <div class="certainty"><fieldset><legend>How sure are you?</legend><div class="opts" role="radiogroup">
-        ${[["low", "Not sure"], ["mid", "Fairly sure"], ["high", "Very sure"]].map(([v, l]) => `<label class="opt"><input type="radio" name="cert" value="${v}"><span>${l}</span></label>`).join("")}</div></fieldset>
-        <p class="note">Being honest about certainty helps: a confident wrong answer tells us exactly what to reinforce.</p></div>
-      <div class="actions"><button class="btn primary" id="save" disabled>${i < KC.length - 1 ? "Save and continue" : "Save and see my results"} <span class="arrow">→</span></button></div>
-    </div></section>`;
-  };
-  const kcAfter = (i) => () => {
-    const q = KC[i], card = $(".card", stage);
-    let answer = null;
-    const ready = () => { const c = card.querySelector('input[name="cert"]:checked'); $("#save").disabled = !(answer && c); };
-    if (q.type === "field") wireFields(card, 1, (p) => { answer = p[0] || null; ready(); });
-    else card.querySelectorAll(".field").forEach((b) => b.setAttribute("disabled", ""));
-    card.addEventListener("change", (e) => { if (e.target.name === "act") answer = e.target.value; ready(); });
-    $("#save").addEventListener("click", () => {
-      state.kc[i] = { answer, cert: card.querySelector('input[name="cert"]:checked').value };
-      announce("Answer saved."); go(4 + i + 1);
-    });
-  };
-  [0, 1, 2].forEach((i) => { SCREENS[4 + i] = kcScreen(i); });
-
-  // 7 · Results
-  SCREENS[7] = () => {
-    const rows = KC.map((q, i) => {
-      const r = state.kc[i] || {}; const ok = r.answer === q.correct;
-      let cls, icon, st;
-      if (ok && r.cert !== "low") { cls = "mastered"; icon = "✓"; st = "Mastered"; }
-      else if (ok) { cls = "unsure"; icon = "~"; st = "Correct but unsure · review the guide card"; }
-      else if (r.cert === "high") { cls = "priority"; icon = "!"; st = "Priority · confident wrong answer"; }
-      else { cls = "practice"; icon = "✗"; st = "Keep practicing"; }
-      return `<li class="res ${cls}"><span class="ic" aria-hidden="true">${icon}</span><span class="st">${esc(q.check)}: ${st}</span><span class="why">${esc(ok ? q.why.right : q.why.wrong)}</span></li>`;
-    }).join("");
-    const gaps = KC.filter((q, i) => { const r = state.kc[i] || {}; return !(r.answer === q.correct && r.cert !== "low"); }).map((q) => q.check);
-    return `<section class="screen full"><div class="card">
-      <h2>Your results by check</h2>
-      <p class="lead">Each check shows its own status. Only you see this detail; your manager sees which workshops are on your route, and the program sees totals by step and team.</p>
-      <ul class="results" style="list-style:none;padding:0">${rows}</ul>
-      <div class="feedback show info"><strong>Your next step</strong>${gaps.length
-        ? `Your route now includes the workshop${gaps.length > 1 ? "s" : ""} for: ${gaps.map(esc).join(", ")}. The other checks stay available as optional review.`
-        : "All checks in this prototype are mastered. Next: book an on-the-job verification with an expert referent."}</div>
-      <p class="note">The full module checks all five items (name, ID number, date of birth, address and document validity), with three variants per check for retakes.</p>
-      <div class="actions"><button class="btn primary" id="restart">Start again <span class="arrow">↺</span></button></div>
-    </div></section>`;
-  };
-  const after7 = () => $("#restart").addEventListener("click", () => { state.kc = {}; go(0); });
-
-  const AFTER = [after0, after1, after2, after3, kcAfter(0), kcAfter(1), kcAfter(2), after7];
-  function render() { renderProgress(); stage.innerHTML = SCREENS[state.step](); AFTER[state.step](); focusTitle(); }
-  render();
 })();
 </script>
 </body>
