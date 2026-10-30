@@ -221,6 +221,75 @@
   .dec .item .why { color: var(--muted); }
   .guard { display: flex; gap: 12px; align-items: flex-start; }
 
+
+  /* Recommendation narrative */
+  .chapters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chapters button { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; }
+  .chapters button:hover { border-color: var(--teal); color: var(--teal); }
+  .chapter { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: clamp(18px, 3.5vw, 36px); margin-top: 20px; display: flex; flex-direction: column; gap: 18px; scroll-margin-top: 90px; }
+  .chapter.band { border-color: var(--ink); }
+  .chapter.dark { background: var(--ink); color: var(--paper); }
+  .phasepanel[hidden] { display: none; }
+  .chapter h2 { font-size: clamp(24px, 3.2vw, 34px); font-weight: 300; line-height: 1.15; }
+  .chapter h2 b { font-weight: 800; color: var(--teal); }
+  .chapter.dark h2 b { color: var(--cyan); }
+  .chapter .sub { margin-top: 4px; }
+  .chapter .sub .note { font-weight: 400; }
+  .flowrow { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1.2fr); gap: 12px; align-items: center; }
+  .flowrow .arrow { font-size: 30px; color: var(--teal); text-align: center; font-weight: 800; }
+  @media (max-width: 820px) { .flowrow { grid-template-columns: 1fr; } .flowrow .arrow { transform: rotate(90deg); } }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice { background: var(--mist); border-radius: var(--r); padding: 12px 14px; }
+  .choice .from { display: block; font-size: 13px; color: var(--teal); font-weight: 800; }
+  .acc { display: flex; flex-direction: column; gap: 6px; }
+  .acc details { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .acc summary { color: var(--ink); font-weight: 700; }
+  .acc details[open] summary { margin-bottom: 6px; }
+  .acc p { margin: 0; font-size: 14px; color: var(--muted); }
+  .lessons { display: flex; flex-direction: column; gap: 10px; }
+  .lesson { display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 260px); gap: 14px; align-items: center; padding: 14px; border-radius: var(--r); background: var(--mist); }
+  .lesson .ln { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--cyan); display: grid; place-items: center; font-weight: 800; }
+  .lesson p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+  .lesson .hl { color: var(--teal); font-weight: 800; }
+  .lesson .inplan { font-size: 13px; font-weight: 700; color: var(--teal); background: var(--paper); border: 1.5px solid var(--teal); border-radius: 10px; padding: 8px 10px; }
+  @media (max-width: 760px) { .lesson { grid-template-columns: 36px minmax(0, 1fr); } .lesson .inplan { grid-column: 1 / -1; } }
+  .srcs summary { font-size: 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 14px; font-weight: 700; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; flex: none; }
+  .dot.l { background: #047680; } .dot.s { background: #6E4FD0; } .dot.c { background: #B26A00; }
+  .phasebar { display: flex; gap: 6px; }
+  .phasebar button { min-width: 0; text-align: left; border: 0; border-radius: 10px; padding: 10px 12px; background: var(--mist); color: var(--ink); cursor: pointer; font-size: 14px; }
+  .phasebar button b { display: block; font-size: 12px; color: var(--teal); }
+  .phasebar button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+  .phasebar button[aria-selected="true"] b { color: var(--cyan); }
+  @media (max-width: 640px) { .phasebar { flex-direction: column; } }
+  .phasepanel { display: flex; flex-direction: column; gap: 10px; }
+  .goal { margin: 0; font-weight: 700; }
+  .acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 8px; align-items: start; }
+  .act, .gate { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+  .act summary, .gate summary { list-style: none; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; color: var(--ink); font-weight: 400; }
+  .act summary::-webkit-details-marker, .gate summary::-webkit-details-marker { display: none; }
+  .act summary .dot { margin-top: 5px; }
+  .act summary .wk, .gate summary .wk { display: block; font-size: 13px; color: var(--muted); }
+  .act summary::after, .gate summary::after { content: "+"; margin-left: auto; font-weight: 800; color: var(--teal); }
+  .act[open] summary::after, .gate[open] summary::after { content: "–"; }
+  .act[open] summary, .gate[open] summary { margin-bottom: 0; }
+  .act dl { margin: 0; padding: 0 14px 14px 36px; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }
+  .act dt { font-weight: 800; color: var(--muted); }
+  .act dd { margin: 0; }
+  .gate { border: 2px dashed var(--teal); background: var(--teal-soft); }
+  .gate .dia { color: var(--teal); font-size: 18px; line-height: 1.2; }
+  .gate p, .gate .tw { margin: 0; padding: 0 14px 14px; font-size: 14px; }
+  .gate table { background: var(--paper); border-radius: 8px; }
+  .mline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; position: relative; }
+  .ms { background: var(--mist); border-radius: var(--r); padding: 12px; border-top: 4px solid var(--teal); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+  .ms .when { font-weight: 800; color: var(--teal); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .ms b { font-size: 15px; }
+  .ms span:last-child { color: var(--muted); }
+  .ms.end { background: var(--ink); color: var(--paper); border-top-color: var(--cyan); }
+  .ms.end .when { color: var(--cyan); } .ms.end span:last-child { color: var(--soft); }
+  @media (max-width: 860px) { .mline { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .mline { grid-template-columns: 1fr; } }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -260,7 +329,7 @@
       </div>
     </div>
     <div class="grid g5">
-      <a class="card deliv" href="#recommendation"><span class="num">01</span><h3>Recommendation</h3><p>Diagnosis, assumptions, solution, measures and risks in five screens.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#recommendation"><span class="num">01</span><h3>Recommendation</h3><p>From diagnosis and evidence to a 90-day plan, its measures and risks.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#storyboard"><span class="num">02</span><h3>Storyboard</h3><p>One objective, screen by screen, ending in a knowledge check.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#prototype"><span class="num">03</span><h3>Prototype</h3><p>Try the practice, the decision, the check and your results.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#adoption"><span class="num">04</span><h3>Adoption plan</h3><p>Who changes and how, who does what, and what the client commits to.</p><span class="go">Open →</span></a>
@@ -274,141 +343,190 @@
 <section class="view" id="recommendation" aria-labelledby="h-rec" hidden>
   <div class="wrap">
     <header><div class="eyebrow">Deliverable 1 · Learning &amp; change recommendation</div>
-      <h1 id="h-rec">Five screens, <b>one argument</b></h1>
-      <p class="lead">Use the arrows or your keyboard (← →) to move between screens.</p></header>
+      <h1 id="h-rec">The client asked for training. <b>What they need is adoption.</b></h1>
+      <p class="lead">Six months after launch, people know the process exists. Here is why it isn't used consistently, and a 90-day plan to change that, with training as one part of it.</p>
+      <nav class="chapters" aria-label="Chapters">
+        <button type="button" data-go="ch1">1 What's happening</button><button type="button" data-go="ch2">2 Our starting point</button><button type="button" data-go="ch3">3 What the evidence says</button><button type="button" data-go="ch4">4 The 90-day plan</button><button type="button" data-go="ch5">5 How we'll measure it</button><button type="button" data-go="ch6">6 Risks &amp; questions</button>
+      </nav>
+    </header>
 
-    <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Recommendation in five screens">
-      <div class="slides">
-
-        <!-- Slide 1 -->
-        <article class="slide dark" role="group" aria-roledescription="slide" aria-label="1 of 5: Diagnosis">
-          <div class="eyebrow">1 · Understanding the request</div>
-          <h2>Training alone won't fix this: <b>3 of 4 root causes sit outside the classroom</b></h2>
-          <div class="grid g4">
-            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
-              <div class="t">Experienced staff revert to old methods</div><div class="c">The old way feels faster and safer</div><span class="chip lilac">Motivation · habit</span></div>
-            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg></div>
-              <div class="t">Documentation is hard to find and use</div><div class="c">Guidance lives outside the workflow</div><span class="chip lilac">Tools · environment</span></div>
-            <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20c0-3 3-5 6-5s6 2 6 5"/><path d="M14 15.5c1-.3 2-.5 3-.5 3 0 5 2 5 5"/></svg></div>
-              <div class="t">Managers give inconsistent guidance</div><div class="c">Never calibrated on one standard</div><span class="chip lilac">Leadership</span></div>
-            <div class="sym inside"><div class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></div>
-              <div class="t">Employees aren't sure they apply it correctly</div><div class="c">No safe practice on real cases</div><span class="chip cyan">Knowledge · skill</span></div>
-          </div>
-          <div class="verdict"><span class="big">!</span><p><b>Underlying gap:</b> the client measures outcomes and course completion, not whether the process is actually followed. Communications, documents and manager support happened as activities, not as capability.</p></div>
-          <p class="note">Working diagnosis built from the brief only. Each gap is a hypothesis validated in weeks 1–3.</p>
-        </article>
-
-        <!-- Slide 2 -->
-        <article class="slide light" role="group" aria-roledescription="slide" aria-label="2 of 5: Assumptions and design rationale" hidden>
-          <div class="eyebrow">2 · Assumptions &amp; design rationale</div>
-          <h2>A realistic scenario and <b>five principles backed by evidence</b></h2>
-          <div class="grid g2" style="align-items:start">
-            <div class="stack">
-              <div class="scen dark">
-                <span class="eyebrow">Assumed scenario</span>
-                <div><b>KYC client onboarding</b> at a multinational financial services firm, standardized on a digital platform six months ago.</div>
-                <div class="row"><span class="chip cyan">~800 analysts &amp; leads</span><span class="chip cyan">Regional hubs</span><span class="chip cyan">Highly regulated</span></div>
-                <div class="note">If it doesn't apply, the approach still holds: only content and examples change.</div>
-              </div>
-              <details class="card"><summary>Operating assumptions (and what changes if they're false)</summary>
-                <div class="tw"><table><thead><tr><th>We assume</th><th>If false</th></tr></thead><tbody>
-                  <tr><td>The platform records each step</td><td>Check adherence through quality sampling and manager reviews</td></tr>
-                  <tr><td>Quality data splits by step, team and site</td><td>A sample audit builds the baseline</td></tr>
-                  <tr><td>The old method still runs outside the platform</td><td>Track workarounds inside the platform</td></tr>
-                  <tr><td>Compliance can review content in an agreed time</td><td>Narrow scope to the most critical steps</td></tr>
-                  <tr><td>Experts can give time to support peers</td><td>Managers take that role; slower progress</td></tr>
-                </tbody></table></div></details>
-            </div>
-            <div>
-              <div class="proof"><span class="num">System first</span><div><b>Fix the system before the course</b><span>Training fails when people return to an unchanged system.¹</span></div></div>
-              <div class="proof"><span class="num">11% → 7%</span><div><b>Support at the point of use</b><span>A one-page surgical checklist cut major complications in 8 countries.²</span></div></div>
-              <div class="proof"><span class="num">−62%</span><div><b>Learn from those who already succeed</b><span>Staff-designed practices cut ICU infections across U.S. veterans' hospitals.³</span></div></div>
-              <div class="proof"><span class="num">Feedback</span><div><b>Treat resistance as information</b><span>Vocal critics often spot real flaws in the change plan.⁴</span></div></div>
-              <div class="proof"><span class="num">143 vs 305 min</span><div><b>Leaders shape adoption</b><span>Same training, same surgery: how leaders framed it explained the gap between teams.⁵</span></div></div>
-            </div>
-          </div>
-          <p class="note">¹ Beer, HBS Working Knowledge / HBR · ² Haynes et al., NEJM 2009 · ³ Jain et al., NEJM 2011 · ⁴ Ford &amp; Ford, HBR 2009 · ⁵ Edmondson, Bohmer &amp; Pisano, ASQ 2001; Pisano et al., Management Science 2001</p>
-        </article>
-
-        <!-- Slide 3 -->
-        <article class="slide light" role="group" aria-roledescription="slide" aria-label="3 of 5: Proposed solution" hidden>
-          <div class="eyebrow">3 · Proposed solution</div>
-          <h2>One integrated solution: <b>learning, performance support and change enablement</b></h2>
-          <div class="grid g3">
-            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></span>Learning</h3>
-              <ul><li>Case-based assessment → a personal route by step</li><li>Short step modules with real cases from experts</li><li>Workshops only on the steps with most gaps</li><li>On-the-job verification by expert referents</li></ul></div>
-            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 14l2 2 4-4"/></svg></span>Performance support</h3>
-              <ul><li>One-page step guides at the point of use</li><li>One-page guide for managers</li><li>A no-blame channel to report friction</li><li>Phase 2: guided mode inside the platform</li></ul></div>
-            <div class="pillar"><h3><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 12h4l3-8 4 16 3-8h2"/></svg></span>Change enablement</h3>
-              <ul><li>Sponsor: quality over speed during the transition</li><li>Manager calibration + weekly file review</li><li>Experts as referents and co-designers</li><li>Listen, then report back what changes</li></ul></div>
-          </div>
-          <div class="decision" aria-label="Decision point: why experienced staff revert">
-            <div><span class="lab">Decision point</span><br><b>Why do experts revert?</b> Hypothesis: fluency → targeted practice + guides</div>
-            <div><span class="lab">If it clusters on one step</span><br>Fix the step with the process owner</div>
-            <div><span class="lab">If they feel loss of status</span><br>Expert-referent role</div>
-            <div><span class="lab">If nobody notices</span><br>Weekly manager review</div>
-          </div>
-          <div class="timeline" aria-label="90-day timeline">
-            <div class="phase"><b>Weeks 1–3</b>Align &amp; diagnose<span class="gate">◆ Decision gate</span></div>
-            <div class="phase"><b>Weeks 4–10</b>Enable: guides, calibrated managers, learning routes<span class="gate">◆ Reassessment in week 10</span></div>
-            <div class="phase"><b>Weeks 11–13</b>Reinforce &amp; measure<span class="gate">◆ Day-90 review</span></div>
-          </div>
-        </article>
-
-        <!-- Slide 4 -->
-        <article class="slide light" role="group" aria-roledescription="slide" aria-label="4 of 5: Measuring success" hidden>
-          <div class="eyebrow">4 · Measuring success</div>
-          <h2>Measured at <b>three levels</b>, against a baseline set in week 1</h2>
-          <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against the baseline.</div>
-          <div class="grid g3">
-            <div class="level"><span class="k">LEARNING · Kirkpatrick 2</span><h3>Do they know how?</h3>
-              <ul><li>Mastery by step, with a certainty rating</li><li>Confident wrong answers flagged first</li></ul>
-              <div class="horizon"><div><b>Day 90</b>Critical steps</div><div><b>Beyond</b>All steps</div></div></div>
-            <div class="level"><span class="k">BEHAVIOR · Kirkpatrick 3 · Prosci</span><h3>Do they do it?</h3>
-              <ul><li>% analysts verified by referents</li><li>% files following the full flow (+ quality)</li><li>Deviations by step and cause</li><li>Manager agreement · weekly reviews held</li></ul>
-              <div class="horizon"><div><b>Day 90</b>Adherence rising</div><div><b>Beyond</b>Stable habit</div></div></div>
-            <div class="level"><span class="k">RESULTS · Kirkpatrick 4</span><h3>Does quality improve?</h3>
-              <ul><li>First-time-right files by step, team, site</li><li>Gap between best and worst teams</li></ul>
-              <div class="horizon"><div><b>Day 90</b>Early improvement</div><div><b>Beyond</b>Fewer audit findings</div></div></div>
-          </div>
-          <div class="rules"><span class="chip teal">Adherence always paired with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed against the baseline</span><span class="chip teal">Success-case interviews explain the numbers</span></div>
-        </article>
-
-        <!-- Slide 5 -->
-        <article class="slide dark" role="group" aria-roledescription="slide" aria-label="5 of 5: Risks and open questions" hidden>
-          <div class="eyebrow">5 · Risks &amp; open questions</div>
-          <h2>What could <b>derail adoption</b>, and what we need to ask</h2>
-          <div class="grid g2" style="align-items:start">
-            <div>
-              <div class="risk"><span class="r">Learning doesn't transfer</span><span class="a">→</span><span class="m">Spaced practice, step guides, on-the-job verification</span></div>
-              <div class="risk"><span class="r">People game the metrics</span><span class="a">→</span><span class="m">Private individual results; adherence paired with quality</span></div>
-              <div class="risk"><span class="r">Managers return to volume</span><span class="a">→</span><span class="m">Sponsor sets quality first; weekly review; recalibration in week 7</span></div>
-              <div class="risk"><span class="r">Approvals or data slip</span><span class="a">→</span><span class="m">Review windows agreed in week 1; assessment can start first</span></div>
-              <div class="risk"><span class="r">It's the process, not the people</span><span class="a">→</span><span class="m">Friction channel from week 1; process owner at the decision gate</span></div>
-            </div>
-            <div class="stack">
-              <span class="eyebrow">Questions for the client</span>
-              <div class="grid g2" style="gap:8px">
-                <div class="q">Do you measure if the process is followed, or only outcomes?</div>
-                <div class="q">Which steps concentrate errors? Which teams do best?</div>
-                <div class="q">Who sponsors the change, and how visibly?</div>
-                <div class="q">Do team metrics reward speed over quality?</div>
-                <div class="q">Who approves changes to the process and platform?</div>
-                <div class="q">Did launch training reach every profile, shift and site?</div>
-              </div>
-            </div>
-          </div>
-          <div class="next"><b>Next step:</b> a week-1 session with the sponsor to agree success metrics, data access and Compliance review windows.</div>
-        </article>
+    <!-- CH1 -->
+    <article class="chapter band dark" id="ch1" aria-labelledby="h-ch1">
+      <span class="eyebrow">1 · What's happening</span>
+      <h2 id="h-ch1">Training alone won't fix this: <b>3 of 4 causes sit outside the classroom</b></h2>
+      <div class="grid g4">
+        <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
+          <div class="t">Experienced staff revert to old methods</div><div class="c">The old way feels faster and safer</div><span class="chip lilac">Motivation · habit</span></div>
+        <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg></div>
+          <div class="t">Documentation is hard to find and use</div><div class="c">Guidance lives outside the workflow</div><span class="chip lilac">Tools · environment</span></div>
+        <div class="sym"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20c0-3 3-5 6-5s6 2 6 5"/><path d="M14 15.5c1-.3 2-.5 3-.5 3 0 5 2 5 5"/></svg></div>
+          <div class="t">Managers give inconsistent guidance</div><div class="c">Never calibrated on one standard</div><span class="chip lilac">Leadership</span></div>
+        <div class="sym inside"><div class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></div>
+          <div class="t">Employees aren't sure they apply it correctly</div><div class="c">No safe practice on real cases</div><span class="chip cyan">Knowledge · skill</span></div>
       </div>
+      <div class="verdict"><span class="big">!</span><p><b>The gap underneath:</b> the client measures outcomes and course completion, not whether the process is followed. Communication, documents and manager support happened as activities, not as capability.</p></div>
+      <p class="note">Dashed card = the one cause training can address directly. Every cause here is a hypothesis built from the brief, confirmed or adjusted in weeks 1–3.</p>
+    </article>
 
-      <div class="cnav">
-        <div class="dots" role="group" aria-label="Choose a screen">
-          <button type="button" aria-current="true">1 Diagnosis</button><button type="button">2 Rationale</button><button type="button">3 Solution</button><button type="button">4 Measures</button><button type="button">5 Risks</button>
+    <!-- CH2 -->
+    <article class="chapter" id="ch2" aria-labelledby="h-ch2">
+      <span class="eyebrow">2 · Our starting point</span>
+      <h2 id="h-ch2">We assumed a realistic scenario, <b>and it shaped three design choices</b></h2>
+      <div class="flowrow">
+        <div class="scen dark">
+          <span class="eyebrow">Assumed scenario</span>
+          <div><b>KYC client onboarding</b> (Know Your Customer identity checks) at a multinational financial services firm, standardized on a digital platform six months ago.</div>
+          <div class="row"><span class="chip cyan">~800 analysts &amp; leads</span><span class="chip cyan">Regional hubs, shifts</span><span class="chip cyan">Highly regulated</span></div>
+          <div class="note">If it doesn't apply, the approach still holds: only content and examples change.</div>
         </div>
-        <div class="arrows"><button class="btn" type="button" data-dir="-1" aria-label="Previous screen">←</button><span class="count" aria-live="polite">1 / 5</span><button class="btn primary" type="button" data-dir="1" aria-label="Next screen"><span>→</span></button></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="choices">
+          <div class="choice"><span class="from">Because it's regulated…</span><b>Compliance approves everything we publish, and the process owner sets the criteria.</b></div>
+          <div class="choice"><span class="from">Because teams are spread across hubs and shifts…</span><b>Self-paced modules, short sessions by shift, and a personal route for each analyst.</b></div>
+          <div class="choice"><span class="from">Because the work happens on a platform…</span><b>We can measure whether the process is followed, not only the final results.</b></div>
+        </div>
       </div>
-    </div>
+      <h3 class="sub">What we assume about the client <span class="note">(open each to see why it matters)</span></h3>
+      <div class="acc">
+        <details><summary>The platform records each step of a file</summary><p><b>Why it matters:</b> it lets us track weekly whether the full process is followed. <b>If not:</b> we use quality sampling and manager file reviews instead.</p></details>
+        <details><summary>Quality data can be split by step, team and site</summary><p><b>Why it matters:</b> it shows where errors concentrate and which teams already do it well. <b>If not:</b> a sample audit builds the baseline, and results take longer to show.</p></details>
+        <details><summary>The old method can still be used outside the platform</summary><p><b>Why it matters:</b> it explains how experts revert. <b>If not:</b> workarounds happen inside the platform, and we track them there.</p></details>
+        <details><summary>Compliance can review new content within an agreed time</summary><p><b>Why it matters:</b> guides and cases can't go live without approval. <b>If not:</b> we narrow the scope to the most critical steps.</p></details>
+        <details><summary>Experienced staff can dedicate some time to support peers</summary><p><b>Why it matters:</b> they verify colleagues on the job. <b>If not:</b> managers take that role, and progress is slower.</p></details>
+      </div>
+    </article>
+
+    <!-- CH3 -->
+    <article class="chapter" id="ch3" aria-labelledby="h-ch3">
+      <span class="eyebrow">3 · What the evidence says</span>
+      <h2 id="h-ch3">Five lessons from organizations <b>that faced the same problem</b></h2>
+      <p class="lead">Different industries, same pattern: a correct process that people did not follow consistently. Each lesson shows up in the plan.</p>
+      <div class="lessons">
+        <div class="lesson"><span class="ln">1</span><div><b>Fix the system before the course</b><p>Harvard research on corporate training: people trained and sent back to an unchanged system don't apply what they learned.</p></div><span class="inplan">In the plan: managers and guides change before training starts</span></div>
+        <div class="lesson"><span class="ln">2</span><div><b>Put the help where the work happens</b><p>A one-page surgical checklist in 8 hospitals across 8 countries cut major complications <span class="hl">from 11% to 7%</span>.</p></div><span class="inplan">In the plan: one-page step guides inside the workflow</span></div>
+        <div class="lesson"><span class="ln">3</span><div><b>Learn from the teams that already succeed</b><p>U.S. veterans' hospitals let frontline staff design and teach the practices: ICU infections fell <span class="hl">62%</span>.</p></div><span class="inplan">In the plan: expert referents build the practice cases</span></div>
+        <div class="lesson"><span class="ln">4</span><div><b>Treat resistance as information</b><p>Research on resistance to change: the loudest critics often see real flaws in the plan.</p></div><span class="inplan">In the plan: a no-blame friction channel; experts join the diagnosis</span></div>
+        <div class="lesson"><span class="ln">5</span><div><b>Leaders decide whether a change sticks</b><p>16 hospitals learned the same new surgery. By the 40th case, the fastest team took <span class="hl">143 minutes</span> and the slowest <span class="hl">305</span>: how leaders framed the change explained the gap.</p></div><span class="inplan">In the plan: managers calibrated first, then a weekly review</span></div>
+      </div>
+      <details class="srcs"><summary>Sources</summary><p class="note">1 Beer, HBS Working Knowledge / HBR · 2 Haynes et al., NEJM 2009 · 3 Jain et al., NEJM 2011 · 4 Ford &amp; Ford, HBR 2009 · 5 Edmondson, Bohmer &amp; Pisano, Administrative Science Quarterly 2001; Pisano et al., Management Science 2001</p></details>
+    </article>
+
+    <!-- CH4 -->
+    <article class="chapter" id="ch4" aria-labelledby="h-ch4">
+      <span class="eyebrow">4 · The 90-day plan</span>
+      <h2 id="h-ch4">Three phases, <b>one decision gate</b>, three kinds of action</h2>
+      <div class="legend"><span><i class="dot l"></i>Learning</span><span><i class="dot s"></i>Performance support</span><span><i class="dot c"></i>Change enablement</span><span class="note">Open any action to see how it works and which problem it solves.</span></div>
+      <div class="phasebar" role="tablist" aria-label="Plan phases">
+        <button role="tab" id="tab-p1" aria-controls="p1" aria-selected="true" style="flex:3"><b>Weeks 1–3</b>Align &amp; diagnose</button>
+        <button role="tab" id="tab-p2" aria-controls="p2" aria-selected="false" style="flex:7"><b>Weeks 4–10</b>Enable</button>
+        <button role="tab" id="tab-p3" aria-controls="p3" aria-selected="false" style="flex:3"><b>Weeks 11–13</b>Reinforce &amp; measure</button>
+      </div>
+
+      <div class="phasepanel" role="tabpanel" id="p1" aria-labelledby="tab-p1">
+        <p class="goal">Goal: agree what success means, and find out what is really causing each symptom.</p>
+        <div class="acts">
+          <details class="act c"><summary><i class="dot c"></i><span><b>Agree what success means</b><span class="wk">Week 1 · with the sponsor</span></span></summary>
+            <dl><dt>How</dt><dd>A working session to pick 1–2 success metrics, set targets against the baseline, and agree data access and Compliance review times.</dd><dt>Solves</dt><dd>Today nobody measures whether the process is followed.</dd><dt>Who</dt><dd>The client decides; we facilitate.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>Open a no-blame channel to report friction</b><span class="wk">Week 1 · stays open</span></span></summary>
+            <dl><dt>How</dt><dd>A simple form or chat channel where anyone can flag a step that slows them down or seems wrong.</dd><dt>Solves</dt><dd>Experts revert silently; this tells us where the process hurts.</dd><dt>Who</dt><dd>We design it; the client runs it.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>Listen to each group separately</b><span class="wk">Week 2</span></span></summary>
+            <dl><dt>How</dt><dd>An anonymous survey on tracked reversions, plus short interviews with experts, new analysts and managers, never mixed.</dd><dt>Solves</dt><dd>Finds the real reason experts revert and why documents aren't used.</dd><dt>Who</dt><dd>We run it; results go to the decision gate.</dd></dl></details>
+          <details class="act l"><summary><i class="dot l"></i><span><b>Case-based assessment for every analyst</b><span class="wk">Week 3 · one week to complete</span></span></summary>
+            <dl><dt>How</dt><dd>Real-looking files: decide what's wrong and how sure you are. Each analyst gets a personal route by step. Results are private and not graded.</dd><dt>Solves</dt><dd>Shows where errors and low confidence concentrate.</dd><dt>Who</dt><dd>We build it with experts; Compliance validates the cases.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>First manager calibration</b><span class="wk">Week 2 · by shift</span></span></summary>
+            <dl><dt>How</dt><dd>Managers review the same files, decide on their own, then compare and agree on the criteria.</dd><dt>Solves</dt><dd>Measures how inconsistent the guidance really is.</dd><dt>Who</dt><dd>We facilitate; the process owner settles open criteria.</dd></dl></details>
+        </div>
+        <details class="gate"><summary><span class="dia" aria-hidden="true">◆</span><span><b>Decision gate · end of week 3</b><span class="wk">We choose the 2–3 critical steps and confirm why experts revert</span></span></summary>
+          <p>The survey and interviews tell us which cause is behind the reversions. Each cause already has an action ready, so only the right one is switched on:</p>
+          <div class="tw"><table><thead><tr><th>If we find that…</th><th>The cause is</th><th>We switch on</th></tr></thead><tbody>
+            <tr><td>Experts say the new way “takes longer”, across many steps</td><td><b>Fluency</b> (our working hypothesis)</td><td>Targeted practice and step guides</td></tr>
+            <tr><td>Reversions cluster on one step with a concrete flaw</td><td><b>The process</b></td><td>Fix the step with the process owner and Compliance</td></tr>
+            <tr><td>Experts describe losing autonomy or expertise</td><td><b>Identity</b></td><td>A referent role: they co-design cases and verify peers</td></tr>
+            <tr><td>Nobody notices or comments on which method is used</td><td><b>Reinforcement</b></td><td>Weekly manager file review</td></tr>
+          </tbody></table></div></details>
+      </div>
+
+      <div class="phasepanel" role="tabpanel" id="p2" aria-labelledby="tab-p2" hidden>
+        <p class="goal">Goal: change the environment first, then train on the critical steps.</p>
+        <div class="acts">
+          <details class="act c"><summary><i class="dot c"></i><span><b>Report back what we heard</b><span class="wk">Week 4</span></span></summary>
+            <dl><dt>How</dt><dd>A short message to every team: what we found and what will change because of it.</dd><dt>Solves</dt><dd>Listening without visible action breeds cynicism.</dd><dt>Who</dt><dd>The sponsor sends it; we draft it.</dd></dl></details>
+          <details class="act s"><summary><i class="dot s"></i><span><b>One-page guides for the critical steps</b><span class="wk">Weeks 4–5</span></span></summary>
+            <dl><dt>How</dt><dd>Long manuals become one page per step, reachable from the screen where the work happens. Compliance approves them.</dd><dt>Solves</dt><dd>Documentation is hard to find and use.</dd><dt>Who</dt><dd>We design; the client approves and hosts.</dd></dl></details>
+          <details class="act s"><summary><i class="dot s"></i><span><b>Manager guide and weekly file review</b><span class="wk">From week 5</span></span></summary>
+            <dl><dt>How</dt><dd>A one-page guide with the agreed criteria, and a short weekly review of real files with each team.</dd><dt>Solves</dt><dd>Inconsistent guidance; nobody reinforcing the new way.</dd><dt>Who</dt><dd>We design; managers run it.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>Experts become referents</b><span class="wk">Weeks 5–10</span></span></summary>
+            <dl><dt>How</dt><dd>Calibrated first, they co-design the practice cases and verify colleagues on the job with criteria approved by Compliance.</dd><dt>Solves</dt><dd>Turns the people who revert into owners of the change.</dd><dt>Who</dt><dd>The client allocates their time; we prepare them.</dd></dl></details>
+          <details class="act l"><summary><i class="dot l"></i><span><b>Step modules and workshops</b><span class="wk">Weeks 6–9</span></span></summary>
+            <dl><dt>How</dt><dd>Short self-paced modules per step, built on real cases, plus workshops by shift only on the steps where most analysts struggle.</dd><dt>Solves</dt><dd>Low confidence and uneven experience across teams.</dd><dt>Who</dt><dd>We build and co-facilitate; then hand over.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>Second manager calibration</b><span class="wk">Week 7</span></span></summary>
+            <dl><dt>How</dt><dd>Same exercise as week 2, to check that criteria are holding.</dd><dt>Solves</dt><dd>Criteria drift back within weeks without a check.</dd><dt>Who</dt><dd>We facilitate with a client co-facilitator.</dd></dl></details>
+          <details class="act l"><summary><i class="dot l"></i><span><b>Reassessment</b><span class="wk">Week 10</span></span></summary>
+            <dl><dt>How</dt><dd>The case-based assessment again, with new files.</dd><dt>Solves</dt><dd>Shows progress by step against week 3.</dd><dt>Who</dt><dd>We run and analyze it.</dd></dl></details>
+        </div>
+      </div>
+
+      <div class="phasepanel" role="tabpanel" id="p3" aria-labelledby="tab-p3" hidden>
+        <p class="goal">Goal: make the new way the normal way, and show what changed.</p>
+        <div class="acts">
+          <details class="act c"><summary><i class="dot c"></i><span><b>Visible recognition</b><span class="wk">Weeks 11–12</span></span></summary>
+            <dl><dt>How</dt><dd>Analysts verified on every step and teams that improved most are recognized by the sponsor.</dd><dt>Solves</dt><dd>Rewards quality, not just volume.</dd><dt>Who</dt><dd>The client leads.</dd></dl></details>
+          <details class="act l"><summary><i class="dot l"></i><span><b>Success-case interviews</b><span class="wk">Weeks 11–12</span></span></summary>
+            <dl><dt>How</dt><dd>Short interviews with the teams that improved most and least.</dd><dt>Solves</dt><dd>Explains the numbers and feeds the next round of content.</dd><dt>Who</dt><dd>We run them.</dd></dl></details>
+          <details class="act c"><summary><i class="dot c"></i><span><b>Day-90 review and next phase</b><span class="wk">Week 13</span></span></summary>
+            <dl><dt>How</dt><dd>Results against the baseline, and a roadmap: guided mode inside the platform, metrics linked to performance goals, a growing case library.</dd><dt>Solves</dt><dd>Keeps the change alive after the project.</dd><dt>Who</dt><dd>Joint review; the client decides on phase 2.</dd></dl></details>
+        </div>
+      </div>
+      <p class="note">Shared accountability: we design, co-facilitate and hand over; the client decides, approves and reinforces day to day. See the adoption plan (Deliverable 4).</p>
+    </article>
+
+    <!-- CH5 -->
+    <article class="chapter" id="ch5" aria-labelledby="h-ch5">
+      <span class="eyebrow">5 · How we'll measure it</span>
+      <h2 id="h-ch5">Measured along the same 90 days, <b>from baseline to results</b></h2>
+      <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against the baseline.</div>
+      <div class="mline" aria-label="Measurement milestones">
+        <div class="ms"><span class="when">Weeks 1–3</span><b>Baseline</b><span>First-time-right files by step, team and site · reversions · manager agreement · mastery by step</span></div>
+        <div class="ms"><span class="when">From week 5</span><b>Weekly adoption</b><span>Files following the full flow (always with quality) · weekly reviews held · friction reported</span></div>
+        <div class="ms"><span class="when">Week 7</span><b>Managers aligned?</b><span>Agreement on the same files, compared with week 2</span></div>
+        <div class="ms"><span class="when">Week 10</span><b>Learning gained</b><span>Mastery by step, compared with week 3</span></div>
+        <div class="ms end"><span class="when">Day 90</span><b>Results</b><span>First-time-right files and the gap between teams, against the baseline</span></div>
+      </div>
+      <div class="grid g3">
+        <div class="level"><span class="k">LEARNING · Kirkpatrick 2</span><h3>Do they know how?</h3><p class="note">Mastery by step, with how sure they are. Confident wrong answers are flagged first.</p></div>
+        <div class="level"><span class="k">BEHAVIOR · Kirkpatrick 3 · Prosci</span><h3>Do they do it?</h3><p class="note">Full-flow files, analysts verified by referents, reversions by step, manager reviews held.</p></div>
+        <div class="level"><span class="k">RESULTS · Kirkpatrick 4</span><h3>Does quality improve?</h3><p class="note">First-time-right files and less variation between teams. Audit findings follow later.</p></div>
+      </div>
+      <p class="note"><b>Realistic horizon:</b> training starts in week 6, so day 90 shows clear learning gains, early behavior change and first signals in quality on the critical steps. Fewer audit findings come after the project.</p>
+      <div class="rules"><span class="chip teal">Adherence always paired with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed with the client</span></div>
+    </article>
+
+    <!-- CH6 -->
+    <article class="chapter band dark" id="ch6" aria-labelledby="h-ch6">
+      <span class="eyebrow">6 · Risks &amp; questions</span>
+      <h2 id="h-ch6">What could <b>derail adoption</b>, and what we need to ask</h2>
+      <div class="grid g2" style="align-items:start">
+        <div>
+          <div class="risk"><span class="r">Learning doesn't transfer</span><span class="a">→</span><span class="m">Guides at the point of use and on-the-job verification · Phase 2</span></div>
+          <div class="risk"><span class="r">People game the metrics</span><span class="a">→</span><span class="m">Private results; adherence always paired with quality · Phases 1–3</span></div>
+          <div class="risk"><span class="r">Managers return to volume</span><span class="a">→</span><span class="m">Sponsor message, weekly review, recalibration · Weeks 1, 5, 7</span></div>
+          <div class="risk"><span class="r">Approvals or data slip</span><span class="a">→</span><span class="m">Review times agreed in week 1; assessment can start first</span></div>
+          <div class="risk"><span class="r">It's the process, not the people</span><span class="a">→</span><span class="m">Friction channel and the week-3 decision gate</span></div>
+        </div>
+        <div class="stack">
+          <span class="eyebrow">Questions for the client</span>
+          <div class="grid g2" style="gap:8px">
+            <div class="q">Do you measure if the process is followed, or only outcomes?</div>
+            <div class="q">Which steps concentrate errors? Which teams do best?</div>
+            <div class="q">Who sponsors the change, and how visibly?</div>
+            <div class="q">Do team metrics reward speed over quality?</div>
+            <div class="q">Who approves changes to the process and platform?</div>
+            <div class="q">Did launch training reach every profile, shift and site?</div>
+          </div>
+        </div>
+      </div>
+      <div class="next"><b>Next step:</b> a week-1 session with the sponsor to agree success metrics, data access and Compliance review times.</div>
+    </article>
   </div>
 </section>
 
@@ -622,26 +740,12 @@
   }
   window.addEventListener("hashchange", route); route();
 
-  // Carousel
-  const car = document.querySelector(".carousel");
-  if (car) {
-    const slides = [...car.querySelectorAll(".slide")], dots = [...car.querySelectorAll(".dots button")], count = car.querySelector(".count");
-    let i = 0;
-    const show = (n) => {
-      i = (n + slides.length) % slides.length;
-      slides.forEach((s, k) => { s.hidden = k !== i; });
-      dots.forEach((d, k) => d.setAttribute("aria-current", k === i ? "true" : "false"));
-      count.textContent = `${i + 1} / ${slides.length}`;
-    };
-    car.querySelectorAll("[data-dir]").forEach((b) => b.addEventListener("click", () => show(i + Number(b.dataset.dir))));
-    dots.forEach((d, k) => d.addEventListener("click", () => show(k)));
-    document.addEventListener("keydown", (e) => {
-      if (document.getElementById("recommendation").hidden) return;
-      if (e.target.closest && e.target.closest("input, textarea, select, summary")) return;
-      if (e.key === "ArrowRight") show(i + 1); else if (e.key === "ArrowLeft") show(i - 1);
-    });
-    show(0);
-  }
+  // Chapters + phase tabs
+  document.querySelectorAll(".chapters [data-go]").forEach((b) => b.addEventListener("click", () => document.getElementById(b.dataset.go).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" })));
+  const tabs = [...document.querySelectorAll('.phasebar [role="tab"]')];
+  const select = (t) => { tabs.forEach((x) => { const on = x === t; x.setAttribute("aria-selected", on ? "true" : "false"); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute("aria-controls")).hidden = !on; }); };
+  tabs.forEach((t, k) => { t.addEventListener("click", () => select(t)); t.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const n = tabs[(k + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length]; select(n); n.focus(); } }); });
+  if (tabs[0]) select(tabs[0]);
 })();
 </script>
 </body>
