@@ -396,6 +396,32 @@
   .vi b { display: block; }
   .vi span:not(.vw) { font-size: 14px; color: var(--muted); }
   @media (max-width: 560px) { .vi { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* AI narrative */
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
+  .role { border-radius: var(--r); padding: 18px; }
+  .role.me { background: var(--ink); color: var(--paper); }
+  .role.ai { background: var(--mist); }
+  .role .rk { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--teal); }
+  .role.me .rk { color: var(--cyan); }
+  .role ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+  .steps.light .stp { background: var(--mist); }
+  .steps.light .stp .n { border-color: var(--teal); color: var(--teal); }
+  .steps.light .stp p { color: var(--muted); }
+  .verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; align-items: start; }
+  .vcol { border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 10px; border-top: 5px solid; background: var(--mist); }
+  .vcol.ok { border-color: var(--ok); } .vcol.warn { border-color: var(--warn); } .vcol.bad { border-color: var(--bad); }
+  .vcol > .chip { align-self: flex-start; background: var(--paper); }
+  .vitem { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+  .vitem b { font-size: 15px; }
+  .vitem .vp { color: var(--muted); }
+  .vcol details summary { font-size: 13px; }
+  .vcol details .vitem { margin-top: 10px; }
+  .moments { display: flex; flex-direction: column; gap: 10px; }
+  .moment { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; background: var(--ink-2); border-radius: var(--r); padding: 16px; }
+  .moment .mn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--cyan); color: var(--cyan); display: grid; place-items: center; font-weight: 800; }
+  .moment b { font-size: 18px; color: var(--cyan); }
+  .moment p { margin: 4px 0 0; color: var(--soft); max-width: 80ch; }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -439,7 +465,7 @@
       <a class="card deliv" href="#storyboard"><span class="num">02</span><h3>Storyboard</h3><p>One objective, screen by screen, ending in a knowledge check.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#prototype"><span class="num">03</span><h3>Prototype</h3><p>Try the practice, the decision, the check and your results.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#adoption"><span class="num">04</span><h3>Adoption plan</h3><p>Who has to change, how we handle resistance, and what the client commits to.</p><span class="go">Open →</span></a>
-      <a class="card deliv" href="#ai"><span class="num">05</span><h3>AI use</h3><p>My method, and what I accepted, changed or rejected.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#ai"><span class="num">05</span><h3>AI use</h3><p>How AI and I split the work, and what I accepted, changed or rejected.</p><span class="go">Open →</span></a>
     </div>
     <p class="note">Scenario: the brief leaves industry and process open, so this work assumes a KYC (Know Your Customer) client-onboarding process at a multinational financial services firm. Client figures are assumptions; research figures are cited.</p>
   </div>
@@ -866,47 +892,86 @@
 
 <!-- ================= 5 AI ================= -->
 <section class="view" id="ai" aria-labelledby="h-ai" hidden>
-  <div class="wrap stack">
+  <div class="wrap">
     <header><div class="eyebrow">Deliverable 5 · AI use statement</div>
-      <h1 id="h-ai">I led the thinking; AI <b>researched, challenged and drafted</b></h1>
-      <p class="lead">Tool: Claude (Anthropic), used as a research and drafting partner, with every decision logged.</p></header>
+      <h1 id="h-ai">AI did the heavy lifting. <b>I decided what was true, relevant and mine.</b></h1>
+      <p class="lead">I used Claude (Anthropic) as a research, critique and drafting partner throughout this challenge, and kept a running log of every request and decision.</p>
+      <nav class="chapters" aria-label="Chapters">
+        <button type="button" data-go="ai1">1 How we split the work</button><button type="button" data-go="ai2">2 Accepted, modified, rejected</button><button type="button" data-go="ai3">3 Where my judgment changed the work</button><button type="button" data-go="ai4">4 How I check AI output</button>
+      </nav>
+    </header>
 
-    <div class="card dark stack">
-      <span class="eyebrow">My method</span>
-      <div class="steps">
-        <div class="stp"><span class="n">1</span><b>Read the case myself</b><p>Symptoms, contradictions and gaps, before asking AI</p></div>
-        <div class="stp"><span class="n">2</span><b>Research and verify</b><p>Every figure checked against its primary source</p></div>
-        <div class="stp"><span class="n">3</span><b>Diagnose with a matrix</b><p>Symptom → cause → validation → action, corrected row by row</p></div>
-        <div class="stp"><span class="n">4</span><b>Design and build</b><p>AI drafted the materials; I reviewed and redirected them</p></div>
-        <div class="stp"><span class="n">5</span><b>Log every decision</b><p>What I asked, what AI returned, what I decided</p></div>
+    <!-- AI1 -->
+    <article class="chapter" id="ai1" aria-labelledby="h-ai1">
+      <span class="eyebrow">1 · How we split the work</span>
+      <h2 id="h-ai1">I set the direction; <b>AI helped me go further and faster</b></h2>
+      <div class="roles">
+        <div class="role me"><span class="rk">What I did</span>
+          <ul><li>Read the case first and named the symptoms, contradictions and gaps</li><li>Chose the scenario, the plan's logic and every action, row by row</li><li>Asked for objective critique of my own drafts, and rewrote them</li><li>Reviewed every output for meaning, sources and fit with the client's problem</li></ul></div>
+        <div class="role ai"><span class="rk">What AI did</span>
+          <ul><li>Searched for comparable cases, critiques and measurement frameworks</li><li>Checked figures against primary sources when I asked</li><li>Challenged my reasoning and pointed out gaps</li><li>Drafted the slides, storyboard and the code of this site and the prototype</li></ul></div>
       </div>
-    </div>
+      <div class="steps light">
+        <div class="stp"><span class="n">1</span><b>Read the case myself</b><p>Before asking AI anything</p></div>
+        <div class="stp"><span class="n">2</span><b>Research and verify</b><p>Every figure traced to its source</p></div>
+        <div class="stp"><span class="n">3</span><b>Diagnose with a matrix</b><p>Symptom → cause → validation → action</p></div>
+        <div class="stp"><span class="n">4</span><b>Design and build</b><p>AI drafts, I review and redirect</p></div>
+        <div class="stp"><span class="n">5</span><b>Log every decision</b><p>What I asked, got and decided</p></div>
+      </div>
+    </article>
 
-    <div class="grid g3">
-      <div class="card dec"><span class="chip ok">Accepted</span>
-        <div class="item"><b>Split gaps into assumptions and open questions</b><span class="why">It answers the brief and makes my reasoning visible.</span></div>
-        <div class="item"><b>A hypothesis-driven matrix</b><span class="why">It let me design actions without client data; I corrected each row myself.</span></div></div>
-      <div class="card dec"><span class="chip warn">Modified</span>
-        <div class="item"><b>Case results from secondary sites</b><span class="why">I required primary sources; one figure changed (VA: 62% in ICUs, 45% elsewhere, not 65%).</span></div>
-        <div class="item"><b>Principles cited only as references</b><span class="why">Rewritten as proof points a reader understands without context.</span></div></div>
-      <div class="card dec"><span class="chip bad">Rejected / overridden</span>
-        <div class="item"><b>A palette from EPAM's previous identity</b><span class="why">Replaced with the current official palette, confirmed against brand images.</span></div>
-        <div class="item"><b>The first learning objective proposed</b><span class="why">I chose a clearer one, closer to the errors that send files back.</span></div></div>
-    </div>
+    <!-- AI2 -->
+    <article class="chapter" id="ai2" aria-labelledby="h-ai2">
+      <span class="eyebrow">2 · Accepted, modified, rejected</span>
+      <h2 id="h-ai2">Every AI output got one of three verdicts, <b>with a reason</b></h2>
+      <div class="verdicts">
+        <div class="vcol ok"><span class="chip ok">Accepted</span>
+          <div class="vitem"><b>Split the brief's gaps into assumptions and open questions</b><span class="vp">Why: it answers what the brief asks for and makes my reasoning visible.</span></div>
+          <details><summary>One more</summary><div class="vitem"><b>A hypothesis-driven matrix (symptom → cause → validation → action)</b><span class="vp">Why: it let me design actions without client data. I then corrected each row myself.</span></div></details>
+        </div>
+        <div class="vcol warn"><span class="chip warn">Modified</span>
+          <div class="vitem"><b>Case results summarized from secondary websites</b><span class="vp">I required primary sources. One figure changed: U.S. veterans' hospitals cut infections 62% in ICUs and 45% elsewhere, not 65%.</span></div>
+          <details><summary>Three more</summary>
+            <div class="vitem"><b>Research cited only as journal references</b><span class="vp">Rewritten as short stories a reader understands without context, each linked to an action in the plan.</span></div>
+            <div class="vitem"><b>Measurement frameworks used as headings</b><span class="vp">Moved to a footnote; the chapter now follows three plain questions.</span></div>
+            <div class="vitem"><b>An unconfirmed claim about the sponsor</b><span class="vp">Marked as a hypothesis and turned into a question for the client.</span></div></details>
+        </div>
+        <div class="vcol bad"><span class="chip bad">Rejected or overridden</span>
+          <div class="vitem"><b>Five slides that followed the email literally</b><span class="vp">I replaced them with this narrative site, after confirming slides were optional, so evaluators can grasp the plan quickly.</span></div>
+          <details><summary>Three more</summary>
+            <div class="vitem"><b>A brand palette from EPAM's previous identity</b><span class="vp">Replaced with the current official palette, confirmed against brand images.</span></div>
+            <div class="vitem"><b>The first learning objective proposed</b><span class="vp">I chose a clearer one, closer to the errors that send files back.</span></div>
+            <div class="vitem"><b>Hosting the prototype inside my portfolio</b><span class="vp">I kept it in a separate site, with no reference to the hiring process.</span></div></details>
+        </div>
+      </div>
+    </article>
 
-    <div class="card stack">
-      <h3>My guardrails as the human in the loop</h3>
+    <!-- AI3 -->
+    <article class="chapter dark" id="ai3" aria-labelledby="h-ai3">
+      <span class="eyebrow">3 · Where my judgment changed the work</span>
+      <h2 id="h-ai3">Three moments that <b>shaped the final result</b></h2>
+      <div class="moments">
+        <div class="moment"><span class="mn">1</span><div><b>“Where did this come from?”</b><p>I kept asking for the origin of claims. AI acknowledged that three design rationales and a reassessment in week 10 were its own additions, never discussed. I rewrote the first and kept the second consciously, knowing why it matters.</p></div></div>
+        <div class="moment"><span class="mn">2</span><div><b>“Is this true?”</b><p>I asked for every case to be checked against its original study. That caught a wrong figure and separated peer-reviewed evidence from vendor stories, which are labeled as illustrative.</p></div></div>
+        <div class="moment"><span class="mn">3</span><div><b>“Will an evaluator understand this?”</b><p>Reading the first drafts as an evaluator would, I found too much text and too little story. I redirected the whole format into a narrative, chapter by chapter, with detail only on demand.</p></div></div>
+      </div>
+    </article>
+
+    <!-- AI4 -->
+    <article class="chapter" id="ai4" aria-labelledby="h-ai4">
+      <span class="eyebrow">4 · How I check AI output</span>
+      <h2 id="h-ai4">Four questions I ask <b>before anything ships</b></h2>
       <div class="grid g4">
-        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 19V5h11l5 5v9z"/><path d="M9 14l2 2 4-4"/></svg></span><div><b>Sources</b><div class="note">Every figure traces to its original study</div></div></div>
-        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span><div><b>Assumptions</b><div class="note">Stated as assumptions, never as facts</div></div></div>
-        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div><b>Privacy</b><div class="note">No real personal or client data</div></div></div>
-        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Decisions</b><div class="note">AI proposed options; I chose and rewrote</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 19V5h11l5 5v9z"/><path d="M9 14l2 2 4-4"/></svg></span><div><b>Is it sourced?</b><div class="note">Every figure traces to its original study</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span><div><b>Fact, inference or decision?</b><div class="note">Assumptions are labeled; AI's inferences are flagged</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 12h4l3-8 4 16 3-8h2"/></svg></span><div><b>Does it serve the client's problem?</b><div class="note">Every action links back to a symptom in the brief</div></div></div>
+        <div class="guard"><span class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div><b>Is it safe to share?</b><div class="note">No real personal or client data, anywhere</div></div></div>
       </div>
-      <p class="note">Both ways: I also asked AI to critique my own drafts objectively. When it found flaws (mixed focus groups, metrics used as early penalties), I reworked the actions myself.</p>
-    </div>
+    </article>
   </div>
 </section>
 </main>
+
 
 <footer class="site"><div class="wrap">Designed by Leticia Castañeda. The scenario and all client data are illustrative; research sources are cited where used.</div></footer>
 
