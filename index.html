@@ -422,6 +422,18 @@
   .moment .mn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--cyan); color: var(--cyan); display: grid; place-items: center; font-weight: 800; }
   .moment b { font-size: 18px; color: var(--cyan); }
   .moment p { margin: 4px 0 0; color: var(--soft); max-width: 80ch; }
+
+  .tagk { font-style: normal; display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-right: 6px; vertical-align: 1px; }
+  .tagk.me { background: var(--ink); color: var(--cyan); }
+  .tagk.ai { background: var(--paper); color: var(--teal); border: 1.5px solid var(--teal); }
+  .split5 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; counter-reset: none; }
+  .split5 li { background: var(--mist); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .split5 li .n { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--teal); color: var(--teal); display: grid; place-items: center; font-weight: 800; }
+  .split5 li b { font-size: 16px; }
+  .split5 .who { font-size: 14px; color: var(--muted); }
+  .split5 li:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 18px; color: var(--teal); font-weight: 800; z-index: 1; }
+  @media (max-width: 960px) { .split5 { grid-template-columns: 1fr 1fr; } .split5 li::after { display: none; } }
+  @media (max-width: 520px) { .split5 { grid-template-columns: 1fr; } }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -904,20 +916,15 @@
     <!-- AI1 -->
     <article class="chapter" id="ai1" aria-labelledby="h-ai1">
       <span class="eyebrow">1 · How we split the work</span>
-      <h2 id="h-ai1">I set the direction; <b>AI helped me go further and faster</b></h2>
-      <div class="roles">
-        <div class="role me"><span class="rk">What I did</span>
-          <ul><li>Read the case first and named the symptoms, contradictions and gaps</li><li>Chose the scenario, the plan's logic and every action, row by row</li><li>Asked for objective critique of my own drafts, and rewrote them</li><li>Reviewed every output for meaning, sources and fit with the client's problem</li></ul></div>
-        <div class="role ai"><span class="rk">What AI did</span>
-          <ul><li>Searched for comparable cases, critiques and measurement frameworks</li><li>Checked figures against primary sources when I asked</li><li>Challenged my reasoning and pointed out gaps</li><li>Drafted the slides, storyboard and the code of this site and the prototype</li></ul></div>
-      </div>
-      <div class="steps light">
-        <div class="stp"><span class="n">1</span><b>Read the case myself</b><p>Before asking AI anything</p></div>
-        <div class="stp"><span class="n">2</span><b>Research and verify</b><p>Every figure traced to its source</p></div>
-        <div class="stp"><span class="n">3</span><b>Diagnose with a matrix</b><p>Symptom → cause → validation → action</p></div>
-        <div class="stp"><span class="n">4</span><b>Design and build</b><p>AI drafts, I review and redirect</p></div>
-        <div class="stp"><span class="n">5</span><b>Log every decision</b><p>What I asked, got and decided</p></div>
-      </div>
+      <h2 id="h-ai1">Five steps, <b>two roles</b></h2>
+      <div class="legend"><span><i class="tagk me">Me</i>I led</span><span><i class="tagk ai">AI</i>AI supported</span></div>
+      <ol class="split5">
+        <li><span class="n">1</span><b>Read the case</b><span class="who"><i class="tagk me">Me</i>Symptoms, contradictions and gaps, before asking AI anything</span></li>
+        <li><span class="n">2</span><b>Research &amp; verify</b><span class="who"><i class="tagk ai">AI</i>Found cases, critiques and frameworks</span><span class="who"><i class="tagk me">Me</i>Required the original study behind every figure</span></li>
+        <li><span class="n">3</span><b>Diagnose</b><span class="who"><i class="tagk me">Me</i>Built the plan row by row: symptom, cause, action</span><span class="who"><i class="tagk ai">AI</i>Critiqued each row objectively</span></li>
+        <li><span class="n">4</span><b>Design &amp; build</b><span class="who"><i class="tagk ai">AI</i>Drafted materials and the code of this site</span><span class="who"><i class="tagk me">Me</i>Reviewed and redirected every draft</span></li>
+        <li><span class="n">5</span><b>Decide &amp; log</b><span class="who"><i class="tagk me">Me</i>Gave every output a verdict and logged why</span></li>
+      </ol>
     </article>
 
     <!-- AI2 -->
