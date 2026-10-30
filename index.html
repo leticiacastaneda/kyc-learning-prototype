@@ -343,6 +343,59 @@
   .boxk { display: inline-block; width: 18px; height: 12px; border: 2px solid var(--teal); border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
   .sct { font-weight: 600; font-size: 12px; color: var(--muted); margin-left: 4px; }
   .screen summary .tt a.chip { margin-left: 6px; text-decoration: none; }
+
+  /* Adoption narrative */
+  .layers { display: flex; flex-direction: column; gap: 6px; max-width: 860px; }
+  .layer { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2px 16px; padding: 14px 18px; border-radius: var(--r); background: var(--mist); }
+  .layer .lk { grid-row: 1 / span 2; font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .05em; align-self: center; }
+  .layer > span:last-child { color: var(--muted); font-size: 14px; }
+  .layer.hl { background: var(--ink); color: var(--paper); box-shadow: 0 0 0 3px var(--cyan); padding-block: 20px; }
+  .layer.hl .lk { color: var(--cyan); } .layer.hl > span:last-child { color: var(--soft); }
+  @media (max-width: 640px) { .layer { grid-template-columns: 1fr; } .layer .lk { grid-row: auto; } }
+  .journeys { display: flex; flex-direction: column; gap: 12px; }
+  .journey { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 12px 20px; padding: 18px; border-radius: var(--r); background: var(--mist); }
+  .jwho { display: flex; gap: 12px; align-items: flex-start; grid-row: 1 / span 2; }
+  .jwho b { font-size: 17px; display: block; }
+  .jwho .stuck { display: block; font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .hyp { font-style: normal; font-size: 12px; font-weight: 700; color: var(--teal); }
+  .adkar { display: flex; gap: 3px; margin-top: 6px; }
+  .adkar i { font-style: normal; width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; font-weight: 800; background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+  .adkar i.on { background: var(--bad); color: var(--paper); border-color: var(--bad); }
+  .jpath { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr); gap: 8px; align-items: stretch; }
+  .jt { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+  .jt span { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .jt.to { border: 2px solid var(--teal); font-weight: 700; }
+  .jt.to span { color: var(--teal); }
+  .jarrow { display: grid; place-items: center; color: var(--teal); font-weight: 800; font-size: 22px; }
+  .jhow { font-size: 14px; }
+  .jhow span { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--teal); margin-right: 8px; }
+  @media (max-width: 860px) { .journey { grid-template-columns: 1fr; } .jwho { grid-row: auto; } }
+  @media (max-width: 520px) { .jpath { grid-template-columns: 1fr; } .jarrow { transform: rotate(90deg); } }
+  .loop { display: grid; grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr); grid-template-rows: auto auto; gap: 12px; align-items: center; }
+  .lnode { background: var(--ink-2); border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .lnode b { font-size: 17px; }
+  .lnode > span:last-child { color: var(--soft); font-size: 14px; }
+  .lnum { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--cyan); color: var(--cyan); display: grid; place-items: center; font-weight: 800; margin-bottom: 4px; }
+  .n1 { grid-column: 1; grid-row: 1; } .n2 { grid-column: 3; grid-row: 1; } .n4 { grid-column: 1; grid-row: 2; } .n3 { grid-column: 3; grid-row: 2; }
+  .lcenter { grid-column: 2; grid-row: 1 / span 2; width: 170px; height: 170px; justify-self: center; border-radius: 50%; border: 2px dashed var(--cyan); display: grid; place-items: center; text-align: center; font-weight: 800; color: var(--cyan); }
+  .n1::after { content: "→"; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-weight: 800; }
+  .n2::after { content: "↓"; position: absolute; bottom: -18px; left: 50%; color: var(--cyan); font-weight: 800; }
+  .n3::before { content: "←"; position: absolute; left: -14px; top: 50%; transform: translateY(-50%); color: var(--cyan); font-weight: 800; }
+  .n4::after { content: "↑"; position: absolute; top: -18px; left: 50%; color: var(--cyan); font-weight: 800; }
+  @media (max-width: 760px) { .loop { grid-template-columns: 1fr; } .n1, .n2, .n3, .n4, .lcenter { grid-column: 1; grid-row: auto; } .lcenter { order: -1; width: 140px; height: 140px; } .n2 { order: 1; } .n3 { order: 2; } .n4 { order: 3; } .lnode::after, .lnode::before { display: none; } }
+  .example { background: var(--ink-2); border-radius: var(--r); padding: 14px 16px; border: 1px solid var(--cyan); }
+  .example p { margin: 6px 0 0; color: var(--soft); font-size: 15px; }
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; }
+  .side { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: var(--r); background: var(--mist); }
+  .side b { display: block; font-size: 16px; }
+  .side span:not(.icon) { font-size: 14px; color: var(--muted); }
+  .vline { position: relative; display: flex; flex-direction: column; gap: 14px; padding-left: 22px; border-left: 2px solid var(--teal); margin-left: 8px; }
+  .vi { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; position: relative; }
+  .vi::before { content: ""; position: absolute; left: -30px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--teal); border: 2px solid var(--paper); }
+  .vi .vw { font-weight: 800; color: var(--teal); font-size: 14px; }
+  .vi b { display: block; }
+  .vi span:not(.vw) { font-size: 14px; color: var(--muted); }
+  @media (max-width: 560px) { .vi { grid-template-columns: 1fr; gap: 2px; } }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -385,7 +438,7 @@
       <a class="card deliv" href="#recommendation"><span class="num">01</span><h3>Recommendation</h3><p>From diagnosis and evidence to a 90-day plan, its measures and risks.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#storyboard"><span class="num">02</span><h3>Storyboard</h3><p>One objective, screen by screen, ending in a knowledge check.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#prototype"><span class="num">03</span><h3>Prototype</h3><p>Try the practice, the decision, the check and your results.</p><span class="go">Open →</span></a>
-      <a class="card deliv" href="#adoption"><span class="num">04</span><h3>Adoption plan</h3><p>Who changes and how, who does what, and what the client commits to.</p><span class="go">Open →</span></a>
+      <a class="card deliv" href="#adoption"><span class="num">04</span><h3>Adoption plan</h3><p>Who has to change, how we handle resistance, and what the client commits to.</p><span class="go">Open →</span></a>
       <a class="card deliv" href="#ai"><span class="num">05</span><h3>AI use</h3><p>My method, and what I accepted, changed or rejected.</p><span class="go">Open →</span></a>
     </div>
     <p class="note">Scenario: the brief leaves industry and process open, so this work assumes a KYC (Know Your Customer) client-onboarding process at a multinational financial services firm. Client figures are assumptions; research figures are cited.</p>
@@ -586,7 +639,7 @@
           <div class="grid g2" style="gap:8px">
             <div class="q">Do you measure if the process is followed, or only outcomes?</div>
             <div class="q">Which steps concentrate errors? Which teams do best?</div>
-            <div class="q">Who sponsors the change, and how visibly?</div>
+            <div class="q">Who sponsors the change, and how involved have they been since launch?</div>
             <div class="q">Do team metrics reward speed over quality?</div>
             <div class="q">Who approves changes to the process and platform?</div>
             <div class="q">Did launch training reach every profile, shift and site?</div>
@@ -725,62 +778,89 @@
 
 <!-- ================= 4 ADOPTION ================= -->
 <section class="view" id="adoption" aria-labelledby="h-ad" hidden>
-  <div class="wrap stack">
-    <header><div class="eyebrow">Deliverable 4 · Change enablement artifact: adoption plan excerpt</div>
-      <h1 id="h-ad">Four audiences, four changes, <b>one plan</b></h1>
-      <p class="lead">Resistance is treated as information: every reversion or complaint tells us whether the gap is in the person, the tool or the process.</p></header>
+  <div class="wrap">
+    <header><div class="eyebrow">Deliverable 4 · Change enablement artifact · adoption plan excerpt</div>
+      <h1 id="h-ad">Training builds the skill. <b>This plan makes the change stick.</b></h1>
+      <p class="lead">Who has to change, how we move each group, how we handle resistance, and what the client commits to.</p>
+      <nav class="chapters" aria-label="Chapters">
+        <button type="button" data-go="ad1">1 Where it fits</button><button type="button" data-go="ad2">2 Who has to change</button><button type="button" data-go="ad3">3 How we handle resistance</button><button type="button" data-go="ad4">4 Shared accountability</button>
+      </nav>
+    </header>
 
-    <div class="grid g4">
-      <div class="card aud"><div class="top2"><h3>Sponsor</h3><span class="chip teal">Sets direction</span></div>
-        <div class="row"><b>What changes</b>Puts quality over speed, visibly</div>
-        <div class="row"><b>How we drive it</b>Week-1 success definition, opening message, decision gates</div>
-        <div class="row"><b>Signal</b>Message sent; attends the gates</div></div>
-      <div class="card aud"><div class="top2"><h3>Managers</h3><span class="chip warn">Reinforcement</span></div>
-        <div class="row"><b>What changes</b>One shared standard, reinforced weekly</div>
-        <div class="row"><b>How we drive it</b>Calibration on real files, one-page guide, weekly review</div>
-        <div class="row"><b>Signal</b>Agreement on the same files; reviews held</div></div>
-      <div class="card aud"><div class="top2"><h3>Experts</h3><span class="chip bad">Desire</span></div>
-        <div class="row"><b>What changes</b>From the old method to referents of the new</div>
-        <div class="row"><b>How we drive it</b>Part of the diagnosis; co-design cases; verify peers</div>
-        <div class="row"><b>Signal</b>Fewer reversions; verifications done</div></div>
-      <div class="card aud"><div class="top2"><h3>Analysts</h3><span class="chip ok">Knowledge · Ability</span></div>
-        <div class="row"><b>What changes</b>Master critical steps; report friction</div>
-        <div class="row"><b>How we drive it</b>Personal route, step guides, workshops, verification</div>
-        <div class="row"><b>Signal</b>Mastery by step; first-time-right files</div></div>
-    </div>
-
-    <div class="card stack">
-      <h3>Who does what, and when · design, co-facilitate, hand over</h3>
-      <div class="lanes" role="table" aria-label="Responsibilities by phase">
-        <div class="blank" role="cell"></div>
-        <div class="h" role="columnheader"><b>Weeks 1–3</b>Align &amp; diagnose</div>
-        <div class="h" role="columnheader"><b>Weeks 4–10</b>Enable</div>
-        <div class="h" role="columnheader"><b>Weeks 11–13</b>Reinforce &amp; measure</div>
-        <div class="ln" role="rowheader">Consulting team</div>
-        <div class="c" role="cell">Baseline · survey &amp; interviews · case-based assessment · facilitate calibration</div>
-        <div class="c" role="cell">Step guides · manager guide · modules · workshops · calibrate referents</div>
-        <div class="c" role="cell">Results · success-case interviews · phase 2 roadmap</div>
-        <div class="ln tg" role="rowheader">Together</div>
-        <div class="c tg" role="cell">◆ Decision gate: confirm causes, pick 2–3 critical steps</div>
-        <div class="c tg" role="cell">Report back what we heard · ◆ Recalibration (week 7)</div>
-        <div class="c tg" role="cell">◆ Day-90 review</div>
-        <div class="ln" role="rowheader">Client</div>
-        <div class="c" role="cell">Sponsor message · data · access to people · Compliance validates cases</div>
-        <div class="c" role="cell">Approvals · process fixes · weekly manager review · referents' time · attendance</div>
-        <div class="c" role="cell">Visible recognition · phase 2 decision</div>
+    <!-- AD1 -->
+    <article class="chapter" id="ad1" aria-labelledby="h-ad1">
+      <span class="eyebrow">1 · Where it fits</span>
+      <h2 id="h-ad1">Three layers in the plan; <b>this one carries the other two</b></h2>
+      <div class="layers">
+        <div class="layer"><span class="lk">Layer 1 · Learning</span><b>People learn how</b><span>Assessment, personal routes, step modules, workshops</span></div>
+        <div class="layer"><span class="lk">Layer 2 · Performance support</span><b>Help is there at the moment of work</b><span>One-page step guides, manager guide, friction channel</span></div>
+        <div class="layer hl"><span class="lk">Layer 3 · Change enablement · this plan</span><b>The environment makes the new way the normal way</b><span>A visible sponsor, calibrated managers, experts as owners, resistance treated as information</span></div>
       </div>
-      <p class="note">The consulting team never decides the KYC criteria: the process owner and Compliance do.</p>
-    </div>
+      <p class="lead">Six months ago the client trained and communicated, then the old habits came back. Without this third layer, the same would happen again: people would return to an unchanged system.</p>
+    </article>
 
-    <div class="card">
-      <h3>What we need from the client</h3>
-      <div class="commit"><span class="when">Week 1</span><span class="what">A sponsor with a visible agenda and opening message</span><span class="if">If it slips: the quality-first priority doesn't reach managers</span></div>
-      <div class="commit"><span class="when">Week 2</span><span class="what">Quality data by step, team and site</span><span class="if">If it slips: the baseline moves; the assessment runs first</span></div>
-      <div class="commit"><span class="when">Weeks 2–5</span><span class="what">Compliance reviews within an agreed window</span><span class="if">If it slips: each week of delay moves the workshops a week</span></div>
-      <div class="commit"><span class="when">From week 1</span><span class="what">Allocated hours for expert referents</span><span class="if">If it slips: no on-the-job verification</span></div>
-      <div class="commit"><span class="when">Weeks 2, 5, 7</span><span class="what">Managers in calibration and the weekly review</span><span class="if">If it slips: training loses its reinforcement</span></div>
-      <div class="commit"><span class="when">Weeks 6–9</span><span class="what">Attendance according to each analyst's route</span><span class="if">If it slips: mastery by step doesn't improve</span></div>
-    </div>
+    <!-- AD2 -->
+    <article class="chapter" id="ad2" aria-labelledby="h-ad2">
+      <span class="eyebrow">2 · Who has to change</span>
+      <h2 id="h-ad2">Four groups, each stuck in a different place, <b>each moved differently</b></h2>
+      <p class="lead">We use the ADKAR model to see where each group is stuck: <b>A</b>wareness, <b>D</b>esire, <b>K</b>nowledge, <b>A</b>bility, <b>R</b>einforcement. The highlighted letter is where the change stalls today, based on what the brief describes.</p>
+      <div class="journeys">
+        <div class="journey">
+          <div class="jwho"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2 8 12.7 4 8.8 9.5 8z"/></svg></span><div><b>Sponsor</b><div class="adkar" aria-label="Stuck at Reinforcement"><i>A</i><i>D</i><i>K</i><i>A</i><i class="on">R</i></div><span class="stuck">Launched it, then stepped back <em class="hyp">(hypothesis to confirm)</em></span></div></div>
+          <div class="jpath"><div class="jt"><span>Today</span>The process was launched and attention moved on</div><span class="jarrow" aria-hidden="true">→</span><div class="jt to"><span>By day 90</span>Opens and closes each phase; quality first, visibly</div></div>
+          <div class="jhow"><span>How we move them</span>Week-1 success definition · opening message · present at each decision gate · recognizes progress</div>
+        </div>
+        <div class="journey">
+          <div class="jwho"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20c0-3 3-5 6-5s6 2 6 5"/><path d="M14 15.5c1-.3 2-.5 3-.5 3 0 5 2 5 5"/></svg></span><div><b>Managers</b><div class="adkar" aria-label="Stuck at Reinforcement"><i>A</i><i>D</i><i>K</i><i>A</i><i class="on">R</i></div><span class="stuck">Each one reinforces a different standard</span></div></div>
+          <div class="jpath"><div class="jt"><span>Today</span>Each one applies their own criteria</div><span class="jarrow" aria-hidden="true">→</span><div class="jt to"><span>By day 90</span>One shared standard, checked weekly with the team</div></div>
+          <div class="jhow"><span>How we move them</span>Calibration on real files · one-page guide · weekly file review · what they gain: less rework and fewer escalations</div>
+        </div>
+        <div class="journey">
+          <div class="jwho"><span class="icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></span><div><b>Experienced staff</b><div class="adkar" aria-label="Stuck at Desire"><i>A</i><i class="on">D</i><i>K</i><i>A</i><i>R</i></div><span class="stuck">Know how, don't want to switch yet</span></div></div>
+          <div class="jpath"><div class="jt"><span>Today</span>Return to the old method when busy</div><span class="jarrow" aria-hidden="true">→</span><div class="jt to"><span>By day 90</span>Referents who verify peers and flag real process flaws</div></div>
+          <div class="jhow"><span>How we move them</span>Part of the diagnosis · co-design the practice cases · verify colleagues · their friction reports change the process</div>
+        </div>
+        <div class="journey">
+          <div class="jwho"><span class="icon"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></span><div><b>Analysts</b><div class="adkar" aria-label="Stuck at Knowledge and Ability"><i>A</i><i>D</i><i class="on">K</i><i class="on">A</i><i>R</i></div><span class="stuck">Want to do it right, aren't sure how</span></div></div>
+          <div class="jpath"><div class="jt"><span>Today</span>Follow the process but doubt they're right, and hide errors</div><span class="jarrow" aria-hidden="true">→</span><div class="jt to"><span>By day 90</span>Master the critical steps and report friction instead of working around it</div></div>
+          <div class="jhow"><span>How we move them</span>Personal route from the assessment · step guides · workshops · on-the-job verification · no penalties while learning</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- AD3 -->
+    <article class="chapter dark" id="ad3" aria-labelledby="h-ad3">
+      <span class="eyebrow">3 · How we handle resistance</span>
+      <h2 id="h-ad3">Resistance is information: <b>a loop, not a fight</b></h2>
+      <p class="lead" style="color:var(--soft)">When someone goes back to the old way, they are telling us something about the person, the tool or the process. The plan runs this loop from week 1 to day 90.</p>
+      <div class="loop">
+        <div class="lnode n1"><span class="lnum">1</span><b>Listen</b><span>Friction channel, separate group interviews, reversions tracked by step</span></div>
+        <div class="lnode n2"><span class="lnum">2</span><b>Find the cause</b><span>Is the gap in the person, the tool or the process?</span></div>
+        <div class="lcenter"><span>Resistance<br>is information</span></div>
+        <div class="lnode n3"><span class="lnum">3</span><b>Act on that cause</b><span>Practice for a skill gap, a better guide for a tool gap, a fixed step for a process flaw</span></div>
+        <div class="lnode n4"><span class="lnum">4</span><b>Report back</b><span>Tell people what we heard and what changed, so speaking up pays off</span></div>
+      </div>
+      <div class="example"><span class="eyebrow">Example from the plan</span><p>Experts say the new way “takes longer” across many steps → the cause is fluency, not attitude → targeted practice and step guides, decided at the week-3 decision gate. If instead reversions cluster on one step with a real flaw, the step itself is fixed with the process owner.</p></div>
+    </article>
+
+    <!-- AD4 -->
+    <article class="chapter" id="ad4" aria-labelledby="h-ad4">
+      <span class="eyebrow">4 · Shared accountability</span>
+      <h2 id="h-ad4">Results at day 90 depend on both sides: <b>six client commitments</b></h2>
+      <div class="split">
+        <div class="side"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></svg></span><div><b>We design, facilitate and hand over</b><span>Diagnosis, materials, first sessions run together with the client, measurement</span></div></div>
+        <div class="side"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>The client decides, approves and sustains</b><span>KYC criteria, Compliance approval, daily reinforcement, phase-2 decisions</span></div></div>
+      </div>
+      <div class="vline">
+        <div class="vi"><span class="vw">Week 1</span><div><b>A sponsor with a visible agenda and an opening message</b><span>If it slips: the quality-first priority never reaches managers</span></div></div>
+        <div class="vi"><span class="vw">From week 1</span><div><b>Allocated hours for expert referents</b><span>If it slips: no on-the-job verification</span></div></div>
+        <div class="vi"><span class="vw">Week 2</span><div><b>Quality data by step, team and site</b><span>If it slips: the starting point moves; the assessment runs first</span></div></div>
+        <div class="vi"><span class="vw">Weeks 2–5</span><div><b>Compliance reviews within an agreed time</b><span>If it slips: each week of delay moves the workshops a week</span></div></div>
+        <div class="vi"><span class="vw">Weeks 2, 5, 7</span><div><b>Managers in calibration and the weekly review</b><span>If it slips: training loses its reinforcement</span></div></div>
+        <div class="vi"><span class="vw">Weeks 6–9</span><div><b>Attendance according to each analyst's route</b><span>If it slips: mastery by step doesn't improve</span></div></div>
+      </div>
+      <p class="note">These commitments are agreed in the week-1 session with the sponsor, together with the success metrics.</p>
+    </article>
   </div>
 </section>
 
