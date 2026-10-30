@@ -290,6 +290,27 @@
   .ms.end .when { color: var(--cyan); } .ms.end span:last-child { color: var(--soft); }
   @media (max-width: 860px) { .mline { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 480px) { .mline { grid-template-columns: 1fr; } }
+
+  .choice .mean { display: block; font-size: 14px; color: var(--muted); margin: 2px 0 4px; }
+  .qs { display: flex; flex-direction: column; gap: 12px; }
+  .qcard { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; background: var(--mist); border-radius: var(--r); padding: 18px; }
+  .qcard.dark { background: var(--ink); color: var(--paper); }
+  .qcard .qn { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--cyan); display: grid; place-items: center; font-weight: 800; font-size: 18px; }
+  .qcard.dark .qn { background: var(--cyan); color: var(--ink); }
+  .qbody { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .qbody p { margin: 0; font-size: 15px; max-width: 75ch; }
+  .qcard.dark .qbody p { color: var(--soft); }
+  .qbody .good { font-size: 14px; }
+  .qcard.dark .qbody .good b { color: var(--cyan); }
+  .track { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 2px; height: 14px; background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / 13)); border-radius: 7px; position: relative; max-width: 640px; }
+  .qcard.dark .track { background: repeating-linear-gradient(90deg, var(--ink-3) 0 1px, transparent 1px calc(100% / 13)); }
+  .track i { grid-row: 1; height: 14px; width: 14px; border-radius: 50%; background: var(--teal); justify-self: center; }
+  .track i.w { width: auto; justify-self: stretch; border-radius: 7px; background: rgba(4,118,128,.35); }
+  .qcard.dark .track i { background: var(--cyan); }
+  .qcard.dark .track i.w { background: rgba(6,245,254,.35); }
+  .tl { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; font-weight: 700; color: var(--teal); max-width: 640px; }
+  .qcard.dark .tl { color: var(--cyan); }
+  .note.foot { border-top: 1px solid var(--line); padding-top: 12px; }
   footer.site { font-size: 13px; color: var(--muted); }
   footer.site .wrap { padding-block: 0 32px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .deliv { transition: none; } }
@@ -365,13 +386,13 @@
           <div class="t">Employees aren't sure they apply it correctly</div><div class="c">No safe practice on real cases</div><span class="chip cyan">Knowledge · skill</span></div>
       </div>
       <div class="verdict"><span class="big">!</span><p><b>The gap underneath:</b> the client measures outcomes and course completion, not whether the process is followed. Communication, documents and manager support happened as activities, not as capability.</p></div>
-      <p class="note">Dashed card = the one cause training can address directly. Every cause here is a hypothesis built from the brief, confirmed or adjusted in weeks 1–3.</p>
+      <p class="note">Dashed card = the only cause training can address on its own. These causes are our reading of the symptoms the brief describes; we confirm them with the client before acting.</p>
     </article>
 
     <!-- CH2 -->
     <article class="chapter" id="ch2" aria-labelledby="h-ch2">
       <span class="eyebrow">2 · Our starting point</span>
-      <h2 id="h-ch2">We assumed a realistic scenario, <b>and it shaped three design choices</b></h2>
+      <h2 id="h-ch2">We assumed a realistic scenario, <b>and three things in the brief shaped the design</b></h2>
       <div class="flowrow">
         <div class="scen dark">
           <span class="eyebrow">Assumed scenario</span>
@@ -381,9 +402,9 @@
         </div>
         <div class="arrow" aria-hidden="true">→</div>
         <div class="choices">
-          <div class="choice"><span class="from">Because it's regulated…</span><b>Compliance approves everything we publish, and the process owner sets the criteria.</b></div>
-          <div class="choice"><span class="from">Because teams are spread across hubs and shifts…</span><b>Self-paced modules, short sessions by shift, and a personal route for each analyst.</b></div>
-          <div class="choice"><span class="from">Because the work happens on a platform…</span><b>We can measure whether the process is followed, not only the final results.</b></div>
+          <div class="choice"><span class="from">The brief says: highly regulated</span><span class="mean">In KYC, a missed step is a compliance finding, not just rework.</span><b>So practice uses realistic files, and every guide and case is validated by Compliance.</b></div>
+          <div class="choice"><span class="from">The brief says: distributed, unevenly experienced teams</span><span class="mean">One course for everyone bores the experts and loses the newcomers.</span><b>So each analyst gets a route based on what they actually need, by step.</b></div>
+          <div class="choice"><span class="from">The brief says: metrics haven't improved</span><span class="mean">The platform already records how each file is worked, but nobody looks at it.</span><b>So we measure whether the process is followed, not only the final quality.</b></div>
         </div>
       </div>
       <h3 class="sub">What we assume about the client <span class="note">(open each to see why it matters)</span></h3>
@@ -483,22 +504,37 @@
     <!-- CH5 -->
     <article class="chapter" id="ch5" aria-labelledby="h-ch5">
       <span class="eyebrow">5 · How we'll measure it</span>
-      <h2 id="h-ch5">Measured along the same 90 days, <b>from baseline to results</b></h2>
-      <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against the baseline.</div>
-      <div class="mline" aria-label="Measurement milestones">
-        <div class="ms"><span class="when">Weeks 1–3</span><b>Baseline</b><span>First-time-right files by step, team and site · reversions · manager agreement · mastery by step</span></div>
-        <div class="ms"><span class="when">From week 5</span><b>Weekly adoption</b><span>Files following the full flow (always with quality) · weekly reviews held · friction reported</span></div>
-        <div class="ms"><span class="when">Week 7</span><b>Managers aligned?</b><span>Agreement on the same files, compared with week 2</span></div>
-        <div class="ms"><span class="when">Week 10</span><b>Learning gained</b><span>Mastery by step, compared with week 3</span></div>
-        <div class="ms end"><span class="when">Day 90</span><b>Results</b><span>First-time-right files and the gap between teams, against the baseline</span></div>
+      <h2 id="h-ch5">Three questions, <b>answered over the same 90 days</b></h2>
+      <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against today's starting point.</div>
+      <p class="lead">Before changing anything, we take a picture of today. Then we answer three questions in order: if people don't know how, they can't do it; if they don't do it, quality can't improve.</p>
+      <div class="qs">
+        <div class="qcard">
+          <span class="qn">1</span>
+          <div class="qbody"><h3>Do they know how?</h3>
+            <p>Every analyst solves real-looking files and says how sure they are. We compare the first assessment with the one after training, step by step.</p>
+            <div class="track" aria-label="Measured in weeks 3 and 10"><i style="grid-column:3"></i><i style="grid-column:10"></i></div>
+            <div class="tl"><span>Week 3: before training</span><span>Week 10: after training</span></div>
+            <p class="good"><b>Good at day 90:</b> most analysts master the critical steps; no confident wrong answers left on them.</p></div>
+        </div>
+        <div class="qcard">
+          <span class="qn">2</span>
+          <div class="qbody"><h3>Do they do it on the job?</h3>
+            <p>Each week we look at how many files follow the full process (always together with their quality), how many reversions are reported, and whether managers held their file review. Managers repeat the calibration to check they still agree.</p>
+            <div class="track" aria-label="Measured weekly from week 5, calibration in weeks 2 and 7"><i class="w" style="grid-column:5 / 14"></i><i style="grid-column:2"></i><i style="grid-column:7"></i></div>
+            <div class="tl"><span>Weeks 2 and 7: managers compared</span><span>Weekly from week 5</span></div>
+            <p class="good"><b>Good at day 90:</b> the full process is the norm on critical steps, and every team holds its weekly review.</p></div>
+        </div>
+        <div class="qcard dark">
+          <span class="qn">3</span>
+          <div class="qbody"><h3>Does quality improve?</h3>
+            <p>We compare files that pass Quality the first time, and the gap between the best and worst teams, against the starting point.</p>
+            <div class="track" aria-label="Starting point in weeks 1 to 3, compared at day 90"><i class="w" style="grid-column:1 / 4"></i><i style="grid-column:13"></i></div>
+            <div class="tl"><span>Weeks 1–3: starting point</span><span>Day 90: compared</span></div>
+            <p class="good"><b>Good at day 90:</b> a clear early improvement on the critical steps. Fewer audit findings come after the project.</p></div>
+        </div>
       </div>
-      <div class="grid g3">
-        <div class="level"><span class="k">LEARNING · Kirkpatrick 2</span><h3>Do they know how?</h3><p class="note">Mastery by step, with how sure they are. Confident wrong answers are flagged first.</p></div>
-        <div class="level"><span class="k">BEHAVIOR · Kirkpatrick 3 · Prosci</span><h3>Do they do it?</h3><p class="note">Full-flow files, analysts verified by referents, reversions by step, manager reviews held.</p></div>
-        <div class="level"><span class="k">RESULTS · Kirkpatrick 4</span><h3>Does quality improve?</h3><p class="note">First-time-right files and less variation between teams. Audit findings follow later.</p></div>
-      </div>
-      <p class="note"><b>Realistic horizon:</b> training starts in week 6, so day 90 shows clear learning gains, early behavior change and first signals in quality on the critical steps. Fewer audit findings come after the project.</p>
-      <div class="rules"><span class="chip teal">Adherence always paired with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed with the client</span></div>
+      <div class="rules"><span class="chip teal">Process adherence is always read together with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed with the client</span></div>
+      <p class="note foot">Measurement draws on documented frameworks: Kirkpatrick's four levels of evaluation (learning, behavior, results), Prosci's adoption factors (speed, utilization and proficiency) and the ADKAR assessment to diagnose where each group is stuck.</p>
     </article>
 
     <!-- CH6 -->
