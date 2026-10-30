@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KYC Step Module · Prototype</title>
+<meta name="description" content="Prototype of a scenario-based learning module: spot inconsistencies before a KYC file is submitted. Sample data only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Dark brand header over light reading surfaces; cyan/lilac only on dark, teal for interaction on light */
+  :root {
+    --ink: #231F20; --ink-2: #3A3536; --paper: #FFFFFF; --mist: #F2F3F5; --line: #D9DBDF;
+    --muted: #5E5A5B; --cyan: #06F5FE; --lilac: #B895FF; --teal: #047680; --teal-soft: #E3F1F2;
+    --ok: #1B7A3E; --ok-soft: #E6F4EA; --warn: #8A5A00; --warn-soft: #FFF4DB; --bad: #B3261E; --bad-soft: #FCE8E6;
+    --font: "Mulish", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --r: 10px;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: var(--font); background: var(--mist); color: var(--ink); font-size: 16px; line-height: 1.5; }
+  a { color: var(--teal); }
+  button, select { font: inherit; }
+  :focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  header.top { background: var(--ink); color: var(--paper); position: relative; overflow: hidden; }
+  header.top::before { content: ""; position: absolute; inset: -60% -10% auto auto; width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,245,254,.28), rgba(184,149,255,.18) 45%, transparent 70%); pointer-events: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .top .wrap { padding-block: 20px 16px; position: relative; display: flex; flex-direction: column; gap: 14px; }
+  .brandrow { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--lilac); }
+  .top h1 { margin: 2px 0 0; font-weight: 300; font-size: clamp(22px, 3.2vw, 30px); line-height: 1.2; }
+  .top h1 b { font-weight: 700; color: var(--cyan); }
+  .badge { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--lilac); color: var(--lilac); white-space: nowrap; }
+  ol.progress { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  ol.progress li { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--ink-2); color: #CFCBCC; }
+  ol.progress li[aria-current="step"] { background: var(--cyan); color: var(--ink); font-weight: 800; }
+  ol.progress li.done { color: var(--paper); }
+  ol.progress li.done::before { content: "✓ "; color: var(--cyan); }
+
+  main .wrap { padding-block: 24px 48px; }
+  .screen { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+  .screen.full { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 900px) { .screen { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; min-width: 0; }
+  .card + .card { margin-top: 16px; }
+  h2 { font-size: 22px; font-weight: 800; margin: 0 0 6px; text-wrap: balance; }
+  h2:focus { outline: none; }
+  h3 { font-size: 16px; font-weight: 800; margin: 0 0 8px; }
+  .lead { margin: 0 0 16px; color: var(--muted); max-width: 70ch; }
+  .scene { display: flex; gap: 12px; align-items: center; margin: 0 0 16px; padding: 12px 14px; background: var(--mist); border-radius: var(--r); }
+  .avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--cyan); display: grid; place-items: center; font-weight: 800; }
+
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+  .doc { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; background: linear-gradient(135deg, #F7FAFB, #EEF3F6); position: relative; overflow: hidden; }
+  .doc::after { content: "SAMPLE"; position: absolute; right: -8px; bottom: 10px; transform: rotate(-12deg); font-weight: 800; font-size: 34px; letter-spacing: .1em; color: rgba(4,118,128,.08); pointer-events: none; }
+  .doc .dochead { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .doc .docbody { display: flex; gap: 12px; }
+  .photo { flex: none; width: 64px; height: 80px; border-radius: 6px; background: #CBD5DA; display: grid; place-items: end center; overflow: hidden; }
+  .photo span { width: 44px; height: 54px; background: #9AAAB2; border-radius: 22px 22px 0 0; }
+  dl.kv { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 10px; font-size: 14px; }
+  dl.kv dt { color: var(--muted); }
+  dl.kv dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .docs { display: flex; flex-direction: column; gap: 12px; }
+
+  .platform { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--paper); }
+  .platform .bar { background: var(--ink-2); color: var(--paper); font-size: 12px; font-weight: 700; padding: 8px 12px; display: flex; justify-content: space-between; gap: 8px; }
+  .platform .bar span:last-child { color: var(--cyan); }
+  .fields { list-style: none; margin: 0; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+  .field { width: 100%; text-align: left; background: var(--paper); border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 12px; cursor: pointer;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; color: var(--ink); }
+  .field .lbl { font-size: 12px; color: var(--muted); grid-column: 1; }
+  .field .val { font-weight: 700; font-variant-numeric: tabular-nums; grid-column: 1; overflow-wrap: anywhere; }
+  .field .tag { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 12px; font-weight: 800; }
+  .field:hover { border-color: var(--teal); }
+  .field[aria-pressed="true"] { border-color: var(--teal); background: var(--teal-soft); }
+  .field[aria-pressed="true"] .tag::before { content: "Selected"; color: var(--teal); }
+  .field.is-right { border-color: var(--ok); background: var(--ok-soft); }
+  .field.is-right .tag::before { content: "✓ Mismatch"; color: var(--ok); }
+  .field.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .field.is-wrong .tag::before { content: "✗ No mismatch"; color: var(--bad); }
+  .field.is-missed { border: 2px dashed var(--warn); background: var(--warn-soft); }
+  .field.is-missed .tag::before { content: "! Missed"; color: var(--warn); }
+  .field[disabled] { cursor: default; }
+
+  .alt { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+  select { padding: 6px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); max-width: 100%; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; align-items: center; }
+  .btn { border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 9px 16px; font-weight: 700; cursor: pointer; }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary .arrow { color: var(--cyan); }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; }
+  .btn.ghost { border-color: var(--line); }
+
+  .feedback { margin-top: 16px; border-radius: var(--r); padding: 12px 14px; display: none; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--ok-soft); border: 1px solid var(--ok); }
+  .feedback.no { background: var(--bad-soft); border: 1px solid var(--bad); }
+  .feedback.info { background: var(--teal-soft); border: 1px solid var(--teal); }
+  .feedback strong { display: block; margin-bottom: 2px; }
+  .feedback ul { margin: 6px 0 0; padding-left: 20px; }
+
+  aside.guide { position: sticky; top: 16px; background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 16px; }
+  aside.guide h3 { color: var(--cyan); }
+  aside.guide p.small { font-size: 13px; color: #CFCBCC; margin: 0 0 10px; }
+  aside.guide ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+  aside.guide b { color: var(--paper); }
+  aside.guide .rule { color: #CFCBCC; }
+  @media (max-width: 900px) { aside.guide { position: static; } }
+
+  fieldset { border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; margin: 0 0 12px; }
+  legend { font-weight: 800; padding: 0 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { position: relative; }
+  .opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .opt span { display: inline-block; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); font-weight: 600; }
+  .opt input:checked + span { border-color: var(--teal); background: var(--teal-soft); }
+  .opt input:focus-visible + span { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .opt.right span { border-color: var(--ok); background: var(--ok-soft); }
+  .opt.wrong span { border-color: var(--bad); background: var(--bad-soft); }
+
+  .certainty { margin-top: 16px; padding: 12px 14px; background: var(--mist); border-radius: var(--r); }
+  .certainty legend { padding: 0; }
+  .certainty fieldset { border: 0; padding: 0; margin: 0; }
+
+  .intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; margin: 16px 0; }
+  .tile { background: var(--mist); border-radius: var(--r); padding: 14px; }
+  .tile b { display: block; margin-bottom: 4px; }
+
+  .results { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+  .res { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; padding: 12px 14px; border-radius: var(--r); border: 1.5px solid var(--line); background: var(--paper); }
+  .res .ic { grid-row: 1 / span 2; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; }
+  .res .st { font-weight: 800; }
+  .res .why { color: var(--muted); font-size: 14px; }
+  .res.mastered { border-color: var(--ok); } .res.mastered .ic { background: var(--ok-soft); color: var(--ok); }
+  .res.unsure { border-color: var(--warn); } .res.unsure .ic { background: var(--warn-soft); color: var(--warn); }
+  .res.practice { border-color: var(--bad); } .res.practice .ic { background: var(--bad-soft); color: var(--bad); }
+  .res.priority { border: 2px dashed var(--bad); } .res.priority .ic { background: var(--bad); color: var(--paper); }
+  .note { font-size: 13px; color: var(--muted); }
+  footer { font-size: 13px; color: var(--muted); }
+  footer .wrap { padding-block: 0 32px; }
+  @media (prefers-reduced-motion: no-preference) { .screen { animation: in .25s ease-out; } @keyframes in { from { opacity: .9; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandrow">
+      <div>
+        <div class="eyebrow">KYC onboarding · Step module</div>
+        <h1>Spot inconsistencies <b>before you submit a file</b></h1>
+      </div>
+      <span class="badge">Prototype · Sample data only</span>
+    </div>
+    <nav aria-label="Module progress"><ol class="progress" id="progress"></ol></nav>
+  </div>
+</header>
+
+<main id="main"><div class="wrap" id="stage"></div></main>
+<div class="sr" aria-live="polite" id="live"></div>
+<footer><div class="wrap">Prototype for the EPAM take-home challenge by Leticia Castañeda · Builds storyboard screens 6–8, 11–13 and 16 · All names, numbers and documents are fictional · The 3-month validity of a proof of address is a sample policy.</div></footer>
+
+<script>
+(() => {
+  const TODAY = "30/10/2026";
+  const STEPS = ["Start", "Practice 1", "Practice 2", "Decide", "Check", "Results"];
+  const GUIDE = [
+    ["Name", "Matches the ID exactly, including every given name and surname."],
+    ["ID number", "Every digit matches the document. Read long numbers in pairs."],
+    ["Date of birth", "Day, month and year match. Watch the day/month order."],
+    ["Address", "Matches a proof of address issued in the last 3 months (sample policy)."],
+    ["Document validity", "The ID is in date and shows no signs of alteration."],
+  ];
+  const state = { step: 0, kc: {}, kcIndex: 0 };
+  const $ = (s, el = document) => el.querySelector(s);
+  const stage = $("#stage"), live = $("#live");
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const announce = (t) => { live.textContent = ""; setTimeout(() => { live.textContent = t; }, 30); };
+
+  function renderProgress() {
+    const ol = $("#progress");
+    const idx = state.step <= 3 ? state.step : state.step <= 6 ? 4 : 5;
+    ol.innerHTML = STEPS.map((s, i) => `<li ${i === idx ? 'aria-current="step"' : ""} class="${i < idx ? "done" : ""}">${s}</li>`).join("");
+  }
+  function guideAside() {
+    return `<aside class="guide" aria-labelledby="g-h"><h3 id="g-h">Step guide: five checks</h3>
+      <p class="small">The same guide you use on the job. Keep it open while you practice.</p>
+      <ol>${GUIDE.map(([a, b]) => `<li><b>${a}.</b> <span class="rule">${b}</span></li>`).join("")}</ol></aside>`;
+  }
+  function idCard(d) {
+    return `<div class="doc" role="group" aria-label="Identity document, sample"><div class="dochead">Identity document · sample</div>
+      <div class="docbody"><div class="photo" aria-hidden="true"><span></span></div>
+      <dl class="kv"><dt>Name</dt><dd>${esc(d.name)}</dd><dt>ID number</dt><dd>${esc(d.id)}</dd><dt>Date of birth</dt><dd>${esc(d.dob)}</dd><dt>Valid until</dt><dd>${esc(d.valid)}</dd></dl></div></div>`;
+  }
+  function addressCard(d) {
+    return `<div class="doc" role="group" aria-label="Proof of address, sample"><div class="dochead">Proof of address · utility bill · sample</div>
+      <dl class="kv"><dt>Holder</dt><dd>${esc(d.holder)}</dd><dt>Address</dt><dd>${esc(d.address)}</dd><dt>Issued</dt><dd>${esc(d.issued)}</dd></dl></div>`;
+  }
+  function platform(fields, label) {
+    return `<div class="platform"><div class="bar"><span>KYC platform · Identity verification</span><span>${esc(label)}</span></div>
+      <ul class="fields">${fields.map((f) => `<li><button type="button" class="field" data-key="${f.key}" aria-pressed="false">
+        <span class="lbl">${esc(f.label)}</span><span class="val">${esc(f.value)}</span><span class="tag" aria-hidden="true"></span></button></li>`).join("")}</ul></div>`;
+  }
+  function altSelect(fields, id, multiple) {
+    return `<div class="alt"><label for="${id}">Or choose ${multiple ? "fields" : "the field"} from a list:</label>
+      <select id="${id}" ${multiple ? "multiple size=\"5\"" : ""}>${multiple ? "" : '<option value="">Select a field</option>'}${fields.map((f) => `<option value="${f.key}">${esc(f.label)}</option>`).join("")}</select></div>`;
+  }
+  function wireFields(root, max, onChange) {
+    const btns = [...root.querySelectorAll(".field")];
+    const sel = root.querySelector("select");
+    const sync = () => { const picked = btns.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.key);
+      if (sel) [...sel.options].forEach((o) => { if (o.value) o.selected = picked.includes(o.value); }); onChange && onChange(picked); };
+    btns.forEach((b) => b.addEventListener("click", () => {
+      const on = b.getAttribute("aria-pressed") === "true";
+      if (max === 1) btns.forEach((x) => x.setAttribute("aria-pressed", "false"));
+      else if (!on && btns.filter((x) => x.getAttribute("aria-pressed") === "true").length >= max) { announce(`You can select up to ${max} fields.`); return; }
+      b.setAttribute("aria-pressed", on && max !== 1 ? "false" : "true"); sync();
+    }));
+    if (sel) sel.addEventListener("change", () => {
+      const picked = [...sel.selectedOptions].map((o) => o.value).filter(Boolean).slice(0, max);
+      btns.forEach((b) => b.setAttribute("aria-pressed", picked.includes(b.dataset.key) ? "true" : "false")); onChange && onChange(picked);
+    });
+    return () => btns.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.key);
+  }
+  function show(fb, cls, html) { fb.className = "feedback show " + cls; fb.innerHTML = html; announce(fb.textContent); }
+  function lock(root) { root.querySelectorAll(".field, select").forEach((e) => e.setAttribute("disabled", "")); }
+  function go(step) { state.step = step; render(); }
+  function focusTitle() { const h = $("h2", stage); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } window.scrollTo({ top: 0 }); }
+
+  const SCREENS = [];
+
+  // 0 · Start
+  SCREENS[0] = () => `<section class="screen full"><div class="card">
+    <h2>Practice spotting the five inconsistencies that send files back</h2>
+    <p class="lead">This prototype builds part of the storyboard: two practice files, a decision, three knowledge-check items and your results. It takes about 6 minutes.</p>
+    <div class="scene"><div class="avatar" aria-hidden="true">A</div><div>You'll work alongside <b>Ana</b>, an onboarding analyst in a regional hub. She has new files to check before submitting.</div></div>
+    <div class="intro-grid">
+      <div class="tile"><b>Objective</b>Given a client file, identify inconsistencies between the identity documents and the data captured in the platform, and choose the right next action.</div>
+      <div class="tile"><b>How it works</b>Compare the document with the platform capture. Select the field that doesn't match. The step guide stays open on the side.</div>
+      <div class="tile"><b>Safe to practice</b>Nothing here is used in performance reviews. Your results only build your learning route.</div>
+    </div>
+    <div class="actions"><button class="btn primary" id="start">Start practice <span class="arrow">→</span></button></div>
+  </div></section>`;
+  const after0 = () => $("#start").addEventListener("click", () => go(1));
+
+  // 1 · Practice 1
+  const F1 = [
+    { key: "name", label: "Full name", value: "Lucía Ramos Vega" },
+    { key: "id", label: "ID number", value: "27519846" },
+    { key: "dob", label: "Date of birth", value: "02/11/1991" },
+    { key: "valid", label: "Document valid", value: "Yes, until 08/2030" },
+  ];
+  SCREENS[1] = () => `<section class="screen"><div class="card">
+    <h2>Practice 1: find the one field that doesn't match</h2>
+    <p class="lead">Lucía's file has one inconsistency. Select the field in the platform capture that doesn't match her ID.</p>
+    <div class="compare">${idCard({ name: "Lucía Ramos Vega", id: "27519864", dob: "02/11/1991", valid: "08/2030" })}${platform(F1, "File 1 of 2")}</div>
+    ${altSelect(F1, "alt1", false)}
+    <div class="actions"><button class="btn ghost" id="hint" aria-expanded="false" aria-controls="hinttext">Show a hint</button>
+      <button class="btn primary" id="check" disabled>Check answer</button><button class="btn" id="next" hidden>Next file <span>→</span></button></div>
+    <p id="hinttext" class="note" hidden>Hint: read long numbers in pairs of two digits.</p>
+    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
+  const after1 = () => {
+    let tries = 0; const card = $(".card", stage), fb = $("#fb");
+    const picked = wireFields(card, 1, (p) => { $("#check").disabled = p.length === 0; });
+    $("#hint").addEventListener("click", (e) => { const h = $("#hinttext"); h.hidden = !h.hidden; e.currentTarget.setAttribute("aria-expanded", String(!h.hidden)); });
+    $("#check").addEventListener("click", () => {
+      const p = picked()[0]; tries++;
+      const btn = card.querySelector(`.field[data-key="${p}"]`);
+      if (p === "id") { btn.classList.add("is-right"); lock(card); $("#check").hidden = true; $("#next").hidden = false;
+        show(fb, "ok", "<strong>Right.</strong>The last two digits are swapped: 27519864 on the ID, 27519846 in the platform. One wrong digit makes the identity check fail and the file comes back from Quality."); $("#next").focus(); }
+      else if (tries < 2) { btn.classList.add("is-wrong"); btn.setAttribute("aria-pressed", "false"); $("#check").disabled = true;
+        show(fb, "no", "<strong>Not this one.</strong>That field matches the document. Compare the ID number digit by digit and try again."); }
+      else { btn.classList.add("is-wrong"); card.querySelector('.field[data-key="id"]').classList.add("is-missed"); lock(card); $("#check").hidden = true; $("#next").hidden = false;
+        show(fb, "info", "<strong>Here's the inconsistency.</strong>The ID number: 27519864 on the document, 27519846 in the platform. The last two digits are swapped."); $("#next").focus(); }
+    });
+    $("#next").addEventListener("click", () => go(2));
+  };
+
+  // 2 · Practice 2
+  const F2 = [
+    { key: "name", label: "Full name", value: "Sofía Martínez Lara" },
+    { key: "id", label: "ID number", value: "31840275" },
+    { key: "dob", label: "Date of birth", value: "19/06/1985" },
+    { key: "address", label: "Address", value: "Av. Juárez 210, Col. Centro" },
+    { key: "proof", label: "Proof of address", value: "Issued 12/05/2026 · accepted" },
+  ];
+  SCREENS[2] = () => `<section class="screen"><div class="card">
+    <h2>Practice 2: two inconsistencies, no hints</h2>
+    <p class="lead">Sofía's file has two inconsistencies. Select both, then check your answers. Today is ${TODAY}.</p>
+    <div class="compare"><div class="docs">${idCard({ name: "Sofía Martínez Lara", id: "31840275", dob: "19/06/1985", valid: "03/2031" })}${addressCard({ holder: "Sofía Martínez Lara", address: "Av. Juárez 120, Col. Centro", issued: "12/05/2026" })}</div>${platform(F2, "File 2 of 2")}</div>
+    ${altSelect(F2, "alt2", true)}
+    <div class="actions"><button class="btn primary" id="check" disabled>Check answers</button><button class="btn" id="next" hidden>Decide what to do <span>→</span></button></div>
+    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
+  const after2 = () => {
+    const card = $(".card", stage), fb = $("#fb");
+    const picked = wireFields(card, 2, (p) => { $("#check").disabled = p.length === 0; });
+    $("#check").addEventListener("click", () => {
+      const p = picked(); const target = ["address", "proof"]; const lines = [];
+      card.querySelectorAll(".field").forEach((b) => {
+        const k = b.dataset.key, sel = p.includes(k), isT = target.includes(k);
+        if (sel && isT) b.classList.add("is-right"); else if (sel && !isT) b.classList.add("is-wrong"); else if (!sel && isT) b.classList.add("is-missed");
+      });
+      lines.push(p.includes("address") ? "<li><b>Address:</b> found. 210 in the platform, 120 on the proof of address. A capture error.</li>" : "<li><b>Address (missed):</b> 210 in the platform, 120 on the proof of address.</li>");
+      lines.push(p.includes("proof") ? "<li><b>Proof of address:</b> found. Issued 12/05/2026, more than 3 months ago; the guide accepts documents up to 3 months old.</li>" : "<li><b>Proof of address (missed):</b> issued 12/05/2026. Check the issue date, not only the content.</li>");
+      p.filter((k) => !target.includes(k)).forEach((k) => lines.push(`<li><b>${esc(F2.find((f) => f.key === k).label)}:</b> this field matches the documents.</li>`));
+      const all = p.length === 2 && target.every((t) => p.includes(t));
+      show(fb, all ? "ok" : "info", `<strong>${all ? "Both found." : "Here's what the file shows."}</strong><ul>${lines.join("")}</ul>`);
+      lock(card); $("#check").hidden = true; $("#next").hidden = false; $("#next").focus();
+    });
+    $("#next").addEventListener("click", () => go(3));
+  };
+
+  // 3 · Decide
+  const ACTIONS = [["correct", "Correct the capture"], ["request", "Request a new document"], ["escalate", "Escalate to Compliance"]];
+  const radios = (name) => `<div class="opts" role="radiogroup">${ACTIONS.map(([v, l]) => `<label class="opt"><input type="radio" name="${name}" value="${v}"><span>${l}</span></label>`).join("")}</div>`;
+  SCREENS[3] = () => `<section class="screen"><div class="card">
+    <h2>Finding the error is half the job: decide what to do</h2>
+    <p class="lead">What should Ana do with each inconsistency in Sofía's file?</p>
+    <fieldset><legend>Address: 210 in the platform, 120 on the proof of address</legend>${radios("d1")}</fieldset>
+    <fieldset><legend>Proof of address issued 12/05/2026 (more than 3 months ago)</legend>${radios("d2")}</fieldset>
+    <div class="actions"><button class="btn primary" id="check" disabled>Check decisions</button><button class="btn" id="next" hidden>Start the knowledge check <span>→</span></button></div>
+    <div class="feedback" id="fb"></div></div>${guideAside()}</section>`;
+  const after3 = () => {
+    const card = $(".card", stage), fb = $("#fb");
+    const val = (n) => (card.querySelector(`input[name="${n}"]:checked`) || {}).value;
+    card.addEventListener("change", () => { $("#check").disabled = !(val("d1") && val("d2")); });
+    $("#check").addEventListener("click", () => {
+      const ans = { d1: "correct", d2: "request" }; const out = [];
+      for (const n of ["d1", "d2"]) {
+        card.querySelectorAll(`input[name="${n}"]`).forEach((i) => { const l = i.closest(".opt"); if (i.value === ans[n]) l.classList.add("right"); else if (i.checked) l.classList.add("wrong"); i.disabled = true; });
+      }
+      out.push(val("d1") === "correct" ? "<li><b>Address: correct the capture.</b> The document is right; the capture is wrong. Fix it from the document in front of you.</li>" : "<li><b>Address: the right action is to correct the capture.</b> The evidence is fine; only the typing is wrong.</li>");
+      out.push(val("d2") === "request" ? "<li><b>Proof of address: request a new document.</b> The data may be right, but the evidence is out of date.</li>" : "<li><b>Proof of address: the right action is to request a new document.</b> An outdated proof cannot support the file, even if the address matches.</li>");
+      if (val("d1") === "escalate" || val("d2") === "escalate") out.push("<li><b>About escalating:</b> escalate when something suggests risk or alteration, not for routine fixes. Escalating everything slows real cases.</li>");
+      const ok = val("d1") === "correct" && val("d2") === "request";
+      show(fb, ok ? "ok" : "info", `<strong>${ok ? "Both decisions are right." : "Here's the reasoning."}</strong><ul>${out.join("")}</ul>`);
+      $("#check").hidden = true; $("#next").hidden = false; $("#next").focus();
+    });
+    $("#next").addEventListener("click", () => go(4));
+  };
+
+  // 4–6 · Knowledge check items
+  const KC = [
+    { check: "Name", type: "field", prompt: "Find the field that doesn't match the ID.",
+      doc: { name: "Ana Lucía Torres Gil", id: "40417728", dob: "23/01/1994", valid: "11/2032" },
+      fields: [{ key: "name", label: "Full name", value: "Ana Torres Gil" }, { key: "id", label: "ID number", value: "40417728" }, { key: "dob", label: "Date of birth", value: "23/01/1994" }, { key: "valid", label: "Document valid", value: "Yes, until 11/2032" }],
+      correct: "name", why: { right: "The second given name (Lucía) is missing. Names must match the ID exactly.", wrong: "The name is incomplete: “Ana Torres Gil” vs “Ana Lucía Torres Gil”. Names must match the ID exactly, including all given names." } },
+    { check: "Document validity", type: "action", prompt: `All the data matches, but the ID was valid until 09/2026. Today is ${TODAY}. What should Ana do?`,
+      doc: { name: "Marco Díaz Peña", id: "55120943", dob: "30/07/1979", valid: "09/2026" },
+      fields: [{ key: "name", label: "Full name", value: "Marco Díaz Peña" }, { key: "id", label: "ID number", value: "55120943" }, { key: "dob", label: "Date of birth", value: "30/07/1979" }, { key: "valid", label: "Document valid", value: "Yes" }],
+      correct: "request", why: { right: "An expired ID cannot support verification, even if every field matches.", wrong: "The right action is to request a valid ID. An expired document cannot support verification, even if every field matches." } },
+    { check: "Date of birth", type: "field", prompt: "Find the field that doesn't match the ID.",
+      doc: { name: "Raúl Herrera Soto", id: "62093317", dob: "05/11/1990", valid: "02/2029" },
+      fields: [{ key: "name", label: "Full name", value: "Raúl Herrera Soto" }, { key: "id", label: "ID number", value: "62093317" }, { key: "dob", label: "Date of birth", value: "11/05/1990" }, { key: "valid", label: "Document valid", value: "Yes, until 02/2029" }],
+      correct: "dob", why: { right: "Day and month are swapped: 05/11 on the ID, 11/05 in the platform. Check the date format in the guide.", wrong: "The date of birth: 05/11/1990 on the ID, 11/05/1990 in the platform. Day and month were swapped." } },
+  ];
+  const kcScreen = (i) => () => {
+    const q = KC[i];
+    const task = q.type === "field" ? `${platform(q.fields, `Item ${i + 1} of 3`)}` : `${platform(q.fields, `Item ${i + 1} of 3`)}`;
+    return `<section class="screen full"><div class="card">
+      <div class="eyebrow" style="color:var(--teal)">Knowledge check · item ${i + 1} of 3 (prototype) · not used in performance reviews</div>
+      <h2>${esc(q.prompt)}</h2>
+      <div class="compare">${idCard(q.doc)}${task}</div>
+      ${q.type === "field" ? altSelect(q.fields, "altk", false) : `<fieldset style="margin-top:16px"><legend>Choose the next action</legend>${radios("act")}</fieldset>`}
+      <div class="certainty"><fieldset><legend>How sure are you?</legend><div class="opts" role="radiogroup">
+        ${[["low", "Not sure"], ["mid", "Fairly sure"], ["high", "Very sure"]].map(([v, l]) => `<label class="opt"><input type="radio" name="cert" value="${v}"><span>${l}</span></label>`).join("")}</div></fieldset>
+        <p class="note">Being honest about certainty helps: a confident wrong answer tells us exactly what to reinforce.</p></div>
+      <div class="actions"><button class="btn primary" id="save" disabled>${i < KC.length - 1 ? "Save and continue" : "Save and see my results"} <span class="arrow">→</span></button></div>
+    </div></section>`;
+  };
+  const kcAfter = (i) => () => {
+    const q = KC[i], card = $(".card", stage);
+    let answer = null;
+    const ready = () => { const c = card.querySelector('input[name="cert"]:checked'); $("#save").disabled = !(answer && c); };
+    if (q.type === "field") wireFields(card, 1, (p) => { answer = p[0] || null; ready(); });
+    else card.querySelectorAll(".field").forEach((b) => b.setAttribute("disabled", ""));
+    card.addEventListener("change", (e) => { if (e.target.name === "act") answer = e.target.value; ready(); });
+    $("#save").addEventListener("click", () => {
+      state.kc[i] = { answer, cert: card.querySelector('input[name="cert"]:checked').value };
+      announce("Answer saved."); go(4 + i + 1);
+    });
+  };
+  [0, 1, 2].forEach((i) => { SCREENS[4 + i] = kcScreen(i); });
+
+  // 7 · Results
+  SCREENS[7] = () => {
+    const rows = KC.map((q, i) => {
+      const r = state.kc[i] || {}; const ok = r.answer === q.correct;
+      let cls, icon, st;
+      if (ok && r.cert !== "low") { cls = "mastered"; icon = "✓"; st = "Mastered"; }
+      else if (ok) { cls = "unsure"; icon = "~"; st = "Correct but unsure · review the guide card"; }
+      else if (r.cert === "high") { cls = "priority"; icon = "!"; st = "Priority · confident wrong answer"; }
+      else { cls = "practice"; icon = "✗"; st = "Keep practicing"; }
+      return `<li class="res ${cls}"><span class="ic" aria-hidden="true">${icon}</span><span class="st">${esc(q.check)}: ${st}</span><span class="why">${esc(ok ? q.why.right : q.why.wrong)}</span></li>`;
+    }).join("");
+    const gaps = KC.filter((q, i) => { const r = state.kc[i] || {}; return !(r.answer === q.correct && r.cert !== "low"); }).map((q) => q.check);
+    return `<section class="screen full"><div class="card">
+      <h2>Your results by check</h2>
+      <p class="lead">Each check shows its own status. Only you see this detail; your manager sees which workshops are on your route, and the program sees totals by step and team.</p>
+      <ul class="results" style="list-style:none;padding:0">${rows}</ul>
+      <div class="feedback show info"><strong>Your next step</strong>${gaps.length
+        ? `Your route now includes the workshop${gaps.length > 1 ? "s" : ""} for: ${gaps.map(esc).join(", ")}. The other checks stay available as optional review.`
+        : "All checks in this prototype are mastered. Next: book an on-the-job verification with an expert referent."}</div>
+      <p class="note">The full module checks all five items (name, ID number, date of birth, address and document validity), with three variants per check for retakes.</p>
+      <div class="actions"><button class="btn primary" id="restart">Start again <span class="arrow">↺</span></button></div>
+    </div></section>`;
+  };
+  const after7 = () => $("#restart").addEventListener("click", () => { state.kc = {}; go(0); });
+
+  const AFTER = [after0, after1, after2, after3, kcAfter(0), kcAfter(1), kcAfter(2), after7];
+  function render() { renderProgress(); stage.innerHTML = SCREENS[state.step](); AFTER[state.step](); focusTitle(); }
+  render();
+})();
+</script>
+</body>
+</html>
