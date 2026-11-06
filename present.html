@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KYC Adoption · Presentation</title>
+<meta name="description" content="Presentation view of the KYC process adoption challenge: 14 slides with backup detail on each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #231F20; --ink-2: #3A3536; --ink-3: #4A4546; --paper: #FFFFFF; --mist: #F2F3F5; --line: #D9DBDF;
+    --muted: #5E5A5B; --soft: #CFCBCC; --cyan: #06F5FE; --lilac: #B895FF; --teal: #047680; --teal-soft: #E3F1F2;
+    --ok: #1B7A3E; --ok-soft: #E6F4EA; --warn: #8A5A00; --warn-soft: #FFF4DB; --bad: #B3261E; --bad-soft: #FCE8E6;
+    --font: "Mulish", "Segoe UI", system-ui, -apple-system, sans-serif; color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; font-family: var(--font); background: #111; color: var(--ink); overflow: hidden; line-height: 1.4; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+  /* Stage: a fixed 1280x720 canvas scaled to fit */
+  .viewport { position: fixed; inset: 0 0 56px 0; display: grid; place-items: center; }
+  .canvas { width: 1280px; height: 720px; position: relative; transform-origin: center center; flex: none; }
+  .slide { position: absolute; inset: 0; background: var(--paper); padding: 52px 64px 44px; display: flex; flex-direction: column; overflow: hidden; }
+  .slide[hidden] { display: none; }
+  .slide.dark { background: var(--ink); color: var(--paper); }
+  .act { font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .dark .act { color: var(--lilac); }
+  h1, h2 { margin: 0; font-weight: 300; text-wrap: balance; }
+  h2 { font-size: 38px; line-height: 1.12; max-width: 1060px; }
+  h2 b, h1 b { font-weight: 800; color: var(--teal); }
+  .dark h2 b, .dark h1 b { color: var(--cyan); }
+  .lead { font-size: 19px; color: var(--muted); margin: 14px 0 0; max-width: 900px; }
+  .dark .lead { color: var(--soft); }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; margin-top: 22px; min-height: 0; }
+  .foot { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .dark .foot { color: var(--soft); }
+  .row { display: grid; gap: 16px; }
+  .c2 { grid-template-columns: 1fr 1fr; } .c3 { grid-template-columns: repeat(3, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); } .c5 { grid-template-columns: repeat(5, 1fr); }
+  .box { background: var(--mist); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+  .dark .box { background: var(--ink-2); }
+  .box b.t { display: block; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .box p { margin: 0; font-size: 15.5px; color: var(--muted); }
+  .dark .box p { color: var(--soft); }
+  .chip { display: inline-block; font-size: 12.5px; font-weight: 800; padding: 3px 10px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
+  .chip.teal { color: var(--teal); } .chip.lilac { color: #6E45D9; } .chip.cyan { color: var(--cyan); }
+  .dark .chip.lilac { color: var(--lilac); }
+  .k { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 6px; }
+  .dark .k { color: var(--lilac); }
+
+  /* 1 Title */
+  .title h1 { font-size: 60px; line-height: 1.06; max-width: 1080px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .stat { border-top: 2px solid var(--cyan); padding-top: 12px; }
+  .stat b { display: block; font-size: 46px; font-weight: 800; color: var(--cyan); line-height: 1; }
+  .stat span { color: var(--soft); font-size: 16px; }
+  .byline { margin-top: auto; font-size: 15px; color: var(--soft); }
+  .byline b { color: var(--paper); }
+
+  /* symptoms */
+  .sym { background: var(--mist); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .sym .q { font-size: 19px; font-weight: 800; line-height: 1.25; }
+  .sym .c { font-size: 15px; color: var(--muted); }
+  .sym .chip { align-self: flex-start; margin-top: auto; }
+  .sym.inside { background: var(--paper); border: 2.5px dashed var(--teal); }
+  .dark .sym { background: var(--ink-2); } .dark .sym .c { color: var(--soft); }
+  .dark .sym.inside { background: transparent; border-color: var(--cyan); }
+  .verdict { display: flex; gap: 14px; align-items: center; background: var(--ink); color: var(--paper); border-radius: 14px; padding: 16px 20px; font-size: 17px; }
+  .dark .verdict { background: var(--ink-2); }
+  .verdict .big { font-size: 30px; font-weight: 800; color: var(--cyan); }
+  .metric { display: flex; align-items: center; gap: 18px; border-left: 4px solid var(--teal); padding: 6px 0 6px 18px; font-size: 19px; }
+  .metric b { font-size: 34px; font-weight: 800; color: var(--teal); }
+
+  /* lists */
+  ul.clean { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  ul.clean li { font-size: 16px; padding-left: 22px; position: relative; }
+  ul.clean li::before { content: ""; position: absolute; left: 4px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  .dark ul.clean li::before { background: var(--cyan); }
+  ul.clean.q li::before { content: "?"; width: auto; height: auto; background: none; top: 0; left: 2px; font-weight: 800; color: var(--teal); }
+  .next { background: var(--teal); color: var(--paper); border-radius: 12px; padding: 12px 18px; font-size: 16px; }
+
+  /* plan */
+  .phases { display: grid; grid-template-columns: 3fr 7fr 3fr; gap: 10px; }
+  .ph { border-radius: 14px; background: var(--mist); padding: 14px 16px; min-width: 0; }
+  .ph .wk { font-size: 13px; font-weight: 800; color: var(--teal); letter-spacing: .06em; text-transform: uppercase; }
+  .ph .nm { display: block; font-size: 20px; font-weight: 800; margin: 2px 0 10px; }
+  .ph ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+  .ph.mid ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; flex: none; }
+  .dot.l { background: var(--teal); } .dot.s { background: #6E45D9; } .dot.c { background: var(--ink); }
+  .gateline { display: grid; grid-template-columns: 3fr 7fr 3fr; gap: 10px; }
+  .gate { grid-column: 1; justify-self: end; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 6px 14px; margin-right: -24px; position: relative; z-index: 1; }
+  .gate span { color: var(--cyan); }
+  .legend { display: flex; gap: 22px; font-size: 14px; color: var(--muted); font-weight: 700; }
+
+  /* lessons */
+  .lesson { display: grid; grid-template-columns: 44px 1fr 330px; gap: 18px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .lesson:last-child { border-bottom: 0; }
+  .lesson .n { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--cyan); font-weight: 800; display: grid; place-items: center; font-size: 17px; }
+  .lesson b { font-size: 19px; display: block; }
+  .lesson p { margin: 3px 0 0; color: var(--muted); font-size: 15px; }
+  .lesson .hl { font-weight: 800; color: var(--teal); }
+  .inplan { background: var(--teal-soft); color: var(--teal); font-weight: 800; font-size: 14.5px; border-radius: 10px; padding: 10px 14px; }
+  .inplan small { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+
+  /* measurement */
+  .objective { background: var(--ink); color: var(--paper); border-radius: 14px; padding: 14px 20px; font-size: 16.5px; }
+  .objective b { color: var(--cyan); }
+  .qc { background: var(--mist); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .qc .qn { width: 34px; height: 34px; border-radius: 50%; background: var(--teal); color: var(--paper); display: grid; place-items: center; font-weight: 800; }
+  .qc h3 { margin: 0; font-size: 22px; }
+  .qc p { margin: 0; font-size: 15px; color: var(--muted); }
+  .qc .when { font-size: 13px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; }
+  .qc .good { margin-top: auto; font-size: 14.5px; color: var(--ink); border-top: 1px solid var(--line); padding-top: 8px; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* module */
+  .route { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1.2fr 24px 1fr; align-items: stretch; }
+  .rs { background: var(--mist); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--muted); }
+  .rs b { display: block; color: var(--ink); font-size: 15.5px; }
+  .rs .w { font-size: 11.5px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .08em; }
+  .rs.hl { background: var(--ink); color: var(--soft); } .rs.hl b { color: var(--paper); } .rs.hl .w { color: var(--cyan); }
+  .ra { display: grid; place-items: center; color: var(--teal); font-weight: 800; }
+  .obj { font-size: 19px; border-left: 4px solid var(--teal); padding: 4px 0 4px 18px; max-width: 1080px; }
+  .stage { background: var(--mist); border-radius: 12px; padding: 14px; min-width: 0; }
+  .stage.built { background: var(--paper); border: 2px solid var(--teal); }
+  .stage .sn { font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .08em; }
+  .stage b { display: block; font-size: 16.5px; margin: 2px 0 4px; }
+  .stage span.d { font-size: 13.5px; color: var(--muted); }
+  .meter { display: flex; gap: 3px; margin-bottom: 8px; }
+  .meter i { width: 18px; height: 6px; border-radius: 3px; background: var(--teal); }
+  .meter i.off { background: var(--line); }
+
+  /* demo */
+  .demo { display: grid; grid-template-columns: 340px 1fr; gap: 24px; flex: 1; min-height: 0; }
+  .demo ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .demo ol li { background: var(--ink-2); border-radius: 12px; padding: 14px 16px; font-size: 15px; color: var(--soft); }
+  .demo ol li b { display: block; color: var(--paper); font-size: 17px; }
+  .demo ol li .n { color: var(--cyan); font-weight: 800; margin-right: 6px; }
+  .frame { background: var(--paper); border-radius: 14px; overflow: hidden; min-height: 0; }
+  .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--cyan); background: transparent; color: var(--cyan); border-radius: 10px; padding: 10px 16px; font-weight: 800; cursor: pointer; text-decoration: none; font-size: 15px; align-self: flex-start; }
+
+  /* journeys */
+  .jr { display: grid; grid-template-columns: 250px 1fr 30px 1fr; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .jr:last-of-type { border-bottom: 0; }
+  .jr .who b { font-size: 19px; display: block; }
+  .jr .who span { font-size: 14px; color: var(--muted); }
+  .adkar { display: flex; gap: 3px; margin: 4px 0; }
+  .adkar i { font-style: normal; font-size: 12px; font-weight: 800; width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; background: var(--mist); color: var(--muted); }
+  .adkar i.on { background: var(--ink); color: var(--cyan); }
+  .jt { font-size: 15px; background: var(--mist); border-radius: 10px; padding: 10px 14px; }
+  .jt.to { background: var(--teal-soft); color: var(--ink); }
+  .jt small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .jt.to small { color: var(--teal); }
+  .arrow { color: var(--teal); font-weight: 800; text-align: center; font-size: 20px; }
+  .hyp { font-style: italic; color: var(--muted); font-size: 13px; }
+  .loopline { display: flex; align-items: center; gap: 10px; font-size: 15px; background: var(--ink); color: var(--paper); border-radius: 12px; padding: 12px 18px; }
+  .loopline b { color: var(--cyan); }
+
+  /* accountability */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .side { border-radius: 14px; padding: 16px 20px; background: var(--mist); }
+  .side.cl { background: var(--ink); color: var(--paper); }
+  .side b { font-size: 19px; display: block; }
+  .side span { font-size: 15px; color: var(--muted); }
+  .side.cl span { color: var(--soft); }
+  .tl { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; position: relative; padding-top: 22px; }
+  .tl::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: var(--teal); }
+  .tli { position: relative; font-size: 14.5px; }
+  .tli::before { content: ""; position: absolute; top: -20px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 3px solid var(--teal); }
+  .tli .w { display: block; font-size: 12px; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* AI */
+  .vcol { border-radius: 14px; padding: 18px 20px; background: var(--ink-2); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .vcol .tag { align-self: flex-start; font-size: 13px; font-weight: 800; padding: 4px 12px; border-radius: 999px; }
+  .vcol.ok .tag { background: var(--ok-soft); color: var(--ok); } .vcol.warn .tag { background: var(--warn-soft); color: var(--warn); } .vcol.bad .tag { background: var(--bad-soft); color: var(--bad); }
+  .vcol p { margin: 0; font-size: 15.5px; color: var(--soft); }
+  .vcol p span { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--lilac); }
+  .vcol p.why { color: var(--paper); }
+  .habit { font-size: 17px; border-left: 4px solid var(--cyan); padding: 4px 0 4px 18px; color: var(--paper); }
+
+  /* risks */
+  .risk { display: grid; grid-template-columns: 1fr 24px 1.6fr; gap: 10px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+  .risk:last-child { border-bottom: 0; }
+  .risk .r { font-weight: 800; }
+  .risk .a { color: var(--teal); font-weight: 800; }
+  .risk .m { color: var(--muted); }
+  .diff { background: var(--ink); color: var(--paper); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+  .diff .k { color: var(--lilac); }
+  .diff li { font-size: 16px; }
+
+  /* close */
+  .recap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .recap div { border-top: 2px solid var(--cyan); padding-top: 12px; }
+  .recap .n { color: var(--cyan); font-weight: 800; font-size: 15px; }
+  .recap b { display: block; font-size: 22px; margin: 4px 0; }
+  .recap span { color: var(--soft); font-size: 15.5px; }
+  .thanks { font-size: 28px; font-weight: 300; margin-top: auto; }
+  .thanks b { font-weight: 800; color: var(--cyan); }
+
+  /* Controls */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; height: 56px; background: #111; color: var(--soft); display: flex; align-items: center; gap: 10px; padding: 0 14px; font-size: 14px; }
+  .bar button, .bar a { background: var(--ink-2); color: var(--paper); border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-weight: 700; text-decoration: none; font-size: 14px; white-space: nowrap; }
+  .bar button:hover, .bar a:hover { background: var(--ink-3); }
+  .bar .count { font-variant-numeric: tabular-nums; min-width: 54px; text-align: center; color: var(--paper); font-weight: 800; }
+  .bar .actname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar #bk { background: var(--cyan); color: var(--ink); }
+  .bar #bk[aria-expanded="true"] { background: var(--lilac); }
+  .bar #timer { font-variant-numeric: tabular-nums; color: var(--cyan); font-weight: 800; }
+  .bar #timer[hidden] { display: none; }
+  .dots { display: flex; gap: 4px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); }
+  .dots i.on { background: var(--cyan); }
+  @media (max-width: 760px) { .dots, .bar .actname, .bar .hint { display: none; } .bar { gap: 6px; } }
+
+  /* Backup drawer */
+  .drawer { position: fixed; top: 0; right: 0; bottom: 56px; width: min(480px, 100%); background: var(--paper); box-shadow: -10px 0 40px rgba(0,0,0,.35); transform: translateX(105%); transition: transform .25s ease; overflow-y: auto; padding: 24px 26px 30px; z-index: 5; }
+  .drawer:not(.open) { visibility: hidden; transition: transform .25s ease, visibility 0s .25s; }
+  .drawer.open { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .drawer { transition: none; } }
+  .drawer h3 { margin: 0 0 4px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+  .drawer .dt { font-size: 21px; font-weight: 800; margin: 0 0 16px; line-height: 1.2; }
+  .drawer .close { position: absolute; top: 14px; right: 14px; border: 0; background: var(--mist); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 18px; }
+  .drawer h4 { font-size: 15px; margin: 18px 0 6px; }
+  .drawer p, .drawer li { font-size: 14.5px; color: var(--ink); }
+  .drawer p { margin: 0 0 8px; }
+  .drawer ul { margin: 0 0 8px; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+  .drawer .src { font-size: 12.5px; color: var(--muted); }
+  .drawer table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .drawer th { text-align: left; font-size: 11.5px; color: var(--muted); padding: 5px 6px; border-bottom: 1.5px solid var(--line); }
+  .drawer td { padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .drawer a { color: var(--teal); font-weight: 700; }
+  .drawer .more { display: inline-block; margin-top: 14px; font-weight: 800; color: var(--teal); }
+  .backup { display: none; }
+
+  /* ===== v2: fewer boxes. Structure from rules, whitespace and type; one emphasis per slide ===== */
+  .body { gap: 26px; }
+  .sym, .box, .qc, .rs, .side, .ph, .vcol { background: none; border-radius: 0; padding: 14px 0 0; border-top: 3px solid var(--line); }
+  .sym .q { font-size: 20px; }
+  .sym.out { border-top-color: var(--lilac); }
+  .sym.inside { background: none; border: 0; border-top: 3px solid var(--teal); }
+  .verdict { background: none; color: var(--ink); padding: 0; font-size: 22px; font-weight: 300; gap: 16px; }
+  .verdict b { font-weight: 800; }
+  .verdict .big { color: var(--teal); }
+  .metric { border-left: 0; padding: 0; font-size: 18px; color: var(--muted); }
+  .metric b { color: var(--muted); font-size: 28px; }
+  .row.c2.divided > :last-child { border-left: 1px solid var(--line); padding-left: 32px; }
+  .row.c2.divided > * { border-top: 0; padding-top: 0; }
+  .next { background: none; color: var(--teal); padding: 14px 0 0; border-top: 1px solid var(--line); border-radius: 0; font-size: 17px; }
+  .ph { border-top: 4px solid var(--ink); }
+  .ph.mid { border-top-color: var(--teal); }
+  .ph:last-child { border-top-color: var(--lilac); }
+  .ph ul { font-size: 15.5px; gap: 8px; }
+  .lesson { padding: 20px 0; }
+  .inplan { background: none; padding: 2px 0 2px 14px; border-left: 3px solid var(--teal); border-radius: 0; font-size: 15.5px; }
+  .objective { background: none; color: var(--ink); padding: 0; font-size: 21px; font-weight: 300; border-radius: 0; }
+  .objective b { color: var(--teal); font-weight: 800; }
+  .qc { border-top-color: var(--teal); gap: 10px; }
+  .qc .qn { background: none; color: var(--teal); width: auto; height: auto; display: block; font-size: 36px; line-height: 1; }
+  .rs { padding-top: 10px; }
+  .rs.hl { background: none; color: var(--muted); border-top-color: var(--teal); }
+  .rs.hl b { color: var(--teal); } .rs.hl .w { color: var(--teal); }
+  .ra { align-items: start; padding-top: 22px; }
+  .stage, .stage.built { background: none; border: 0; border-radius: 0; padding: 0; }
+  .stage.built .sn::after { content: " · built"; color: var(--muted); }
+  .demo ol li { background: none; border-radius: 0; border-top: 1px solid var(--ink-3); padding: 12px 0 0; }
+  .jt, .jt.to { background: none; padding: 0; border-radius: 0; font-size: 16px; }
+  .jt.to { font-weight: 700; color: var(--teal); }
+  .loopline { background: none; color: var(--ink); padding: 14px 0 0; border-top: 1px solid var(--line); border-radius: 0; font-size: 16.5px; }
+  .loopline b { color: var(--teal); }
+  .side.cl { background: none; color: var(--ink); border-top-color: var(--teal); }
+  .side.cl span { color: var(--muted); }
+  .side.cl b { color: var(--teal); }
+  .vcol.ok { border-top-color: #5CC98A; } .vcol.warn { border-top-color: #F2B84B; } .vcol.bad { border-top-color: #FF8A80; }
+  .diff { background: none; color: var(--ink); padding: 0 0 0 32px; border-left: 1px solid var(--line); border-radius: 0; }
+  .diff .k { color: var(--teal); }
+  /* Slide 5 matrix: color = layer only; phases are neutral columns */
+  .mx { display: grid; grid-template-columns: 200px 3fr 6fr 3fr; position: relative; }
+  .mh { font-size: 19px; font-weight: 800; padding: 0 14px 10px; border-bottom: 2px solid var(--ink); }
+  .mh span { display: block; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .mh:first-child { border-bottom: 0; }
+  .ml { padding: 14px 14px 14px 16px; font-size: 13.5px; color: var(--muted); border-left: 5px solid; border-bottom: 1px solid var(--line); }
+  .ml b { display: block; font-size: 16.5px; color: var(--ink); }
+  .ml.c { border-left-color: var(--ink); } .ml.s { border-left-color: #6E45D9; } .ml.l { border-left-color: var(--teal); }
+  .ml.s b { color: #6E45D9; } .ml.l b { color: var(--teal); }
+  .mc { padding: 12px 14px; border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .mc.c { background: #F4F4F5; } .mc.s { background: #F3EEFD; } .mc.l { background: var(--teal-soft); }
+  .mc.empty { background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(0,0,0,.025) 8px 16px); }
+  .mc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; font-size: 15px; }
+  .mc.c li::before, .mc.s li::before, .mc.l li::before { content: "•"; margin-right: 7px; font-weight: 800; }
+  .mc.s li::before { color: #6E45D9; } .mc.l li::before { color: var(--teal); }
+  .gatemark { position: absolute; top: -2px; left: calc(200px + (100% - 200px) * 3 / 12); transform: translate(-50%, -100%); background: var(--ink); color: var(--paper); font-size: 12.5px; font-weight: 800; border-radius: 999px; padding: 4px 12px; white-space: nowrap; margin-top: -34px; }
+  .gatev { position: absolute; top: -26px; bottom: 0; left: calc(200px + (100% - 200px) * 3 / 12); width: 0; border-left: 3px solid var(--ink); transform: translateX(-1.5px); }
+  .gatemark span { color: var(--cyan); margin-right: 6px; }
+  /* Slide 13 table */
+  table.rt { width: 100%; border-collapse: collapse; }
+  .rt th { text-align: left; font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); padding: 0 18px 12px 0; border-bottom: 2px solid var(--ink); width: 33.3%; }
+  .rt th:last-child { color: var(--ink); }
+  .rt td { font-size: 17px; padding: 20px 18px 20px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); }
+  .rt td:first-child { font-weight: 800; color: var(--ink); }
+  .rt td:last-child { color: var(--ink); border-left: 3px solid var(--teal); padding-left: 18px; }
+  .rt th:last-child { padding-left: 21px; }
+</style>
+</head>
+<body>
+<div class="viewport"><div class="canvas" id="canvas">
+
+<!-- 1 OPENING -->
+<section class="slide dark title" data-act="Opening" aria-label="Slide 1">
+  <div class="act">Learning &amp; change recommendation · KYC process adoption</div>
+  <h1>The client asked for training. <b>Training alone won't fix this.</b></h1>
+  <p class="lead">A 90-day adoption plan, with training as one part of it.</p>
+  <div class="stats">
+    <div class="stat"><b>3 of 4</b><span>root causes sit outside the classroom</span></div>
+    <div class="stat"><b>90</b><span>days to a measurable improvement</span></div>
+    <div class="stat"><b>3</b><span>levels of measurement: learning, behavior, results</span></div>
+  </div>
+  <div class="byline"><b>Leticia Castañeda</b> · Learning &amp; organizational development</div>
+  <div class="backup" data-title="The scenario I assumed" data-link="index.html#recommendation">
+    <p>The brief leaves industry and process open, so the work assumes:</p>
+    <ul>
+      <li><b>KYC client onboarding</b> (Know Your Customer identity checks) at a multinational financial services firm</li>
+      <li>Standardized on a digital platform six months ago</li>
+      <li>~800 analysts and leads, regional hubs, shifts</li>
+      <li>Highly regulated: a missed step is a compliance finding, not just rework</li>
+    </ul>
+    <p><b>If the scenario doesn't apply,</b> the approach still holds: only content and examples change.</p>
+    <p class="src">Client figures are assumptions; research figures are cited.</p>
+  </div>
+</section>
+
+<!-- 2 SITUATION -->
+<section class="slide" data-act="Act 1 · How I read the problem" aria-label="Slide 2" hidden>
+  <div class="act">Act 1 · How I read the problem</div>
+  <h2>Six months in, the process exists. <b>People aren't using it consistently.</b></h2>
+  <div class="body">
+    <div class="row c4">
+      <div class="sym"><span class="q">Experienced staff revert to old methods</span></div>
+      <div class="sym"><span class="q">Documentation is hard to find and use</span></div>
+      <div class="sym"><span class="q">Managers give inconsistent guidance</span></div>
+      <div class="sym"><span class="q">Employees aren't sure they apply it correctly</span></div>
+    </div>
+    <div class="metric"><b>—</b><span>The quality metrics the process was meant to improve haven't moved</span></div>
+    <div class="verdict"><span class="big">!</span><span><b>The gap underneath:</b> the client measures outcomes and course completion, not whether the process is followed.</span></div>
+  </div>
+  <div class="backup" data-title="Three things in the brief that shaped the design" data-link="index.html#recommendation">
+    <table><thead><tr><th>The brief says</th><th>In KYC this means</th><th>So we…</th></tr></thead><tbody>
+      <tr><td>Highly regulated</td><td>A missed step is a compliance finding, not just rework</td><td>Practice on realistic files; Compliance validates every guide and case</td></tr>
+      <tr><td>Distributed, unevenly experienced teams</td><td>One course for everyone bores experts and loses newcomers</td><td>Give each analyst a route based on what they need, by step</td></tr>
+      <tr><td>Metrics haven't improved</td><td>The platform records how each file is worked, but nobody looks</td><td>Measure whether the process is followed, not only final quality</td></tr>
+    </tbody></table>
+    <h4>What already happened at launch</h4>
+    <p>Communication, documents and manager support happened as activities, not as capability.</p>
+  </div>
+</section>
+
+<!-- 3 DIAGNOSIS -->
+<section class="slide" data-act="Act 1 · How I read the problem" aria-label="Slide 3" hidden>
+  <div class="act">Act 1 · How I read the problem</div>
+  <h2>Three of the four causes <b>sit outside the classroom</b></h2>
+  <div class="body">
+    <div class="row c4">
+      <div class="sym out"><span class="q">Experienced staff revert</span><span class="c">The old way feels faster and safer</span><span class="chip lilac">Motivation · habit</span></div>
+      <div class="sym out"><span class="q">Documents go unused</span><span class="c">Guidance lives outside the workflow</span><span class="chip lilac">Tools · environment</span></div>
+      <div class="sym out"><span class="q">Managers disagree</span><span class="c">Never calibrated on one standard</span><span class="chip lilac">Leadership</span></div>
+      <div class="sym inside"><span class="q">Employees aren't sure</span><span class="c">No safe practice on real cases</span><span class="chip teal">Knowledge · skill</span></div>
+    </div>
+    <div class="verdict"><span class="big">→</span><span>Only the teal one can be solved by training alone. <b>The plan changes the environment first, then trains.</b></span></div>
+  </div>
+  <p class="foot">These causes are my reading of the symptoms in the brief. They are hypotheses we confirm with the client before acting.</p>
+  <div class="backup" data-title="How I got to the diagnosis, and how we'd confirm it" data-link="index.html#recommendation">
+    <h4>The question behind each symptom</h4>
+    <p>If people had to do it right, could they? If yes, the problem isn't skill: it's motivation, tools or leadership. That logic follows performance-analysis models such as Gilbert's Behavior Engineering Model and Mager &amp; Pipe.</p>
+    <h4>How we confirm it in weeks 1–3</h4>
+    <ul>
+      <li>Anonymous survey on tracked reversions</li>
+      <li>Separate interviews with experts, new analysts and managers, never mixed</li>
+      <li>Manager calibration on the same files, to measure inconsistency</li>
+      <li>Case-based assessment for every analyst, with a confidence rating</li>
+    </ul>
+    <h4>Why experts revert: four possible causes</h4>
+    <p>Fluency (working hypothesis), a real flaw in the process, loss of identity or autonomy, or no reinforcement. The decision gate in week 3 decides which one (slide 5).</p>
+  </div>
+</section>
+
+<!-- 4 ASSUMPTIONS -->
+<section class="slide" data-act="Act 1 · How I read the problem" aria-label="Slide 4" hidden>
+  <div class="act">Act 1 · How I read the problem</div>
+  <h2>What I assumed, <b>and what I'd ask the client in week one</b></h2>
+  <div class="body">
+    <div class="row c2 divided">
+      <div class="box"><span class="k">Assumptions the plan relies on</span>
+        <ul class="clean">
+          <li>The platform records each step of a file</li>
+          <li>Quality data can be split by step, team and site</li>
+          <li>The old method can still be used outside the platform</li>
+          <li>Compliance can review content within an agreed time</li>
+          <li>Experts can dedicate some time to support peers</li>
+        </ul></div>
+      <div class="box"><span class="k">Questions for the client</span>
+        <ul class="clean q">
+          <li>Do you measure if the process is followed, or only outcomes?</li>
+          <li>Which steps concentrate errors? Which teams do best?</li>
+          <li>Who sponsors the change, and how involved since launch?</li>
+          <li>Do team metrics reward speed over quality?</li>
+          <li>Who approves changes to the process and platform?</li>
+        </ul></div>
+    </div>
+    <div class="next"><b>Next step:</b> a week-1 session with the sponsor to agree success metrics, data access and Compliance review times.</div>
+  </div>
+  <div class="backup" data-title="If an assumption doesn't hold" data-link="index.html#recommendation">
+    <table><thead><tr><th>Assumption</th><th>Why it matters</th><th>If not</th></tr></thead><tbody>
+      <tr><td>Platform records each step</td><td>Weekly tracking of adherence</td><td>Quality sampling and manager file reviews</td></tr>
+      <tr><td>Quality data by step, team, site</td><td>Shows where errors concentrate and who does it well</td><td>A sample audit builds the baseline; results take longer</td></tr>
+      <tr><td>Old method usable outside the platform</td><td>Explains how experts revert</td><td>Workarounds happen inside; we track them there</td></tr>
+      <tr><td>Compliance reviews on time</td><td>Guides and cases can't go live without approval</td><td>Narrow scope to the most critical steps</td></tr>
+      <tr><td>Experts have time for peers</td><td>They verify colleagues on the job</td><td>Managers take that role; progress is slower</td></tr>
+    </tbody></table>
+    <h4>One more question</h4>
+    <p>Did launch training reach every profile, shift and site?</p>
+  </div>
+</section>
+
+<!-- 5 PLAN -->
+<section class="slide" data-act="Act 2 · The solution" aria-label="Slide 5" hidden>
+  <div class="act">Act 2 · The solution</div>
+  <h2>One plan: three layers, three phases, <b>one decision gate</b></h2>
+  <div class="body" style="gap:0">
+    <div class="mx">
+      <div class="mh"></div>
+      <div class="mh"><span>Weeks 1–3</span>Align &amp; diagnose</div>
+      <div class="mh"><span>Weeks 4–10</span>Enable</div>
+      <div class="mh"><span>Weeks 11–13</span>Reinforce &amp; measure</div>
+
+      <div class="ml c"><b>Change enablement</b>The environment</div>
+      <div class="mc c"><ul><li>Agree what success means</li><li>No-blame friction channel</li><li>Listen to each group</li><li>First manager calibration</li></ul></div>
+      <div class="mc c"><ul><li>Report back what we heard</li><li>Experts become referents</li><li>Second manager calibration</li></ul></div>
+      <div class="mc c"><ul><li>Visible recognition</li><li>Day-90 review + next phase</li></ul></div>
+
+      <div class="ml s"><b>Performance support</b>Help at the moment of work</div>
+      <div class="mc s empty"></div>
+      <div class="mc s"><ul><li>One-page guides in the workflow</li><li>Manager guide + weekly file review</li></ul></div>
+      <div class="mc s empty"></div>
+
+      <div class="ml l"><b>Learning</b>The skill</div>
+      <div class="mc l"><ul><li>Case-based assessment</li></ul></div>
+      <div class="mc l"><ul><li>Step modules and workshops</li><li>Reassessment, week 10</li></ul></div>
+      <div class="mc l"><ul><li>Success-case interviews</li></ul></div>
+
+      <div class="gatev" aria-hidden="true"></div>
+      <div class="gatemark" aria-label="Decision gate at the end of week 3"><span>◆</span>Decision gate · end of week 3</div>
+    </div>
+  </div>
+  <p class="foot">Shared accountability: we design, co-facilitate and hand over; the client decides, approves and reinforces day to day.</p>
+  <div class="backup" data-title="The decision gate: only the right action is switched on" data-link="index.html#recommendation">
+    <p>At the end of week 3 we choose the 2–3 critical steps and confirm why experts revert.</p>
+    <table><thead><tr><th>If we find that…</th><th>The cause is</th><th>We switch on</th></tr></thead><tbody>
+      <tr><td>Experts say the new way “takes longer”, across many steps</td><td><b>Fluency</b> (working hypothesis)</td><td>Targeted practice and step guides</td></tr>
+      <tr><td>Reversions cluster on one step with a concrete flaw</td><td><b>The process</b></td><td>Fix the step with the process owner and Compliance</td></tr>
+      <tr><td>Experts describe losing autonomy or expertise</td><td><b>Identity</b></td><td>Referent role: co-design cases, verify peers</td></tr>
+      <tr><td>Nobody notices which method is used</td><td><b>Reinforcement</b></td><td>Weekly manager file review</td></tr>
+    </tbody></table>
+    <h4>Who does what</h4>
+    <ul>
+      <li><b>Success definition:</b> client decides, we facilitate</li>
+      <li><b>Guides:</b> we design, client approves and hosts</li>
+      <li><b>Modules and workshops:</b> we build and co-facilitate, then hand over</li>
+      <li><b>Recognition:</b> client leads</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 6 EVIDENCE -->
+<section class="slide" data-act="Act 2 · The solution" aria-label="Slide 6" hidden>
+  <div class="act">Act 2 · The solution</div>
+  <h2>I tested the diagnosis <b>against what worked elsewhere</b></h2>
+  <p class="lead">Different industries, same pattern: a correct process that people didn't follow. The evidence confirmed the design; it didn't replace it.</p>
+  <div class="body" style="gap:0">
+    <div class="lesson"><span class="n">1</span><div><b>Fix the system before the course</b><p>Harvard research: people trained and sent back to an unchanged system don't apply what they learned.</p></div><span class="inplan"><small>In the plan</small>Managers and guides change before training starts</span></div>
+    <div class="lesson"><span class="n">2</span><div><b>Learn from the teams that already succeed</b><p>U.S. veterans' hospitals let frontline staff design the practices: ICU infections fell <span class="hl">62%</span>.</p></div><span class="inplan"><small>In the plan</small>Expert referents build the practice cases</span></div>
+    <div class="lesson"><span class="n">3</span><div><b>Leaders decide whether a change sticks</b><p>16 hospitals learned one new surgery: by the 40th case, <span class="hl">143 vs 305 minutes</span>. How leaders framed it explained the gap.</p></div><span class="inplan"><small>In the plan</small>Managers calibrated first, then a weekly review</span></div>
+  </div>
+  <div class="backup" data-title="All five lessons and their sources" data-link="index.html#recommendation">
+    <ul>
+      <li><b>Fix the system before the course.</b> Beer, HBS Working Knowledge / HBR.</li>
+      <li><b>Put the help where the work happens.</b> A one-page surgical checklist in 8 hospitals across 8 countries cut major complications from 11% to 7%. Haynes et al., NEJM 2009. <i>In the plan: one-page step guides inside the workflow.</i></li>
+      <li><b>Learn from the teams that already succeed.</b> 62% fewer ICU infections, 45% elsewhere. Jain et al., NEJM 2011.</li>
+      <li><b>Treat resistance as information.</b> The loudest critics often see real flaws in the plan. Ford &amp; Ford, HBR 2009. <i>In the plan: no-blame friction channel; experts join the diagnosis.</i></li>
+      <li><b>Leaders decide whether a change sticks.</b> Edmondson, Bohmer &amp; Pisano, ASQ 2001; Pisano et al., Management Science 2001.</li>
+    </ul>
+    <h4>How I used the research</h4>
+    <p>Diagnosis first, from the brief and my own change work. Then I checked each hypothesis against original studies. Every figure traces to the primary source; one secondary-source figure was corrected.</p>
+  </div>
+</section>
+
+<!-- 7 MEASUREMENT -->
+<section class="slide" data-act="Act 2 · The solution" aria-label="Slide 7" hidden>
+  <div class="act">Act 2 · The solution</div>
+  <h2>Three questions <b>tell us if it's working</b></h2>
+  <div class="body">
+    <div class="objective"><b>By day 90:</b> analysts master the 2–3 most critical steps, managers reinforce one shared standard every week, and first-time-right files on those steps improve against today.</div>
+    <div class="row c3">
+      <div class="qc"><span class="qn">1</span><h3>Do they know how?</h3><span class="when">Weeks 3 and 10</span><p>Real-looking files plus how sure they are, compared before and after training, step by step.</p><p class="good"><b>Good:</b> no confident wrong answers left on critical steps.</p></div>
+      <div class="qc"><span class="qn">2</span><h3>Do they do it on the job?</h3><span class="when">Weekly from week 5</span><p>Files that follow the full process (read with their quality), reported reversions, manager reviews held.</p><p class="good"><b>Good:</b> the full process is the norm; every team holds its review.</p></div>
+      <div class="qc"><span class="qn">3</span><h3>Does quality improve?</h3><span class="when">Baseline weeks 1–3 · day 90</span><p>Files that pass Quality the first time, and the gap between best and worst teams.</p><p class="good"><b>Good:</b> a clear early improvement on the critical steps.</p></div>
+    </div>
+    <div class="chips"><span class="chip teal">Adherence always read with quality</span><span class="chip teal">No penalties during the 90 days</span><span class="chip teal">Targets agreed with the client</span></div>
+  </div>
+  <div class="backup" data-title="Frameworks behind the measurement" data-link="index.html#recommendation">
+    <ul>
+      <li><b>Kirkpatrick:</b> learning, behavior and results (levels 2–4). Reaction surveys are not the evidence.</li>
+      <li><b>Prosci adoption factors:</b> speed, utilization and proficiency.</li>
+      <li><b>ADKAR assessment:</b> where each group is stuck (slide 10).</li>
+      <li><b>Certainty-based marking:</b> confidence ratings catch confident mistakes, the riskiest ones in compliance.</li>
+      <li><b>Success Case Method (Brinkerhoff):</b> interviews with the best and worst teams explain the numbers.</li>
+    </ul>
+    <h4>Why these three rules</h4>
+    <ul>
+      <li>Adherence alone can be gamed: a fast, “compliant” file can still be wrong.</li>
+      <li>Penalties while learning push errors underground.</li>
+      <li>Targets set without the client aren't owned by the client.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 8 MODULE -->
+<section class="slide" data-act="Act 3 · The proof" aria-label="Slide 8" hidden>
+  <div class="act">Act 3 · The proof</div>
+  <h2>One module up close: <b>find the mismatch</b></h2>
+  <div class="body">
+    <div class="route">
+      <div class="rs"><span class="w">Week 3</span><b>Case-based assessment</b>Shows each analyst's gaps</div><span class="ra">→</span>
+      <div class="rs"><span class="w">Personal route</span><b>Modules only for gaps</b>One per process step</div><span class="ra">→</span>
+      <div class="rs hl"><span class="w">This module</span><b>Spot inconsistencies before submitting</b>Identity-check step · ~12 min</div><span class="ra">→</span>
+      <div class="rs"><span class="w">Weeks 6–10</span><b>Workshop, then verification</b>A referent confirms on the job</div>
+    </div>
+    <p class="obj">Given a client file, the analyst identifies inconsistencies between identity documents and platform data, and chooses the right next action before submitting it.</p>
+    <div class="row c5">
+      <div class="stage"><div class="meter"><i></i><i></i><i></i><i></i></div><span class="sn">Stage 1</span><b>Why it matters</b><span class="d">A file returned by Quality</span></div>
+      <div class="stage"><div class="meter"><i></i><i></i><i></i><i></i></div><span class="sn">Stage 2</span><b>See it done</b><span class="d">Five checks, a worked example</span></div>
+      <div class="stage built"><div class="meter"><i></i><i></i><i></i><i class="off"></i></div><span class="sn">Stage 3</span><b>Practice with help</b><span class="d">One error, hint if needed</span></div>
+      <div class="stage built"><div class="meter"><i></i><i></i><i class="off"></i><i class="off"></i></div><span class="sn">Stage 4</span><b>Practice alone</b><span class="d">Two errors, then decide</span></div>
+      <div class="stage built"><div class="meter"><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div><span class="sn">Stage 5</span><b>Check</b><span class="d">Five files, how sure you are</span></div>
+    </div>
+  </div>
+  <p class="foot">Bars = level of help, fading toward independence. Stages marked “built” are in the prototype.</p>
+  <div class="backup" data-title="Design decisions in the module" data-link="index.html#storyboard">
+    <h4>Why this objective</h4>
+    <p>It attacks the one cause training can solve alone (“not sure I apply it correctly”). In the scenario, a mismatched file comes back from Quality: rework, delay and compliance risk. I chose it over an approve / request / escalate objective because it is clearer to demonstrate and closer to the errors that send files back. The decision is still practiced in stage 4.</p>
+    <h4>Facts</h4>
+    <ul><li><b>Who:</b> analysts whose assessment showed gaps in this step</li><li><b>Format:</b> self-paced, desktop or mobile, real-looking sample files</li><li><b>Reviewed by:</b> process owner, Compliance, two expert referents</li><li><b>Size:</b> 16 screens across five stages</li></ul>
+    <h4>Assessment</h4>
+    <p>Instant feedback in practice. In the check, learners rate their certainty. Results by check (mastered / correct but unsure / keep practicing / priority), never one score, never used in performance reviews.</p>
+    <h4>Accessibility · WCAG 2.2 AA</h4>
+    <p>Keyboard and list alternative to every click-on-image task, alt text, captions, no color-only cues, no time limits, 200% zoom, mobile.</p>
+    <h4>Privacy</h4>
+    <p>Learner sees detail; manager sees required workshops; client sees totals by step and team.</p>
+  </div>
+</section>
+
+<!-- 9 DEMO -->
+<section class="slide dark" data-act="Act 3 · The proof" aria-label="Slide 9" hidden>
+  <div class="act">Act 3 · The proof</div>
+  <h2>Demo: <b>practice, decide, check</b></h2>
+  <div class="body" style="justify-content:flex-start">
+    <div class="demo">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <ol>
+          <li><span class="n">1</span><b>Practice with help</b>Find the one field that doesn't match</li>
+          <li><span class="n">2</span><b>Practice alone, then decide</b>Correct, request a new document or escalate</li>
+          <li><span class="n">3</span><b>Check with certainty</b>Rate how sure you are; see results by check</li>
+        </ol>
+        <a class="btn" href="prototype.html" target="_blank" rel="noopener">Open full screen ↗</a>
+      </div>
+      <div class="frame"><iframe src="prototype.html" title="Learning prototype" loading="lazy"></iframe></div>
+    </div>
+  </div>
+  <div class="backup" data-title="What to point out in the demo" data-link="index.html#prototype">
+    <ul>
+      <li><b>Help fades:</b> hint and two attempts in practice 1; no hints in practice 2.</li>
+      <li><b>Feedback explains why,</b> not just right or wrong (e.g. swapped digits in an ID number).</li>
+      <li><b>Escalate only on risk signals,</b> not for routine fixes.</li>
+      <li><b>Certainty rating:</b> a confident wrong answer is flagged as priority.</li>
+      <li><b>Results by check,</b> feeding the personal route.</li>
+    </ul>
+    <p class="src">All names, data and documents are fictional. About 6 minutes end to end.</p>
+  </div>
+</section>
+
+<!-- 10 GROUPS -->
+<section class="slide" data-act="Act 3 · The proof" aria-label="Slide 10" hidden>
+  <div class="act">Act 3 · The proof · Adoption plan</div>
+  <h2>Four groups, <b>each stuck in a different place</b></h2>
+  <div class="body" style="gap:4px">
+    <div class="jr"><div class="who"><b>Sponsor</b><div class="adkar"><i>A</i><i>D</i><i>K</i><i>A</i><i class="on">R</i></div><span class="hyp">hypothesis to confirm</span></div><div class="jt"><small>Today</small>Launched it, attention moved on</div><span class="arrow">→</span><div class="jt to"><small>By day 90</small>Opens and closes each phase; quality first, visibly</div></div>
+    <div class="jr"><div class="who"><b>Managers</b><div class="adkar"><i>A</i><i>D</i><i>K</i><i>A</i><i class="on">R</i></div></div><div class="jt"><small>Today</small>Each applies their own criteria</div><span class="arrow">→</span><div class="jt to"><small>By day 90</small>One shared standard, checked weekly</div></div>
+    <div class="jr"><div class="who"><b>Experienced staff</b><div class="adkar"><i>A</i><i class="on">D</i><i>K</i><i>A</i><i>R</i></div></div><div class="jt"><small>Today</small>Know how; return to the old method when busy</div><span class="arrow">→</span><div class="jt to"><small>By day 90</small>Referents who verify peers and flag real flaws</div></div>
+    <div class="jr"><div class="who"><b>Analysts</b><div class="adkar"><i>A</i><i>D</i><i class="on">K</i><i class="on">A</i><i>R</i></div></div><div class="jt"><small>Today</small>Want to do it right, aren't sure how</div><span class="arrow">→</span><div class="jt to"><small>By day 90</small>Master the critical steps; report friction</div></div>
+    <div class="loopline" style="margin-top:10px"><b>Resistance is information:</b> listen → find the cause (person, tool or process) → act on it → report back</div>
+  </div>
+  <div class="backup" data-title="How we move each group" data-link="index.html#adoption">
+    <ul>
+      <li><b>Sponsor:</b> week-1 success definition, opening message, present at each decision gate, recognizes progress.</li>
+      <li><b>Managers:</b> calibration on real files, one-page guide, weekly file review. What they gain: less rework, fewer escalations.</li>
+      <li><b>Experienced staff:</b> part of the diagnosis, co-design the practice cases, verify colleagues; their friction reports change the process.</li>
+      <li><b>Analysts:</b> personal route from the assessment, step guides, workshops, on-the-job verification, no penalties while learning.</li>
+    </ul>
+    <h4>Resistance loop, example</h4>
+    <p>Experts say the new way “takes longer” across many steps → cause is fluency, not attitude → targeted practice and step guides, decided at the week-3 gate. If reversions cluster on one step with a real flaw, the step itself is fixed with the process owner.</p>
+    <p class="src">ADKAR: Awareness, Desire, Knowledge, Ability, Reinforcement. Highlighted letter = where the change stalls today, based on the brief.</p>
+  </div>
+</section>
+
+<!-- 11 ACCOUNTABILITY -->
+<section class="slide" data-act="Act 3 · The proof" aria-label="Slide 11" hidden>
+  <div class="act">Act 3 · The proof · Adoption plan</div>
+  <h2>Results at day 90 <b>depend on both sides</b></h2>
+  <div class="body">
+    <div class="split">
+      <div class="side"><b>We design, facilitate and hand over</b><span>Diagnosis, materials, first sessions run together with the client, measurement</span></div>
+      <div class="side cl"><b>The client decides, approves and sustains</b><span>KYC criteria, Compliance approval, daily reinforcement, phase-2 decisions</span></div>
+    </div>
+    <div><span class="k">Six client commitments, agreed in week 1</span>
+    <div class="tl">
+      <div class="tli"><span class="w">Week 1</span>A visible sponsor and opening message</div>
+      <div class="tli"><span class="w">From week 1</span>Hours allocated for expert referents</div>
+      <div class="tli"><span class="w">Week 2</span>Quality data by step, team and site</div>
+      <div class="tli"><span class="w">Weeks 2–5</span>Compliance reviews on agreed times</div>
+      <div class="tli"><span class="w">Weeks 2, 5, 7</span>Managers in calibration and weekly review</div>
+      <div class="tli"><span class="w">Weeks 6–9</span>Attendance by each analyst's route</div>
+    </div></div>
+  </div>
+  <div class="backup" data-title="If a commitment slips" data-link="index.html#adoption">
+    <table><thead><tr><th>Commitment</th><th>If it slips</th></tr></thead><tbody>
+      <tr><td>Visible sponsor, week 1</td><td>The quality-first priority never reaches managers</td></tr>
+      <tr><td>Hours for referents</td><td>No on-the-job verification</td></tr>
+      <tr><td>Quality data, week 2</td><td>The starting point moves; the assessment runs first</td></tr>
+      <tr><td>Compliance review times</td><td>Each week of delay moves the workshops a week</td></tr>
+      <tr><td>Managers in calibration</td><td>Training loses its reinforcement</td></tr>
+      <tr><td>Attendance by route</td><td>Mastery by step doesn't improve</td></tr>
+    </tbody></table>
+    <h4>Why make it explicit</h4>
+    <p>Six months ago the client trained and communicated, then old habits came back. Naming the client's part up front protects the result and builds their capability to sustain it.</p>
+  </div>
+</section>
+
+<!-- 12 AI -->
+<section class="slide dark" data-act="Act 4 · How I work" aria-label="Slide 12" hidden>
+  <div class="act">Act 4 · How I work</div>
+  <h2>AI accelerates the work. <b>Accountability stays human.</b></h2>
+  <div class="body">
+    <div class="row c3">
+      <div class="vcol ok"><span class="tag">Accepted</span><p><span>AI proposed</span>Separating the brief's gaps into assumptions and open questions</p><p class="why"><span>Why I kept it</span>It answers what the brief asks and makes my reasoning visible</p></div>
+      <div class="vcol warn"><span class="tag">Modified</span><p><span>AI proposed</span>Case results summarized from secondary websites</p><p class="why"><span>What I changed</span>Required original studies; corrected one figure: 62% and 45%, not 65%</p></div>
+      <div class="vcol bad"><span class="tag">Rejected</span><p><span>AI proposed</span>An objective built on approve, request or escalate</p><p class="why"><span>Why I overrode it</span>Spotting inconsistencies is clearer to demonstrate and closer to real errors</p></div>
+    </div>
+    <p class="habit">My habit: ask of every claim whether it is a fact, an inference or a decision we made.</p>
+  </div>
+  <div class="backup" data-title="Four patterns to watch, and client rules" data-link="index.html#ai">
+    <h4>Where AI went wrong in this project</h4>
+    <ul>
+      <li><b>Follows instructions literally:</b> “up to 5 slides” became five dense slides. Habit: review as the end user would.</li>
+      <li><b>Presents inferences as facts:</b> design rationales and a claim about the sponsor appeared undiscussed. Habit: fact, inference or decision?</li>
+      <li><b>Leans on secondary or outdated sources:</b> a wrong case figure, an outdated palette. Habit: require the original source.</li>
+      <li><b>Volume before clarity:</b> complete but text-heavy drafts. Habit: objective critique, then one idea per section.</li>
+    </ul>
+    <h4>Rules I'd agree with a regulated client</h4>
+    <ul>
+      <li>No real client data in AI tools</li>
+      <li>Experts and Compliance validate everything</li>
+      <li>Every claim is traceable</li>
+      <li>Check accessibility and bias</li>
+      <li>Be transparent about AI use</li>
+    </ul>
+    <p class="src">Tool: Claude (Anthropic), as research, critique and drafting partner, with a running decision log.</p>
+  </div>
+</section>
+
+<!-- 13 RISKS & LIMITS -->
+<section class="slide" data-act="Act 4 · How I work" aria-label="Slide 13" hidden>
+  <div class="act">Act 4 · How I work</div>
+  <h2>What could go wrong, <b>and what I'd do differently</b></h2>
+  <div class="body">
+    <table class="rt">
+      <thead><tr><th>Where this plan could struggle</th><th>How the plan protects it</th><th>With more access, I would</th></tr></thead>
+      <tbody>
+        <tr><td>Participation drops in reassessment and recalibration</td><td>Protected time agreed with the sponsor, attendance tracked as an early warning, and a clear agreement: if participation slips, time, quality or cost move</td><td>Know the company's size and sites up front, to plan and document each phase by site, so the client inherits clear numbers on what to reinforce</td></tr>
+        <tr><td>People may feel watched when we collect data</td><td>Data rules co-designed with employees, aggregated results, report back how the data was used to help, not to judge</td><td>Validate the data rules with Compliance and employee representatives before collecting anything</td></tr>
+        <tr><td>What the platform allows shapes the solution</td><td>Phase 1 uses only what L&amp;D can build and run end to end</td><td>Shape phase 2 with technology and product colleagues, with effort and cost by phase</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="backup" data-title="All risks" data-link="index.html#recommendation">
+    <table><thead><tr><th>Risk</th><th>Mitigation · when</th></tr></thead><tbody>
+      <tr><td>Participation drops in reassessment and recalibration</td><td>Protected time agreed with the sponsor in week 1; short sessions; attendance tracked weekly as an early warning; agreed up front that if participation slips, time, quality or cost move · weeks 2, 7, 10</td></tr>
+      <tr><td>People feel watched when data is collected</td><td>Data rules co-designed with employees; results private and aggregated; report back what the data changed · from week 1</td></tr>
+      <tr><td>Learning doesn't transfer</td><td>Guides at the point of use, on-the-job verification · phase 2</td></tr>
+      <tr><td>People game the metrics</td><td>Private results; adherence paired with quality · phases 1–3</td></tr>
+      <tr><td>Managers return to volume</td><td>Sponsor message, weekly review, recalibration · weeks 1, 5, 7</td></tr>
+      <tr><td>Approvals or data slip</td><td>Review times agreed in week 1; assessment can start first</td></tr>
+      <tr><td>It's the process, not the people</td><td>Friction channel and the week-3 decision gate</td></tr>
+    </tbody></table>
+    <h4>Also with more access</h4>
+    <p>Validate the KYC scenario with a practitioner and Compliance before building content.</p>
+    <h4>On phase 2</h4>
+    <p>I designed what L&amp;D can own end to end. A guided mode inside the platform needs engineering and product, so its scope, effort and cost are shaped with them.</p>
+  </div>
+</section>
+
+<!-- 14 CLOSE -->
+<section class="slide dark" data-act="Close" aria-label="Slide 14" hidden>
+  <div class="act">Close</div>
+  <h2>Training builds the skill. <b>The environment makes it stick.</b></h2>
+  <div class="body" style="justify-content:flex-start;margin-top:44px">
+    <div class="recap">
+      <div><span class="n">01</span><b>Diagnose before designing</b><span>Three of four causes were outside the classroom</span></div>
+      <div><span class="n">02</span><b>Environment first, then training</b><span>Guides, managers and experts move before the courses</span></div>
+      <div><span class="n">03</span><b>Measure behavior, not completion</b><span>Know how, do it on the job, quality improves</span></div>
+    </div>
+  </div>
+  <p class="thanks">Thank you. <b>Questions?</b></p>
+  <div class="backup" data-title="Links" data-link="index.html#home">
+    <ul>
+      <li><a href="index.html#recommendation" target="_blank" rel="noopener">1 · Recommendation</a></li>
+      <li><a href="index.html#storyboard" target="_blank" rel="noopener">2 · Storyboard</a></li>
+      <li><a href="prototype.html" target="_blank" rel="noopener">3 · Prototype</a></li>
+      <li><a href="index.html#adoption" target="_blank" rel="noopener">4 · Adoption plan</a></li>
+      <li><a href="index.html#ai" target="_blank" rel="noopener">5 · AI use</a></li>
+    </ul>
+    <h4>Next step with a client</h4>
+    <p>A week-1 session with the sponsor to agree success metrics, data access and Compliance review times.</p>
+  </div>
+</section>
+
+</div></div>
+
+<aside class="drawer" id="drawer" aria-label="Backup detail" aria-hidden="true">
+  <button class="close" id="dclose" aria-label="Close backup">×</button>
+  <h3>Backup</h3>
+  <p class="dt" id="dtitle"></p>
+  <div id="dbody"></div>
+  <a class="more" id="dlink" href="index.html" target="_blank" rel="noopener">Open the full section ↗</a>
+</aside>
+
+<nav class="bar" aria-label="Slide controls">
+  <a href="index.html#home" title="Back to the site">← Site</a>
+  <button id="prev" aria-label="Previous slide">‹</button>
+  <span class="count" id="count" aria-live="polite">1 / 14</span>
+  <button id="next" aria-label="Next slide">›</button>
+  <span class="dots" id="dots" aria-hidden="true"></span>
+  <span class="actname" id="actname"></span>
+  <span id="timer" hidden title="Elapsed time (T to toggle)">0:00</span>
+  <span class="hint" style="font-size:12px;opacity:.7">← → · B backup · F full screen</span>
+  <button id="bk" aria-expanded="false" aria-controls="drawer">Backup</button>
+</nav>
+
+<script>
+(() => {
+  const slides = [...document.querySelectorAll(".slide")];
+  const canvas = document.getElementById("canvas");
+  const drawer = document.getElementById("drawer");
+  const bk = document.getElementById("bk");
+  const dots = document.getElementById("dots");
+  slides.forEach(() => dots.appendChild(document.createElement("i")));
+  let i = 0;
+
+  function fit() {
+    const vw = window.innerWidth, vh = window.innerHeight - 56;
+    const s = Math.min(vw / 1280, vh / 720);
+    canvas.style.transform = `scale(${s})`;
+  }
+  function fill() {
+    const b = slides[i].querySelector(".backup");
+    document.getElementById("dtitle").textContent = b ? b.dataset.title : "";
+    document.getElementById("dbody").innerHTML = b ? b.innerHTML : "<p>No backup for this slide.</p>";
+    const l = document.getElementById("dlink");
+    l.href = b && b.dataset.link ? b.dataset.link : "index.html";
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => { s.hidden = k !== i; });
+    document.getElementById("count").textContent = `${i + 1} / ${slides.length}`;
+    document.getElementById("actname").textContent = slides[i].dataset.act;
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    fill();
+    drawer.scrollTop = 0;
+    try { history.replaceState(null, "", "#" + (i + 1)); } catch (e) {}
+  }
+  function toggle(open) {
+    const o = open ?? !drawer.classList.contains("open");
+    drawer.classList.toggle("open", o);
+    drawer.setAttribute("aria-hidden", o ? "false" : "true");
+    bk.setAttribute("aria-expanded", o ? "true" : "false");
+  }
+
+  document.getElementById("prev").onclick = () => show(i - 1);
+  document.getElementById("next").onclick = () => show(i + 1);
+  bk.onclick = () => toggle();
+  document.getElementById("dclose").onclick = () => toggle(false);
+
+  // Timer (presenter aid, hidden by default)
+  const timer = document.getElementById("timer"); let t0 = null;
+  setInterval(() => { if (t0) { const s = Math.floor((Date.now() - t0) / 1000); timer.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; } }, 500);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest && e.target.closest("iframe")) return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || (k === " " && e.target === document.body)) { e.preventDefault(); show(i + 1); }
+    else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (k === "Home") show(0);
+    else if (k === "End") show(slides.length - 1);
+    else if (k === "b" || k === "B") toggle();
+    else if (k === "Escape") toggle(false);
+    else if (k === "t" || k === "T") { timer.hidden = !timer.hidden; if (!t0) t0 = Date.now(); }
+    else if (k === "f" || k === "F") { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (err) {} }
+  });
+
+  // Swipe
+  let x0 = null;
+  canvas.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  canvas.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); x0 = null; });
+
+  window.addEventListener("resize", fit); fit();
+  window.addEventListener("hashchange", () => { const n = parseInt(location.hash.slice(1), 10); if (Number.isFinite(n) && n - 1 !== i) show(n - 1); });
+  const start = parseInt(location.hash.slice(1), 10);
+  show(Number.isFinite(start) ? start - 1 : 0);
+})();
+</script>
+</body>
+</html>
